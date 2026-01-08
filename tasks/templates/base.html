@@ -3,140 +3,222 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Selección de Perfil</title>
+    <title>Portal Corporativo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <style>
+        :root {
+            --corp-dark: #2c3e50;
+            --corp-gray: #f4f6f9;
+            --corp-slate: #34495e;
+            --corp-blue: #2980b9;
+        }
+
         body {
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364); /* Fondo oscuro elegante */
+            background-color: var(--corp-gray);
+            font-family: 'Roboto', sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; padding: 0;
+            opacity: 0; /* Para animación de entrada */
+            animation: fadeInPage 0.8s ease-out forwards;
         }
 
-        /* Botón Admin Flotante (Arriba Derecha) */
+        /* --- ANIMACIONES KEYFRAMES --- */
+        @keyframes fadeInPage { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideUpFade {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* --- HERO SECTION --- */
+        .hero-banner {
+            background: linear-gradient(135deg, var(--corp-dark), #1a252f);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            z-index: 10;
+        }
+
+        .hero-title {
+            font-weight: 700; letter-spacing: 1px; font-size: 2rem; margin: 0;
+            text-transform: uppercase;
+            animation: slideUpFade 0.8s ease-out;
+        }
+
+        .hero-subtitle {
+            font-weight: 300; opacity: 0.8; margin-top: 5px; font-size: 0.95rem;
+            animation: slideUpFade 0.8s ease-out 0.2s backwards; /* Delay */
+        }
+
         .btn-admin-top {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            color: rgba(255, 255, 255, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 8px 15px;
-            border-radius: 30px;
-            text-decoration: none;
-            transition: all 0.3s;
+            position: absolute; top: 20px; right: 30px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 8px 18px; border-radius: 30px;
+            font-size: 0.85rem; text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            backdrop-filter: blur(5px);
         }
         .btn-admin-top:hover {
-            background: white;
-            color: #333;
+            background: white; color: var(--corp-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
         }
 
-        /* Título Principal */
-        .main-title {
-            color: white;
-            margin-bottom: 50px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            text-align: center;
+        /* --- CONTENEDOR --- */
+        .main-container {
+            flex: 1; padding: 50px 20px;
+            display: flex; justify-content: center; align-items: flex-start;
         }
 
-        /* Contenedor de tarjetas */
-        .cards-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 30px;
-            max-width: 1200px;
+        .cards-grid {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 30px; max-width: 1200px; width: 100%;
         }
 
-        /* Diseño de la Tarjeta */
+        /* --- TARJETA EXPEDIENTE (Fluidez Mejorada) --- */
         .profile-card {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px); /* Efecto vidrio */
-            border-radius: 20px;
-            padding: 40px;
+            background: white;
+            border-radius: 12px;
             width: 300px;
-            text-align: center;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s, box-shadow 0.3s;
-            color: white;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            border-top: 4px solid var(--corp-blue);
+            display: flex; flex-direction: column; overflow: hidden;
+            cursor: pointer;
+            border: 1px solid #f0f2f5;
+            
+            /* Animación de entrada */
+            opacity: 0;
+            animation: slideUpFade 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+            
+            /* Transición suave al pasar mouse */
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
         }
+
+        /* Delay escalonado para las tarjetas (hasta 10 elementos) */
+        .profile-card:nth-child(1) { animation-delay: 0.1s; }
+        .profile-card:nth-child(2) { animation-delay: 0.2s; }
+        .profile-card:nth-child(3) { animation-delay: 0.3s; }
+        .profile-card:nth-child(4) { animation-delay: 0.4s; }
+        .profile-card:nth-child(5) { animation-delay: 0.5s; }
 
         .profile-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
-            background: rgba(255, 255, 255, 0.2);
-            cursor: pointer;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
         }
 
-        .profile-icon {
-            font-size: 50px;
-            margin-bottom: 20px;
-            color: #4facfe;
-        }
-
-        .profile-name {
-            font-size: 1.5rem;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .profile-desc {
-            font-size: 0.9rem;
-            color: #ddd;
-            margin-bottom: 25px;
-        }
-
-        .btn-view {
-            background: #4facfe;
-            color: white;
-            border: none;
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-weight: bold;
-            text-decoration: none;
+        .card-header-internal {
+            background-color: #f8f9fa; padding: 25px;
+            text-align: center; border-bottom: 1px solid #edf2f7;
             transition: background 0.3s;
         }
-        .btn-view:hover {
-            background: #00f2fe;
-            color: #0f2027;
+        .profile-card:hover .card-header-internal { background-color: #fff; }
+
+        .profile-icon-circle {
+            width: 70px; height: 70px;
+            background: white;
+            border: 1px solid #e2e8f0; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto;
+            color: var(--corp-slate); font-size: 28px;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .profile-card:hover .profile-icon-circle {
+            background: var(--corp-blue); color: white;
+            transform: scale(1.1) rotate(5deg);
+            border-color: var(--corp-blue);
+        }
+
+        .card-body-content { padding: 30px 20px; text-align: center; flex-grow: 1; }
+
+        .profile-name {
+            font-size: 1.3rem; color: var(--corp-dark); font-weight: 700;
+            margin-bottom: 8px; transition: color 0.3s;
+        }
+        .profile-card:hover .profile-name { color: var(--corp-blue); }
+
+        .profile-role {
+            font-size: 0.85rem; color: #7f8c8d; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px;
+        }
+
+        .card-footer-btn {
+            background: var(--corp-dark); color: white;
+            text-align: center; padding: 15px;
+            font-size: 0.9rem; font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative; overflow: hidden;
+        }
+        
+        .profile-card:hover .card-footer-btn {
+            background: var(--corp-blue);
+            padding-bottom: 20px; /* Efecto sutil de crecimiento */
+        }
+
+        .page-footer {
+            text-align: center; padding: 25px;
+            color: #95a5a6; font-size: 0.85rem;
+            background-color: white; border-top: 1px solid #e9ecef;
         }
     </style>
 </head>
 <body>
 
-    <a href="/admin/" class="btn-admin-top">
-        <i class="fas fa-user-shield"></i> Ingreso Admin
-    </a>
+    <div class="hero-banner">
+        <a href="/admin/" class="btn-admin-top">
+            <i class="fas fa-cog"></i> Panel Administrativo
+        </a>
+        <h1 class="hero-title">Gestión de Talento Humano</h1>
+        <p class="hero-subtitle">Sistema de visualización de perfiles profesionales</p>
+    </div>
 
-    <h1 class="main-title">Hojas de Vida Disponibles</h1>
+    <div class="main-container">
+        <div class="cards-grid">
+            
+            {% for p in perfiles %}
+                <div class="profile-card" onclick="location.href='{% url 'cv_view' p.id %}'">
+                    <div class="card-header-internal">
+                        <div class="profile-icon-circle">
+                            <i class="fas fa-user-tie"></i>
+                        </div>
+                    </div>
+                    
+                    <div class="card-body-content">
+                        <div class="profile-name">{{ p.nombres }} {{ p.apellidos }}</div>
+                        <div class="profile-role">
+                            <i class="fas fa-passport me-1"></i> {{ p.nacionalidad }}
+                        </div>
+                        <hr style="margin: 20px auto; width: 40px; border-top: 2px solid #eee;">
+                        <small class="text-muted" style="font-size: 0.8rem;">Expediente #{{ p.id }}</small>
+                    </div>
 
-    <div class="cards-container">
-        
-        {% for p in perfiles %}
-            <div class="profile-card" onclick="location.href='{% url 'cv_view' p.id %}'">
-                <div class="profile-icon">
-                    <i class="fas fa-user-circle"></i>
+                    <span class="card-footer-btn">
+                        Ver Hoja de Vida <i class="fas fa-arrow-right ms-2" style="font-size: 0.8em;"></i>
+                    </span>
                 </div>
-                <div class="profile-name">
-                    {{ p.nombres }} {{ p.apellidos }}
+            {% empty %}
+                <div class="alert alert-light border text-center shadow-sm w-100 p-5">
+                    <h4 class="text-muted">Sin registros</h4>
+                    <p class="mb-0 text-secondary">No hay perfiles activos.</p>
                 </div>
-                <div class="profile-desc">
-                    {{ p.nacionalidad }}
-                </div>
-                <a href="{% url 'cv_view' p.id %}" class="btn-view">Ver Perfil</a>
-            </div>
-        {% empty %}
-            <div class="alert alert-warning text-center w-50">
-                <h3>No hay perfiles creados</h3>
-                <p>Ingresa como Admin (botón arriba derecha) y agrega uno en "Datos Personales".</p>
-            </div>
-        {% endfor %}
+            {% endfor %}
 
+        </div>
+    </div>
+
+    <div class="page-footer">
+        &copy; 2026 Plataforma de Gestión de Hojas de Vida. Uso Corporativo.
     </div>
 
 </body>

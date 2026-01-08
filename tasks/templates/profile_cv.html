@@ -2,241 +2,283 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Hoja de Vida Profesional</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV - Jean Pierre Zambrano</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
+        /* --- ESTILO GENERAL (Minimalista Corporativo) --- */
         body {
-            background-color: #e9ecef;
+            background-color: #eef2f6; /* Gris muy suave para el fondo web */
             font-family: 'Open Sans', sans-serif;
-            padding-bottom: 50px;
+            color: #333;
+            padding-bottom: 60px;
         }
 
-        /* --- CONTROLES --- */
+        /* --- CONTROLES FLOTANTES --- */
         .admin-controls {
-            position: fixed; top: 20px; right: 20px; z-index: 1000; display: flex; gap: 10px;
+            position: fixed; top: 25px; right: 25px; z-index: 9999;
+            display: flex; gap: 12px;
         }
-        .btn-float {
-            border-radius: 50px; padding: 10px 20px; font-weight: 600;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2); border: none; transition: 0.3s;
+        .btn-custom {
+            border: none; padding: 10px 20px; border-radius: 6px;
+            font-weight: 600; font-size: 0.85rem; cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.3s ease;
+            text-decoration: none; display: flex; align-items: center; gap: 8px;
         }
-        .btn-float:hover { transform: translateY(-3px); }
+        .btn-download { background-color: #2c3e50; color: white; } /* Azul oscuro corporativo */
+        .btn-back { background-color: white; color: #2c3e50; }
+        .btn-custom:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
 
-        /* --- ANIMACIONES (Aquí está la magia) --- */
-        @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        @keyframes slideInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.5); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        @keyframes fillBar {
-            from { width: 0%; }
-        }
-
-        /* --- ESTRUCTURA DEL CV (Indestructible para PDF) --- */
-        #contenido-cv {
-            max-width: 900px;
+        /* --- HOJA A4 PRINCIPAL --- */
+        #cv-container {
+            width: 850px; /* Ancho fijo para simular A4 */
+            max-width: 100%;
             margin: 40px auto;
             background: white;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.15);
-            /* Usamos display table para asegurar que las columnas NO se rompan en el PDF */
-            display: table; 
-            width: 100%;
-            table-layout: fixed;
-            overflow: hidden; /* Limpieza */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            display: flex; /* Flexbox para columnas */
+            overflow: hidden; /* Cortar bordes */
         }
 
-        /* COLUMNA IZQUIERDA */
+        /* --- COLUMNA IZQUIERDA (OSCURA) --- */
         .sidebar {
-            background-color: #2c3e50; /* Color de fondo fuerte */
+            width: 32%;
+            background-color: #34495e; /* Gris azulado oscuro */
             color: white;
-            display: table-cell; /* Comportamiento de celda */
-            vertical-align: top;
-            width: 35%;
             padding: 40px 25px;
-            /* Animación suave de entrada */
-            animation: slideInLeft 1s ease-out;
+            text-align: left;
         }
 
-        /* COLUMNA DERECHA */
+        .profile-img-box {
+            text-align: center; margin-bottom: 35px;
+        }
+        .avatar-circle {
+            width: 110px; height: 110px;
+            background-color: #ecf0f1; color: #34495e;
+            border-radius: 50%; display: inline-flex;
+            align-items: center; justify-content: center;
+            font-size: 50px; border: 4px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem; text-transform: uppercase;
+            letter-spacing: 2px; color: #bdc3c7;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            padding-bottom: 8px; margin: 30px 0 15px 0;
+            font-weight: 600;
+        }
+
+        .contact-row {
+            margin-bottom: 15px; font-size: 0.85rem;
+            display: flex; gap: 12px; align-items: flex-start;
+            color: #ecf0f1;
+        }
+        .contact-row i { color: #3498db; margin-top: 4px; width: 15px; } /* Icono azul */
+
+        .ref-box { margin-bottom: 20px; }
+        .ref-name { display: block; font-weight: 700; font-size: 0.9rem; color: #fff; }
+        .ref-info { font-size: 0.85rem; color: #bdc3c7; }
+
+        /* --- COLUMNA DERECHA (CONTENIDO) --- */
         .main-content {
-            background-color: #ffffff;
-            display: table-cell;
-            vertical-align: top;
-            width: 65%;
-            padding: 50px 40px;
-            /* Animación suave de entrada */
-            animation: slideInUp 1s ease-out;
+            width: 68%;
+            padding: 50px 45px;
+            background-color: #fff;
         }
 
-        /* --- ELEMENTOS CON ESTILO --- */
-        h1, h2, h3, h4 { font-family: 'Montserrat', sans-serif; }
-
-        .profile-pic-container { text-align: center; margin-bottom: 30px; animation: popIn 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55); }
-        .profile-icon {
-            font-size: 80px; color: #ecf0f1; background: rgba(255,255,255,0.1);
-            padding: 30px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.3);
+        .header-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.2rem; font-weight: 700;
+            color: #2c3e50; text-transform: uppercase;
+            line-height: 1.1; margin-bottom: 5px;
+        }
+        .header-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.1rem; color: #7f8c8d;
+            font-weight: 500; margin-bottom: 35px; letter-spacing: 1px;
         }
 
-        .sidebar-title {
-            font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; color: #bdc3c7;
-            border-bottom: 1px solid rgba(255,255,255,0.3); padding-bottom: 10px; margin: 30px 0 20px 0;
+        .section-title {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1.15rem; font-weight: 700;
+            color: #2c3e50; text-transform: uppercase;
+            display: flex; align-items: center; gap: 10px;
+            margin: 35px 0 20px 0;
+        }
+        .section-title::after {
+            content: ''; flex-grow: 1; height: 2px; background: #ecf0f1;
+        }
+        .title-icon { color: #3498db; }
+
+        .summary-text {
+            font-size: 0.95rem; color: #555; line-height: 1.6;
+            text-align: justify;
         }
 
-        .contact-item { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-size: 0.9rem; }
-        .contact-item i { color: #3498db; width: 20px; text-align: center; }
-        .contact-item a { color: white; text-decoration: none; }
-
-        .skill-item { margin-bottom: 15px; }
-        .progress-bg { background: rgba(255,255,255,0.2); height: 6px; border-radius: 3px; margin-top: 5px; overflow: hidden; }
-        .progress-fill { background-color: #3498db; height: 100%; animation: fillBar 1.5s ease-out; }
-
-        .main-name { font-size: 2.8rem; font-weight: 700; color: #2c3e50; line-height: 1; text-transform: uppercase; }
-        .main-subtitle { font-size: 1.2rem; color: #7f8c8d; margin-bottom: 30px; font-weight: 600; letter-spacing: 1px; }
-
-        .section-header {
-            font-size: 1.5rem; color: #2c3e50; font-weight: 700; margin: 40px 0 25px 0;
-            display: flex; align-items: center; gap: 15px;
+        /* Linea de tiempo Experiencia */
+        .timeline-box {
+            border-left: 2px solid #ecf0f1;
+            padding-left: 20px; margin-bottom: 25px; position: relative;
         }
-        .section-header::after { content: ''; flex: 1; height: 2px; background: #ecf0f1; }
-        .icon-box {
-            background: #2c3e50; color: white; width: 35px; height: 35px;
-            display: flex; align-items: center; justify-content: center; border-radius: 5px;
+        .timeline-box::before {
+            content: ''; position: absolute; left: -6px; top: 5px;
+            width: 10px; height: 10px; background: #3498db;
+            border-radius: 50%;
         }
+        .job-role { font-weight: 700; color: #2c3e50; font-size: 1rem; }
+        .job-company { font-weight: 600; color: #7f8c8d; font-size: 0.9rem; }
+        .job-dates {
+            font-size: 0.8rem; color: #95a5a6; font-style: italic;
+            margin-bottom: 8px; display: block;
+        }
+        .job-details { margin: 0; font-size: 0.9rem; color: #555; }
 
-        .timeline-item {
-            position: relative; padding-left: 20px; border-left: 2px solid #bdc3c7; margin-bottom: 30px;
-            /* Animación en cascada para los trabajos */
-            animation: slideInUp 1s ease-out;
-        }
-        .timeline-item::before {
-            content: ''; position: absolute; left: -6px; top: 0; width: 10px; height: 10px;
-            background: #3498db; border-radius: 50%;
-        }
-        .job-title { font-weight: 700; font-size: 1.1rem; color: #2c3e50; }
-        .company-name { font-weight: 600; color: #3498db; }
-        .date-range { font-size: 0.85rem; color: #95a5a6; font-style: italic; margin-bottom: 10px; display: block; }
-        .job-desc { font-size: 0.95rem; color: #555; text-align: justify; }
-
-        /* CLASE ESPECIAL: Cuando se genera el PDF, anulamos animaciones para evitar errores visuales */
-        .generating-pdf * {
-            animation: none !important;
-            transition: none !important;
-        }
+        /* CLASE PARA PDF (Ocultar botones) */
+        .generating-pdf .admin-controls { display: none !important; }
     </style>
 </head>
 <body>
 
     <div class="admin-controls">
-        <button onclick="generarPDF()" class="btn-float btn-primary">
-            <i class="fas fa-download"></i> Descargar PDF
+        <button onclick="generarPDF()" class="btn-custom btn-download">
+            <i class="fas fa-file-arrow-down"></i> Guardar PDF
         </button>
-        <a href="/" class="btn-float btn-light text-dark"><i class="fas fa-home"></i> Inicio</a>
-        {% if user.is_superuser %}
-            <a href="/admin/tasks/datospersonales/{{ perfil.id }}/change/" class="btn-float btn-warning text-dark"><i class="fas fa-pen"></i> Editar</a>
-        {% endif %}
-    </div>
+        <a href="/" class="btn-custom btn-back">
+            <i class="fas fa-home"></i> Inicio
+        </a>
+        </div>
 
-    <div id="contenido-cv">
-        {% if perfil %}
+    <div id="cv-container">
+        
         <div class="sidebar">
-            <div class="profile-pic-container">
-                <i class="fas fa-user profile-icon"></i>
-            </div>
-
-            <div class="sidebar-title">Contacto</div>
-            <div class="contact-item"><i class="fas fa-id-card"></i> <span>{{ perfil.numerocedula }}</span></div>
-            <div class="contact-item"><i class="fas fa-map-marker-alt"></i> <span>{{ perfil.direcciondomiciliaria }}</span></div>
-            <div class="contact-item"><i class="fas fa-phone"></i> <span>{{ perfil.telefonofijo }}</span></div>
-            {% if perfil.sitioweb %}
-            <div class="contact-item"><i class="fas fa-globe"></i> <a href="{{ perfil.sitioweb }}">{{ perfil.sitioweb }}</a></div>
-            {% endif %}
-
-            <div class="sidebar-title">Habilidades</div>
-            {% for hab in habilidades %}
-            <div class="skill-item">
-                <div class="skill-name" style="display: flex; justify-content: space-between;">
-                    <span>{{ hab.nombre }}</span> <span>{{ hab.nivel }}%</span>
-                </div>
-                <div class="progress-bg">
-                    <div class="progress-fill" style="width: {{ hab.nivel }}%"></div>
+            <div class="profile-img-box">
+                <div class="avatar-circle">
+                    <i class="fas fa-user-tie"></i>
                 </div>
             </div>
-            {% endfor %}
 
-            <div class="sidebar-title">Detalles</div>
-            <div class="contact-item"><i class="fas fa-flag"></i> <span>{{ perfil.nacionalidad }}</span></div>
+            <div class="sidebar-header">Contacto</div>
+            
+            <div class="contact-row">
+                <i class="fas fa-phone"></i>
+                <span>0981035184</span>
+            </div>
+            <div class="contact-row">
+                <i class="fas fa-envelope"></i>
+                <span>jeanpierrezambranodatos@gmail.com</span>
+            </div>
+            <div class="contact-row">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>Barrio Abdón Calderón, Calle 12 Av 40, Manta</span>
+            </div>
+            <div class="contact-row">
+                <i class="fas fa-id-card"></i>
+                <span>CI: 1317043832</span>
+            </div>
+
+            <div class="sidebar-header">Educación</div>
+            
+            <div class="ref-box">
+                <span class="ref-name">Tecnología de la Información</span>
+                <span class="ref-info">ULEAM (Cursando)</span>
+            </div>
+            <div class="ref-box">
+                <span class="ref-name">Bachiller en Ciencias</span>
+                <span class="ref-info">Unidad Educativa Fiscal "Manta"</span>
+            </div>
+
+            <div class="sidebar-header">Referencias</div>
+            
+            <div class="ref-box">
+                <span class="ref-name">Lic. Ronny Yoza</span>
+                <span class="ref-info"><i class="fas fa-phone-alt"></i> 0980579102</span>
+            </div>
+            <div class="ref-box">
+                <span class="ref-name">Ing. Elvis Garcia</span>
+                <span class="ref-info"><i class="fas fa-phone-alt"></i> 0997944719</span>
+            </div>
         </div>
 
         <div class="main-content">
-            <h1 class="main-name">{{ perfil.nombres }}</h1>
-            <h1 class="main-name">{{ perfil.apellidos }}</h1>
-            <p class="main-subtitle">HOJA DE VIDA PROFESIONAL</p>
+            <h1 class="header-name">Jean Pierre<br>Zambrano Avila</h1>
+            <p class="header-title">Estudiante de Tecnología de la Información</p>
 
-            <div class="section-header">
-                <div class="icon-box"><i class="fas fa-user-tie"></i></div><span>Perfil</span>
+            <div class="section-title">
+                <i class="fas fa-user title-icon"></i> Perfil Profesional
             </div>
-            <p style="color: #555; line-height: 1.7;">{{ perfil.descripcionperfil }}</p>
+            <p class="summary-text">
+                Joven de 19 años de la ciudad de Manta, caracterizado por mi responsabilidad, dedicación y ganas de crecer profesionalmente. Busco una oportunidad laboral donde pueda demostrar mis habilidades, aprender constantemente y aportar valor real al equipo. Me motiva asumir nuevos retos, trabajar con compromiso y contribuir al éxito de la empresa mediante mi actitud, disciplina y capacidad de adaptación.
+            </p>
 
-            <div class="section-header">
-                <div class="icon-box"><i class="fas fa-briefcase"></i></div><span>Experiencia</span>
+            <div class="section-title">
+                <i class="fas fa-briefcase title-icon"></i> Experiencia Laboral
             </div>
-            {% for exp in experiencias %}
-            <div class="timeline-item">
-                <div class="job-title">{{ exp.cargodesempenado }}</div>
-                <div class="company-name">{{ exp.nombrempresa }}</div>
-                <span class="date-range">{{ exp.fecha_inicio }} — {% if exp.fecha_fin %}{{ exp.fecha_fin }}{% else %}Actualidad{% endif %}</span>
-                <p class="job-desc">{{ exp.logros }}</p>
+
+            <div class="timeline-box">
+                <div class="job-role">Atención al Cliente</div>
+                <div class="job-company">Billar Ronny Pol's</div>
+                <ul class="job-details" style="padding-left: 15px; margin-top: 5px;">
+                    <li>Atención directa al cliente y gestión de mesas.</li>
+                    <li>Manejo de cobros, cuentas y orden del área.</li>
+                </ul>
             </div>
-            {% empty %}
-                <p class="text-muted">No hay experiencia registrada.</p>
-            {% endfor %}
+
+            <div class="timeline-box">
+                <div class="job-role">Atención al Cliente</div>
+                <div class="job-company">Mini Mercado (Barrio)</div>
+                <ul class="job-details" style="padding-left: 15px; margin-top: 5px;">
+                    <li>Atención personalizada al cliente y asistencia en compras.</li>
+                    <li>Organización de productos y apoyo en tareas generales del negocio.</li>
+                </ul>
+            </div>
+
+            <div class="section-title">
+                <i class="fas fa-star title-icon"></i> Aptitudes
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <ul class="job-details">
+                        <li>Responsabilidad y Disciplina</li>
+                        <li>Atención al Cliente</li>
+                    </ul>
+                </div>
+                <div class="col-6">
+                    <ul class="job-details">
+                        <li>Trabajo en Equipo</li>
+                        <li>Adaptabilidad</li>
+                    </ul>
+                </div>
+            </div>
+
         </div>
-        {% else %}
-        <div style="padding: 50px;"><h3>Perfil no encontrado</h3></div>
-        {% endif %}
     </div>
 
     <script>
         function generarPDF() {
-            const elemento = document.getElementById('contenido-cv');
-            const btn = document.querySelector('.btn-primary');
+            const element = document.getElementById('cv-container');
+            const btn = document.querySelector('.btn-download');
             
-            // 1. AVISAR AL USUARIO
+            // Estado de carga
+            const originalText = btn.innerHTML;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
-            
-            // 2. CONGELAR ANIMACIONES (Clave para que el PDF salga bien)
-            // Agregamos una clase que pone "animation: none" a todo
-            elemento.classList.add('generating-pdf');
+            document.body.classList.add('generating-pdf');
 
-            // 3. CONFIGURAR PDF
-            const opciones = {
+            const opt = {
                 margin:       0,
-                filename:     'CV_{{ perfil.nombres }}.pdf',
+                filename:     'CV_Jean_Pierre_Zambrano.pdf',
                 image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { 
-                    scale: 2, 
-                    useCORS: true, 
-                    scrollY: 0,
-                    backgroundColor: '#ffffff' // Forzamos fondo blanco
-                },
-                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+                html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
+                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
-            // 4. GENERAR Y LUEGO RESTAURAR
-            html2pdf().set(opciones).from(elemento).save().then(function(){
-                // Quitamos la clase para que las animaciones puedan volver si se recarga (opcional)
-                elemento.classList.remove('generating-pdf');
-                btn.innerHTML = '<i class="fas fa-download"></i> Descargar PDF';
+            html2pdf().set(opt).from(element).save().then(() => {
+                document.body.classList.remove('generating-pdf');
+                btn.innerHTML = originalText;
             });
         }
     </script>
