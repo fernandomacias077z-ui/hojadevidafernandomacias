@@ -1,36 +1,47 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fernando Macias | Dev Portfolio</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --blue-tech: #2563eb; --green-success: #10b981; }
-        body { background: #0f172a; color: #f8fafc; font-family: 'Inter', sans-serif; }
-        .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        #loader { position: fixed; inset: 0; background: #0f172a; z-index: 99; display: flex; align-items: center; justify-content: center; }
-        .code-anim { animation: pulse 1.5s infinite; color: var(--blue-tech); font-size: 3rem; font-weight: bold; }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        :root { --primary: #00f2fe; --secondary: #4facfe; --dark: #0f172a; --card-bg: #1e293b; }
+        body { font-family: 'Poppins', sans-serif; background-color: var(--dark); color: white; overflow-x: hidden; }
+        .navbar { background: rgba(15, 23, 42, 0.9) !important; backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .nav-link { color: white !important; font-weight: 500; }
+        .nav-link:hover { color: var(--primary) !important; }
+        .btn-custom { background: linear-gradient(45deg, var(--secondary), var(--primary)); border: none; color: white; font-weight: 600; transition: 0.3s; }
+        .btn-custom:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,242,254,0.3); color: white; }
+        .card { background: var(--card-bg); border: 1px solid rgba(255,255,255,0.1); border-radius: 15px; color: white; }
     </style>
 </head>
 <body>
-    <div id="loader"><div class="code-anim">{ }</div></div>
-    <nav class="glass sticky top-0 z-40 p-4">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="/" class="text-2xl font-bold text-blue-500">DEV_HUB <span class="text-white">//</span></a>
-            <div>
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-white" href="/">/ DEV_HUB //</a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="/">INICIO</a>
                 {% if user.is_authenticated %}
-                <a href="{% url 'profile_cv' %}" class="px-4">_CV</a>
-                <a href="{% url 'logout' %}" class="bg-red-500/20 text-red-400 px-4 py-2 rounded">LOGOUT</a>
+                    <a class="nav-link" href="{% url 'tasks' %}">MIS TAREAS</a>
+                    <a class="nav-link btn btn-outline-danger ms-lg-3" href="{% url 'logout' %}">LOGOUT</a>
                 {% else %}
-                <a href="{% url 'signin' %}" class="px-4">_LOGIN</a>
-                <a href="{% url 'signup' %}" class="bg-blue-600 px-4 py-2 rounded shadow-lg shadow-blue-500/20">_SIGNUP</a>
+                    <a class="nav-link" href="{% url 'signin' %}">LOGIN</a>
+                    <a class="nav-link btn btn-custom ms-lg-3" href="{% url 'signup' %}">SIGNUP</a>
                 {% endif %}
             </div>
         </div>
     </nav>
+
     {% block content %}{% endblock %}
-    <script>
-        window.addEventListener('load', () => { document.getElementById('loader').style.display = 'none'; });
-    </script>
+
+    <footer class="text-center py-4 mt-5 border-top border-secondary">
+        <p class="text-secondary">© 2026 Fernando Macias // Bachiller en Informática - U.E.F. "Manta"</p>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init({ duration: 1000, once: true });</script>
 </body>
 </html>

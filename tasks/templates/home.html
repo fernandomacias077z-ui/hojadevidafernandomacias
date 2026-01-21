@@ -1,17 +1,42 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container d-flex align-items-center justify-content-center" style="min-height: 80vh;">
-    <div class="text-center p-5 rounded-4" style="background: rgba(15,15,25,0.8); border: 1px solid rgba(0,242,255,0.2); max-width: 700px;">
-        <h1 class="display-3 fw-bold text-info mb-4">DEV_SYSTEM</h1>
-        <p class="lead mb-5">Bienvenido Fernando. Regístrate o inicia sesión para acceder al panel de tareas y descargar mi Hoja de Vida profesional.</p>
-        {% if not user.is_authenticated %}
-            <div class="d-flex justify-content-center gap-3">
-                <a href="{% url 'signup' %}" class="btn btn-info px-5 py-3 fw-bold">CREATE_ID</a>
-                <a href="{% url 'signin' %}" class="btn btn-outline-info px-5 py-3 fw-bold">AUTH_LOGIN</a>
+<header class="py-5 mt-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7" data-aos="fade-right">
+                <h1 class="display-3 fw-bold mb-3">Hola, soy <span style="color: var(--primary)">Fernando Macias</span></h1>
+                <p class="lead text-secondary mb-4">Web Developer // Técnico en Informática // Estudiante de la U.E.F. "Manta"</p>
+                <a href="{% url 'signup' %}" class="btn btn-custom btn-lg px-4">EMPEZAR PROYECTO</a>
             </div>
-        {% else %}
-            <a href="{% url 'profile_cv' %}" class="btn btn-info px-5 py-3 fw-bold">GO_TO_MY_CV</a>
-        {% endif %}
+            <div class="col-lg-5 text-center" data-aos="zoom-in">
+                <div class="p-5 rounded-circle shadow-lg" style="background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%); width: 300px; height: 300px; margin: auto;">
+                    <img src="https://via.placeholder.com/200" class="rounded-circle img-fluid" alt="Perfil">
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+</header>
+
+<section class="container py-5">
+    <div class="row">
+        <div class="col-md-6" data-aos="fade-up">
+            <h2 class="fw-bold mb-4 border-bottom border-primary d-inline-block">SOBRE MÍ</h2>
+            <p class="text-secondary">Estudiante de Informática en la **U.E.F. "Manta"**. Apasionado por el desarrollo de soluciones web con Django y Python. Este portafolio es parte de mi memoria técnica y demuestra mis habilidades en backend y frontend.</p>
+            <div class="mt-4">
+                <h5>Habilidades:</h5>
+                <div class="mb-2">Python <div class="progress" style="height: 5px;"><div class="progress-bar bg-info" style="width: 90%"></div></div></div>
+                <div class="mb-2">Django <div class="progress" style="height: 5px;"><div class="progress-bar bg-info" style="width: 85%"></div></div></div>
+                <div class="mb-2">JavaScript <div class="progress" style="height: 5px;"><div class="progress-bar bg-info" style="width: 70%"></div></div></div>
+            </div>
+        </div>
+        <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
+            <h2 class="fw-bold mb-4 border-bottom border-primary d-inline-block">EDUCACIÓN</h2>
+            <div class="card card-body mb-3">
+                <h5 class="text-primary">Bachiller en Informática</h5>
+                <p class="mb-0">U.E.F. "Manta" (2020 - 2023)</p>
+                <small class="text-secondary">Desarrollo de sistemas, redes y soporte técnico.</small>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
