@@ -7,21 +7,20 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # --- RUTA DE INICIO ---
+    # Home / Landing
     path('', views.home, name='home'),
-    
-    # --- HOJA DE VIDA PROTEGIDA (FERNANDO) ---
-    # Usamos 'profile_cv' como nombre para que coincida con tus templates
-    path('profile_cv/', views.profile_cv, name='profile_cv'),
 
-    # --- AUTENTICACIÓN ---
+    # Autenticación
     path('signup/', views.signup, name='signup'),
     path('signin/', views.signin, name='signin'),
     path('logout/', views.signout, name='logout'),
 
-    # --- GESTOR DE TAREAS ---
+    # Hoja de Vida (Protegida)
+    path('profile_cv/', views.profile_cv, name='profile_cv'),
+
+    # Gestor de Tareas
     path('tasks/', views.tasks, name='tasks'),
-    path('tasks_completed/', views.tasks_completed, name='tasks_completed'),
+    path('tasks_completed/', views.tasks_completed, name='tasks_completed'), # Corregido para Render
     path('tasks/create/', views.create_task, name='create_task'),
     path('tasks/<int:task_id>/', views.task_detail, name='task_detail'),
     path('tasks/<int:task_id>/complete/', views.complete_task, name='complete_task'),
