@@ -3,86 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DEV_SYSTEM // CV_MANAGER</title>
+    <title>DEV_HUB // FERNANDO_SYSTEM</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root {
-            --bg-dark: #050508;
-            --neon-cyan: #00f2ff;
-            --neon-purple: #bc13fe;
-            --glass: rgba(15, 15, 25, 0.85);
+        :root { 
+            --bg-dark: #050508; 
+            --neon-cyan: #00f2ff; 
+            --neon-purple: #bc13fe; 
+            --glass: rgba(15, 15, 25, 0.85); 
             --text-main: #e0e0e0;
         }
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            font-family: 'Space Grotesk', sans-serif;
+        body { 
+            background-color: var(--bg-dark); 
+            color: var(--text-main); 
+            font-family: 'Space Grotesk', sans-serif; 
             min-height: 100vh;
+            margin: 0;
         }
 
-        .navbar-cyber {
-            background: var(--glass);
-            border-bottom: 1px solid rgba(0, 242, 255, 0.2);
-            backdrop-filter: blur(10px);
+        /* --- NAVBAR ESTILO FUTURISTA --- */
+        .navbar-cyber { 
+            background: var(--glass); 
+            border-bottom: 1px solid rgba(0, 242, 255, 0.2); 
+            backdrop-filter: blur(10px); 
             padding: 15px 0;
         }
 
-        .navbar-brand {
-            font-family: 'Fira Code', monospace;
-            font-weight: 700;
-            color: var(--neon-cyan) !important;
+        .navbar-brand { 
+            font-family: 'Fira Code', monospace; 
+            font-weight: 700; 
+            color: var(--neon-cyan) !important; 
             letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(0, 242, 255, 0.3);
         }
 
-        .nav-link {
-            color: var(--text-main) !important;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.85rem;
-            margin: 0 10px;
-            transition: 0.3s;
+        .nav-link { 
+            color: var(--text-main) !important; 
+            font-family: 'Fira Code', monospace; 
+            font-size: 0.85rem; 
+            margin: 0 10px; 
+            text-transform: uppercase;
+            transition: 0.3s ease;
         }
 
-        .nav-link:hover {
-            color: var(--neon-cyan) !important;
-            text-shadow: 0 0 8px var(--neon-cyan);
+        .nav-link:hover { 
+            color: var(--neon-cyan) !important; 
+            text-shadow: 0 0 8px var(--neon-cyan); 
         }
 
-        .btn-logout {
-            border: 1px solid var(--neon-purple);
+        .btn-logout { 
+            border: 1px solid var(--neon-purple) !important; 
             color: var(--neon-purple) !important;
+            border-radius: 4px;
         }
 
         .btn-logout:hover {
             background: var(--neon-purple);
-            color: white !important;
+            color: #fff !important;
             box-shadow: 0 0 15px var(--neon-purple);
+        }
+
+        /* Contenedor de mensajes de error de Django */
+        .alert-cyber {
+            background: rgba(255, 0, 0, 0.1);
+            border: 1px solid #ff4444;
+            color: #ff4444;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
         }
     </style>
 </head>
 <body>
+
     <nav class="navbar navbar-expand-lg navbar-cyber sticky-top mb-4">
         <div class="container">
-            <a class="navbar-brand" href="/">DEV_HUB //</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <a class="navbar-brand" href="{% url 'home' %}">DEV_HUB //</a>
+            
+            <button class="navbar-toggler border-info" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     {% if user.is_authenticated %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'tasks' %}">_TASKS</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'create_task' %}">_NEW_TASK</a></li>
-                        <li class="nav-item"><a class="nav-link btn-logout px-3 rounded" href="{% url 'logout' %}">LOGOUT</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link text-info fw-bold" href="{% url 'profile_cv' %}">_MY_CV</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'tasks' %}">_TASKS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'create_task' %}">_NEW_TASK</a>
+                        </li>
+                        <li class="nav-item ms-lg-3">
+                            <a class="nav-link btn-logout px-3" href="{% url 'logout' %}">LOGOUT</a>
+                        </li>
                     {% else %}
-                        <li class="nav-item"><a class="nav-link" href="{% url 'signin' %}">SIGNIN</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">SIGNUP</a></li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'signin' %}">_SIGNIN</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-info border border-info rounded px-3" href="{% url 'signup' %}">_SIGNUP</a>
+                        </li>
                     {% endif %}
                 </ul>
             </div>
         </div>
     </nav>
+
+    {% if error %}
+    <div class="container">
+        <div class="alert alert-cyber text-center mb-4">
+            {{ error }}
+        </div>
+    </div>
+    {% endif %}
 
     {% block content %}
     {% endblock %}

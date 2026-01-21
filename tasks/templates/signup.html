@@ -2,27 +2,14 @@
 {% block content %}
 <main class="container py-5">
     <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="p-4 rounded-3 shadow" style="background: var(--glass); border: 1px solid var(--neon-purple);">
-                <h1 class="text-center mb-4" style="font-family: 'Fira Code'; color: var(--neon-purple);">NEW_USER_CREATE</h1>
-                {% if error %}<div class="alert alert-danger py-2" style="font-size: 0.8rem;">{{error}}</div>{% endif %}
-                <form action="/signup/" method="POST">
-                    {% csrf_token %}
-                    <div class="mb-3">
-                        <label class="form-label small text-info">USERNAME_TAG</label>
-                        <input type="text" name="username" class="form-control bg-dark text-white border-secondary" placeholder="Write username">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small text-info">PASSWORD_ENCRYPT</label>
-                        <input type="password" name="password1" class="form-control bg-dark text-white border-secondary" placeholder="••••••••">
-                    </div>
-                    <div class="mb-3">
-                        <label class="form-label small text-info">CONFIRM_VERIFICATION</label>
-                        <input type="password" name="password2" class="form-control bg-dark text-white border-secondary" placeholder="••••••••">
-                    </div>
-                    <button class="btn btn-primary w-100 py-2 fw-bold" style="background: var(--neon-purple); border: none;">INITIALIZE_SIGNUP</button>
-                </form>
-            </div>
+        <div class="col-md-4">
+            <form method="POST" class="p-4 rounded-3 border border-primary" style="background: rgba(15,15,25,0.8);">
+                <h2 class="text-center text-primary mb-4">CREATE_ID</h2>
+                {% csrf_token %}
+                <input type="text" name="username" class="form-control bg-dark text-white border-secondary mb-3" placeholder="Choose Username">
+                <input type="password" name="password" class="form-control bg-dark text-white border-secondary mb-3" placeholder="Password">
+                <button class="btn btn-primary w-100 fw-bold">INITIALIZE_SIGNUP</button>
+            </form>
         </div>
     </div>
 </main>

@@ -8,6 +8,8 @@ from .models import Task, DatosPersonales, ExperienciaLaboral, Habilidad
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
+# --- VISTAS PÚBLICAS ---
+
 def home(request):
     return render(request, "home.html")
 
@@ -28,21 +30,48 @@ def signup(request):
                 return render(request, "signup.html", {"form": UserCreationForm, "error": "Username already exists"})
         return render(request, "signup.html", {"form": UserCreationForm, "error": "Password do not match"})
 
+def signin(request):
+    if request.method == 'GET':
+        return render(request, 'signin.html', {'form': AuthenticationForm})
+    else:
+        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
+        if user is None:
+            return render(request, 'signin.html', {'form': AuthenticationForm, 'error':'Username or password is incorrect'})
+        else:
+            login(request, user)
+            return redirect('tasks')
+
+def signout(request): # Esta es la función que llama el botón LOGOUT
+    logout(request)
+    return redirect('home')
+
+
+# --- VISTAS PROTEGIDAS (REQUIEREN LOGIN) ---
+
+@login_required
+def profile_cv(request):
+    """
+    Vista protegida para ver la hoja de vida de Fernando.
+    Solo usuarios registrados pueden acceder.
+    """
+    # Como quieres que tenga tus datos específicos, los pasamos al contexto
+    # o los recuperamos de la base de datos si ya los creaste en el Admin.
+    return render(request, 'profile_cv.html', {
+        'nombre': 'Fernando',
+        'edad': 20,
+        'especialidad': 'Tecnología de la Información',
+        'experiencia': 'Reparación de Hardware'
+    })
+
 @login_required
 def tasks(request):
     tasks = Task.objects.filter(user=request.user, datecompleted__isnull=True)
-    return render(request, 'tasks.html',{'tasks':tasks, 'tipopagina':'Tareas Pendientes'})
-
-# ESTA ES LA FUNCIÓN QUE TE ESTÁ DANDO ERROR, ASEGÚRATE DE COPIARLA BIEN:
-@login_required
-def tasks_completed(request):
-    tasks = Task.objects.filter(user=request.user, datecompleted__isnull=False).order_by('-datecompleted')
-    return render(request, 'tasks.html',{'tasks':tasks,'tipopagina':'Tareas completadas'})
+    return render(request, 'tasks.html', {'tasks': tasks, 'tipopagina': 'Tareas Pendientes'})
 
 @login_required
 def create_task(request):
     if request.method == 'GET':
-        return render(request,"create_task.html",{'form': TaskForm})
+        return render(request, "create_task.html", {'form': TaskForm})
     else:
         try:
             form = TaskForm(request.POST)
@@ -51,21 +80,21 @@ def create_task(request):
             new_task.save()
             return redirect('tasks')
         except ValueError:
-            return render(request,"create_task.html",{'form': TaskForm, 'error': 'Ingrese tipos de datos correctos'})
+            return render(request, "create_task.html", {'form': TaskForm, 'error': 'Ingrese tipos de datos correctos'})
 
 @login_required
 def task_detail(request, task_id):
     task = get_object_or_404(Task, pk=task_id, user=request.user)
     if request.method == 'GET':
         form = TaskForm(instance=task)
-        return render(request,'task_detail.html',{'task':task, 'form': form})
+        return render(request, 'task_detail.html', {'task': task, 'form': form})
     else:
         try:
             form = TaskForm(request.POST, instance=task)
             form.save()
             return redirect('tasks')
         except ValueError:
-            return render(request,'task_detail.html',{'task':task, 'form': form, 'error':'Error updating tasks'})
+            return render(request, 'task_detail.html', {'task': task, 'form': form, 'error': 'Error updating tasks'})
 
 @login_required
 def complete_task(request, task_id):
@@ -81,43 +110,3 @@ def delete_task(request, task_id):
     if request.method == 'POST':
         task.delete()
         return redirect('tasks')
-
-def signout(request):
-    logout(request)
-    return redirect('home')
-
-def signin(request):
-    if request.method == 'GET':
-        return render(request, 'signin.html', {'form': AuthenticationForm})
-    else:
-        user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
-        if user is None:
-            return render(request, 'signin.html', {'form': AuthenticationForm, 'error':'Username or password is incorrect'})
-        else:
-            login(request, user)
-            return redirect('tasks')
-
-# VISTA PARA EL PERFIL INTERACTIVO
-# --- ESTO ES LO NUEVO ---
-
-# --- REEMPLAZA CON ESTO AL FINAL DE TU ARCHIVO ---
-
-# 1. Bienvenida: Ahora busca TODOS los perfiles para hacer la lista
-def welcome_view(request):
-    perfiles = DatosPersonales.objects.all()
-    return render(request, 'base.html', {'perfiles': perfiles})
-
-# 2. CV Individual: Ahora recibe un ID para saber EXACTAMENTE cuál mostrar
-def cv_view(request, profile_id):
-    # Busca el perfil que coincida con el ID (si no existe, da error 404)
-    perfil = get_object_or_404(DatosPersonales, id=profile_id)
-    
-    experiencias = ExperienciaLaboral.objects.filter(perfil=perfil).order_by('-fecha_inicio')
-    habilidades = Habilidad.objects.filter(perfil=perfil)
-    
-    context = {
-        'perfil': perfil,
-        'experiencias': experiencias,
-        'habilidades': habilidades
-    }
-    return render(request, 'profile_cv.html', context)

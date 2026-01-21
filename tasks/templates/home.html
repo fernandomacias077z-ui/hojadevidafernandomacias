@@ -1,13 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container d-flex align-items-center justify-content-center" style="min-height: 80vh;">
-    <div class="text-center p-5 rounded-4" style="background: var(--glass); border: 1px solid rgba(0,242,255,0.1); max-width: 800px;">
-        <h1 class="display-1 fw-bold mb-4" style="font-family: 'Fira Code'; color: var(--neon-cyan); text-shadow: 0 0 20px rgba(0,242,255,0.3);">DJANGO_APP</h1>
-        <p class="lead mb-5 opacity-75">Sistema de gestión de talento humano y control de procesos en tiempo real. Interfaz optimizada para desarrolladores y administradores de sistemas.</p>
-        <div class="d-flex justify-content-center gap-3">
-            <a href="/signin/" class="btn btn-outline-info px-5 py-3 fw-bold shadow-sm">SIGNIN_ACCESS</a>
-            <a href="/signup/" class="btn btn-info px-5 py-3 fw-bold shadow">SIGNUP_NEW_ID</a>
-        </div>
+    <div class="text-center p-5 rounded-4" style="background: rgba(15,15,25,0.8); border: 1px solid rgba(0,242,255,0.2); max-width: 700px;">
+        <h1 class="display-3 fw-bold text-info mb-4">DEV_SYSTEM</h1>
+        <p class="lead mb-5">Bienvenido Fernando. Regístrate o inicia sesión para acceder al panel de tareas y descargar mi Hoja de Vida profesional.</p>
+        {% if not user.is_authenticated %}
+            <div class="d-flex justify-content-center gap-3">
+                <a href="{% url 'signup' %}" class="btn btn-info px-5 py-3 fw-bold">CREATE_ID</a>
+                <a href="{% url 'signin' %}" class="btn btn-outline-info px-5 py-3 fw-bold">AUTH_LOGIN</a>
+            </div>
+        {% else %}
+            <a href="{% url 'profile_cv' %}" class="btn btn-info px-5 py-3 fw-bold">GO_TO_MY_CV</a>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

@@ -7,17 +7,19 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # --- RUTAS PRINCIPALES (Hoja de Vida) ---
-    path('', views.welcome_view, name='welcome'),
+    # --- RUTA DE INICIO ---
+    path('', views.home, name='home'),
     
-    # ESTA ES LA LÍNEA QUE CAMBIA (ahora acepta el ID del perfil)
-    path('cv/<int:profile_id>/', views.cv_view, name='cv_view'),
+    # --- HOJA DE VIDA PROTEGIDA (FERNANDO) ---
+    # Usamos 'profile_cv' como nombre para que coincida con tus templates
+    path('profile_cv/', views.profile_cv, name='profile_cv'),
 
-    # --- RUTAS DEL GESTOR DE TAREAS ---
-    path('home/', views.home, name='home'),
+    # --- AUTENTICACIÓN ---
     path('signup/', views.signup, name='signup'),
     path('signin/', views.signin, name='signin'),
     path('logout/', views.signout, name='logout'),
+
+    # --- GESTOR DE TAREAS ---
     path('tasks/', views.tasks, name='tasks'),
     path('tasks_completed/', views.tasks_completed, name='tasks_completed'),
     path('tasks/create/', views.create_task, name='create_task'),

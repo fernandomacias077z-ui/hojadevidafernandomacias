@@ -1,214 +1,43 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DATA_LOG // FERNANDO_IT_PROFILE</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-    <style>
-        :root {
-            --cyber-bg: #050508;
-            --cyber-sidebar: #0a0a12;
-            --neon-cyan: #00f2ff;
-            --text-main: #ffffff;
-            --text-dim: #94a3b8;
-        }
-
-        body {
-            background-color: #1a1a24;
-            font-family: 'Space Grotesk', sans-serif;
-            margin: 0;
-        }
-
-        /* --- CONTROLES --- */
-        .admin-controls {
-            position: fixed; top: 20px; right: 20px; z-index: 1000;
-            display: flex; gap: 10px;
-        }
-        .btn-cyber {
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid var(--neon-cyan);
-            color: var(--neon-cyan);
-            padding: 10px 20px;
-            font-family: 'Fira Code', monospace;
-            font-size: 0.8rem;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-        .btn-cyber:hover {
-            background: var(--neon-cyan);
-            color: var(--cyber-bg);
-            box-shadow: 0 0 20px var(--neon-cyan);
-        }
-
-        /* --- CONTENEDOR A4 --- */
-        #cv-container {
-            width: 850px;
-            margin: 40px auto;
-            background: var(--cyber-bg);
-            display: flex;
-            min-height: 1100px;
-            box-shadow: 0 0 50px rgba(0,0,0,0.5);
-            position: relative;
-        }
-
-        .sidebar {
-            width: 32%;
-            background-color: var(--cyber-sidebar);
-            padding: 50px 30px;
-            border-right: 1px solid rgba(0, 242, 255, 0.1);
-        }
-
-        .avatar-hex {
-            width: 120px; height: 120px;
-            background: var(--cyber-bg);
-            border: 2px solid var(--neon-cyan);
-            display: inline-flex; align-items: center; justify-content: center;
-            font-size: 50px; color: var(--neon-cyan);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
-            margin-bottom: 30px;
-        }
-
-        .side-title {
-            font-family: 'Fira Code', monospace;
-            color: var(--neon-cyan);
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            margin: 30px 0 15px;
-            border-bottom: 1px solid rgba(0, 242, 255, 0.2);
-            padding-bottom: 5px;
-        }
-
-        .info-row { font-size: 0.85rem; margin-bottom: 12px; color: var(--text-dim); display: flex; gap: 10px; }
-        .info-row i { color: var(--neon-cyan); width: 15px; }
-
-        .main-content {
-            width: 68%;
-            padding: 60px 50px;
-            background: linear-gradient(135deg, #050508 0%, #0a0a15 100%);
-        }
-
-        .name-header h1 { font-weight: 800; text-transform: uppercase; color: white; font-size: 3.5rem; line-height: 0.9; margin: 0; }
-        .name-header span { color: var(--neon-cyan); }
-        .tagline { font-family: 'Fira Code', monospace; color: var(--text-dim); font-size: 1rem; margin-top: 10px; }
-
-        .section-header { display: flex; align-items: center; gap: 15px; margin: 40px 0 20px; }
-        .section-header h2 { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin: 0; color: #fff; }
-        .header-line { flex-grow: 1; height: 1px; background: rgba(255,255,255,0.1); }
-
-        .job-card { margin-bottom: 25px; border-left: 2px solid var(--neon-cyan); padding-left: 20px; position: relative; }
-        .job-card::before { content: ""; position: absolute; left: -6px; top: 0; width: 10px; height: 10px; background: var(--neon-cyan); border-radius: 50%; box-shadow: 0 0 10px var(--neon-cyan); }
-        
-        .skill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .skill-item { background: rgba(255,255,255,0.03); padding: 8px 15px; border: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
-
-        .generating-pdf .admin-controls { display: none !important; }
-    </style>
-</head>
-<body>
-
-    <div class="admin-controls">
-        <button onclick="generarPDF()" class="btn-cyber"><i class="fas fa-terminal me-2"></i> Export_PDF</button>
-        <a href="/" class="btn-cyber"><i class="fas fa-home me-2"></i> Return_Home</a>
+{% extends 'base.html' %}
+{% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<main class="container py-4">
+    <div class="text-end mb-3">
+        <button onclick="generarPDF()" class="btn btn-outline-info"><i class="fas fa-download me-2"></i>EXPORT_PDF</button>
     </div>
-
-    <div id="cv-container">
-        <div class="sidebar">
-            <div class="text-center">
-                <div class="avatar-hex"><i class="fas fa-microchip"></i></div>
+    <div id="cv-render" class="row g-0 shadow-lg mx-auto" style="max-width: 850px; background: #050508; border: 1px solid #1a1a24; min-height: 1000px;">
+        <div class="col-4" style="background: #0a0a12; padding: 40px 25px; border-right: 1px solid #1a1a24;">
+            <div class="text-center mb-4">
+                <div class="rounded-circle border border-info d-inline-flex align-items-center justify-content-center" style="width: 100px; height: 100px; font-size: 40px; color: #00f2ff;">
+                    <i class="fas fa-microchip"></i>
+                </div>
             </div>
-
-            <div class="side-title">Contact_Info</div>
-            <div class="info-row"><i class="fas fa-phone"></i> 0981035184</div>
-            <div class="info-row"><i class="fas fa-envelope"></i> jeanpierrezambranodatos@gmail.com</div>
-            <div class="info-row"><i class="fas fa-map-marker-alt"></i> Manta, Ecuador</div>
-            <div class="info-row"><i class="fas fa-id-card"></i> 1317043832</div>
-
-            <div class="side-title">Education</div>
-            <div class="mb-3">
-                <div style="font-weight: 600; font-size: 0.9rem;">Tecnología de la Información</div>
-                <div style="font-size: 0.8rem; color: var(--text-dim);">ULEAM (Cursando)</div>
-            </div>
-            <div class="mb-3">
-                <div style="font-weight: 600; font-size: 0.9rem;">Bachiller en Ciencias</div>
-                <div style="font-size: 0.8rem; color: var(--text-dim);">U.E.F "Manta"</div>
-            </div>
-
-            <div class="side-title">References</div>
-            <div class="mb-2" style="font-size: 0.85rem;">Lic. Ronny Yoza: <span class="text-info">0980579102</span></div>
-            <div class="mb-2" style="font-size: 0.85rem;">Ing. Elvis Garcia: <span class="text-info">0997944719</span></div>
+            <h5 class="text-info font-monospace small border-bottom border-secondary pb-2">CONTACT_INFO</h5>
+            <p class="small mb-1"><i class="fas fa-envelope me-2 text-info"></i> fernando@mail.com</p>
+            <p class="small mb-4"><i class="fas fa-phone me-2 text-info"></i> 0981035184</p>
+            <h5 class="text-info font-monospace small border-bottom border-secondary pb-2">EDUCATION</h5>
+            <p class="small mb-0 fw-bold">Tecnología de la Información</p>
+            <p class="small text-secondary mb-3">ULEAM (Cursando)</p>
         </div>
-
-        <div class="main-content">
-            <div class="name-header">
-                <h1><span>FERNANDO</span></h1>
-                <div class="tagline">// IT_STUDENT_&_HARDWARE_EXPERT</div>
-            </div>
-
-            <div class="section-header">
-                <h2>01. Professional_Profile</h2>
-                <div class="header-line"></div>
-            </div>
-            <p style="color: var(--text-dim); line-height: 1.6; text-align: justify; font-size: 0.95rem;">
-                Estudiante de 20 años de la carrera de Tecnología de la Información en Manta. Me especializo en el diagnóstico y reparación de hardware, combinando mi formación académica con experiencia técnica práctica. Me caracterizo por mi responsabilidad, disciplina y capacidad de adaptación tecnológica, buscando aportar soluciones eficientes en entornos de IT.
-            </p>
-
-            <div class="section-header">
-                <h2>02. Technical_Experience</h2>
-                <div class="header-line"></div>
-            </div>
-
-            <div class="job-card">
-                <div style="font-weight: 700; color: var(--neon-cyan);">Especialista en Hardware</div>
-                <div class="job-meta">Soporte Técnico // Mantenimiento Preventivo y Correctivo</div>
-                <div style="color: var(--text-dim); font-size: 0.9rem;">
-                    Diagnóstico de fallas en componentes físicos, ensamble de equipos de alto rendimiento, limpieza técnica y sustitución de hardware dañado.
-                </div>
-            </div>
-
-            <div class="job-card">
-                <div style="font-weight: 700; color: var(--neon-cyan);">Atención al Cliente</div>
-                <div class="job-meta">Billar Ronny Pol's & Retail Local</div>
-                <div style="color: var(--text-dim); font-size: 0.9rem;">
-                    Gestión de cobros, atención directa al público y resolución de problemas bajo presión, manteniendo el orden y la eficiencia operativa.
-                </div>
-            </div>
-
-            <div class="section-header">
-                <h2>03. Tech_Skills</h2>
-                <div class="header-line"></div>
-            </div>
-            <div class="skill-grid">
-                <div class="skill-item"><i class="fas fa-tools text-info me-2"></i>Reparación de Hardware</div>
-                <div class="skill-item"><i class="fas fa-network-wired text-info me-2"></i>Soporte Técnico IT</div>
-                <div class="skill-item"><i class="fas fa-laptop-medical text-info me-2"></i>Mantenimiento de Equipos</div>
-                <div class="skill-item"><i class="fas fa-users text-info me-2"></i>Trabajo en Equipo</div>
+        <div class="col-8 p-5 text-white">
+            <h1 class="display-4 fw-bold">FERNANDO</h1>
+            <p class="text-info font-monospace">// IT_STUDENT & HARDWARE_EXPERT</p>
+            <hr class="opacity-10">
+            <h4 class="text-info mt-4">01. PERFIL_PROFESIONAL</h4>
+            <p class="text-secondary small">Estudiante de 20 años en TI con amplia experiencia en diagnóstico, reparación de hardware y mantenimiento de sistemas.</p>
+            <h4 class="text-info mt-4">02. EXPERIENCIA_LOG</h4>
+            <div class="border-start border-info ps-3 mb-3">
+                <p class="mb-0 fw-bold">Reparación de Hardware</p>
+                <p class="text-secondary small">Mantenimiento correctivo y preventivo de componentes físicos y ensamble de equipos.</p>
             </div>
         </div>
     </div>
-
-    <script>
-        function generarPDF() {
-            const element = document.getElementById('cv-container');
-            const btn = document.querySelector('.btn-cyber');
-            btn.innerHTML = 'GENERATING...';
-            document.body.classList.add('generating-pdf');
-            const opt = { margin: 0, filename: 'CV_FERNANDO_IT.pdf', image: { type: 'jpeg', quality: 1 },
-                html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
-            html2pdf().set(opt).from(element).save().then(() => {
-                document.body.classList.remove('generating-pdf');
-                btn.innerHTML = '<i class="fas fa-terminal me-2"></i> Export_PDF';
-            });
-        }
-    </script>
-</body>
-</html>
+</main>
+<script>
+    function generarPDF() {
+        const element = document.getElementById('cv-render');
+        const opt = { margin: 0, filename: 'CV_FERNANDO.pdf', image: { type: 'jpeg', quality: 1 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
+        html2pdf().set(opt).from(element).save();
+    }
+</script>
+{% endblock %}
