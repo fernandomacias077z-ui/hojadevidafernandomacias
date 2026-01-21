@@ -1,17 +1,22 @@
-import os
-from pathlib import Path
-import dj_database_url
+# Busca estas líneas y asegúrate de que NO estén comentadas o borradas:
 
-# 1. ESTA LÍNEA ES LA QUE FALTA O ESTÁ MAL UBICADA
-BASE_DIR = Path(__file__).resolve().parent.parent
+ROOT_URLCONF = 'django_portfolio.urls' # <--- ESTA ES LA QUE FALTA SEGÚN EL LOG
 
-# ... resto de tu configuración (SECRET_KEY, DEBUG, etc.) ...
+WSGI_APPLICATION = 'django_portfolio.wsgi.application'
 
-# 2. Asegúrate de que MEDIA_ROOT esté así después de definir BASE_DIR
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
-
-# 3. Configuración para archivos estáticos (necesario para Render)
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# También revisa que estas sigan ahí para que cargue tus 8 archivos HTML:
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'], # Asegúrate de que apunte a tu carpeta de templates
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
