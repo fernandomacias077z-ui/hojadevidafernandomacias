@@ -8,7 +8,7 @@ from .models import Task
 from django.utils import timezone
 from django.contrib.auth.decorators import login_required
 
-# --- PÚBLICAS ---
+# --- VISTAS PÚBLICAS ---
 def home(request):
     return render(request, "home.html")
 
@@ -16,19 +16,16 @@ def signup(request):
     if request.method == "GET":
         return render(request, "signup.html", {"form": UserCreationForm})
     else:
-        # Validación simple de contraseñas manual (opcional si usas UserCreationForm estándar)
-        if request.POST.get("password1") == request.POST.get("password2"):
-            try:
-                user = User.objects.create_user(
-                    username=request.POST["username"],
-                    password=request.POST["password1"],
-                )
-                user.save()
-                login(request, user)
-                return redirect('tasks')
-            except IntegrityError:
-                return render(request, "signup.html", {"form": UserCreationForm, "error": "Username already exists"})
-        return render(request, "signup.html", {"form": UserCreationForm, "error": "Passwords do not match"})
+        try:
+            user = User.objects.create_user(
+                username=request.POST["username"],
+                password=request.POST["password"],
+            )
+            user.save()
+            login(request, user)
+            return redirect('tasks')
+        except IntegrityError:
+            return render(request, "signup.html", {"form": UserCreationForm, "error": "El usuario ya existe."})
 
 def signin(request):
     if request.method == 'GET':
@@ -36,7 +33,7 @@ def signin(request):
     else:
         user = authenticate(request, username=request.POST['username'], password=request.POST['password'])
         if user is None:
-            return render(request, 'signin.html', {'form': AuthenticationForm, 'error':'Username or password is incorrect'})
+            return render(request, 'signin.html', {'form': AuthenticationForm, 'error':'Usuario o contraseña incorrectos.'})
         else:
             login(request, user)
             return redirect('tasks')
@@ -45,9 +42,11 @@ def signout(request):
     logout(request)
     return redirect('home')
 
-# --- PROTEGIDAS ---
+# --- VISTAS PRIVADAS (Requieren Login) ---
+
 @login_required
 def profile_cv(request):
+    # Carga tu hoja de vida de experto en hardware
     return render(request, 'profile_cv.html')
 
 @login_required
@@ -57,7 +56,7 @@ def tasks(request):
 
 @login_required
 def tasks_completed(request):
-    # ESTA ES LA FUNCIÓN QUE FALTABA
+    # Esta función resuelve el Server Error (500)
     tasks = Task.objects.filter(user=request.user, datecompleted__isnull=False).order_by('-datecompleted')
     return render(request, 'tasks.html', {'tasks': tasks, 'tipopagina': 'Tareas Completadas'})
 
@@ -73,7 +72,7 @@ def create_task(request):
             new_task.save()
             return redirect('tasks')
         except ValueError:
-            return render(request, "create_task.html", {'form': TaskForm, 'error': 'Ingrese tipos de datos correctos'})
+            return render(request, "create_task.html", {'form': TaskForm, 'error': 'Datos inválidos.'})
 
 @login_required
 def task_detail(request, task_id):
@@ -87,7 +86,7 @@ def task_detail(request, task_id):
             form.save()
             return redirect('tasks')
         except ValueError:
-            return render(request, 'task_detail.html', {'task': task, 'form': form, 'error': 'Error updating task'})
+            return render(request, 'task_detail.html', {'task': task, 'form': form, 'error': 'Error al actualizar.'})
 
 @login_required
 def complete_task(request, task_id):

@@ -7,7 +7,7 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    # Home / Landing
+    # Principal
     path('', views.home, name='home'),
 
     # Autenticación
@@ -15,12 +15,12 @@ urlpatterns = [
     path('signin/', views.signin, name='signin'),
     path('logout/', views.signout, name='logout'),
 
-    # Hoja de Vida (Protegida)
+    # Perfil / CV
     path('profile_cv/', views.profile_cv, name='profile_cv'),
 
-    # Gestor de Tareas
+    # Tareas
     path('tasks/', views.tasks, name='tasks'),
-    path('tasks_completed/', views.tasks_completed, name='tasks_completed'), # Corregido para Render
+    path('tasks_completed/', views.tasks_completed, name='tasks_completed'),
     path('tasks/create/', views.create_task, name='create_task'),
     path('tasks/<int:task_id>/', views.task_detail, name='task_detail'),
     path('tasks/<int:task_id>/complete/', views.complete_task, name='complete_task'),
