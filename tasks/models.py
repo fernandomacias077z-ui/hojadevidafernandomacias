@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Modelo simplificado para que no de errores de base de datos
 class Task(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
