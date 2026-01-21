@@ -3,223 +3,311 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal Corporativo</title>
+    <title>DevHub - Portal de Talentos Tech</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+
     <style>
         :root {
-            --corp-dark: #2c3e50;
-            --corp-gray: #f4f6f9;
-            --corp-slate: #34495e;
-            --corp-blue: #2980b9;
+            --bg-dark: #0A0A0F;           /* Fondo muy oscuro */
+            --text-light: #E0E0E0;        /* Texto principal claro */
+            --accent-blue: #00BFFF;       /* Azul brillante (Cyan) */
+            --accent-green: #39FF14;      /* Verde Neón */
+            --card-bg: #1A1A2E;           /* Fondo de tarjeta ligeramente más claro */
+            --border-glow: rgba(0, 191, 255, 0.4); /* Resplandor de borde */
         }
 
         body {
-            background-color: var(--corp-gray);
-            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+            font-family: 'Space Grotesk', sans-serif;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            margin: 0; padding: 0;
-            opacity: 0; /* Para animación de entrada */
-            animation: fadeInPage 0.8s ease-out forwards;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden; /* Evitar scroll horizontal */
         }
 
-        /* --- ANIMACIONES KEYFRAMES --- */
-        @keyframes fadeInPage { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideUpFade {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
+        /* --- Globales y Utilidades --- */
+        .text-accent-blue { color: var(--accent-blue) !important; }
+        .text-accent-green { color: var(--accent-green) !important; }
+        .border-glow-effect { border-color: var(--accent-blue) !important; box-shadow: 0 0 10px var(--border-glow); }
 
-        /* --- HERO SECTION --- */
-        .hero-banner {
-            background: linear-gradient(135deg, var(--corp-dark), #1a252f);
-            color: white;
-            padding: 40px 20px;
+        /* --- Header / Hero Section --- */
+        .header-futuristic {
+            background: linear-gradient(135deg, #1A1A2E, #0F0F1A);
+            padding: 60px 20px 40px;
             text-align: center;
+            border-bottom: 2px solid var(--accent-blue);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
             position: relative;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             z-index: 10;
         }
 
-        .hero-title {
-            font-weight: 700; letter-spacing: 1px; font-size: 2rem; margin: 0;
+        .header-title {
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: 700;
+            font-size: 2.8rem;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(0, 191, 255, 0.6);
+        }
+
+        .header-subtitle {
+            font-weight: 300;
+            font-size: 1.1rem;
+            opacity: 0.8;
+            margin-bottom: 25px;
+        }
+
+        .btn-admin {
+            background: var(--accent-blue);
+            color: var(--bg-dark);
+            border: none;
+            padding: 10px 25px;
+            border-radius: 5px;
+            font-weight: 600;
             text-transform: uppercase;
-            animation: slideUpFade 0.8s ease-out;
+            letter-spacing: 0.8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.4);
+            text-decoration: none; /* Asegura que no tenga subrayado */
+        }
+        .btn-admin:hover {
+            background: var(--accent-green);
+            color: var(--bg-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 0 20px var(--accent-green);
         }
 
-        .hero-subtitle {
-            font-weight: 300; opacity: 0.8; margin-top: 5px; font-size: 0.95rem;
-            animation: slideUpFade 0.8s ease-out 0.2s backwards; /* Delay */
+        /* --- Main Content Area --- */
+        .main-content {
+            flex: 1;
+            padding: 60px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
 
-        .btn-admin-top {
-            position: absolute; top: 20px; right: 30px;
-            background: rgba(255,255,255,0.1);
-            color: white;
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 8px 18px; border-radius: 30px;
-            font-size: 0.85rem; text-decoration: none;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            backdrop-filter: blur(5px);
-        }
-        .btn-admin-top:hover {
-            background: white; color: var(--corp-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1300px;
+            width: 100%;
         }
 
-        /* --- CONTENEDOR --- */
-        .main-container {
-            flex: 1; padding: 50px 20px;
-            display: flex; justify-content: center; align-items: flex-start;
-        }
-
-        .cards-grid {
-            display: flex; flex-wrap: wrap; justify-content: center;
-            gap: 30px; max-width: 1200px; width: 100%;
-        }
-
-        /* --- TARJETA EXPEDIENTE (Fluidez Mejorada) --- */
+        /* --- Profile Card --- */
         .profile-card {
-            background: white;
-            border-radius: 12px;
-            width: 300px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-            border-top: 4px solid var(--corp-blue);
-            display: flex; flex-direction: column; overflow: hidden;
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease-out;
             cursor: pointer;
-            border: 1px solid #f0f2f5;
-            
-            /* Animación de entrada */
-            opacity: 0;
-            animation: slideUpFade 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-            
-            /* Transición suave al pasar mouse */
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            position: relative;
         }
 
-        /* Delay escalonado para las tarjetas (hasta 10 elementos) */
-        .profile-card:nth-child(1) { animation-delay: 0.1s; }
-        .profile-card:nth-child(2) { animation-delay: 0.2s; }
-        .profile-card:nth-child(3) { animation-delay: 0.3s; }
-        .profile-card:nth-child(4) { animation-delay: 0.4s; }
-        .profile-card:nth-child(5) { animation-delay: 0.5s; }
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 10px;
+            padding: 2px; /* Grosor del borde */
+            background: linear-gradient(45deg, transparent, var(--accent-blue), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .profile-card:hover::before {
+            opacity: 1;
+        }
 
         .profile-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 191, 255, 0.2), 0 0 40px rgba(0, 191, 255, 0.1);
         }
 
-        .card-header-internal {
-            background-color: #f8f9fa; padding: 25px;
-            text-align: center; border-bottom: 1px solid #edf2f7;
-            transition: background 0.3s;
-        }
-        .profile-card:hover .card-header-internal { background-color: #fff; }
-
-        .profile-icon-circle {
-            width: 70px; height: 70px;
-            background: white;
-            border: 1px solid #e2e8f0; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            margin: 0 auto;
-            color: var(--corp-slate); font-size: 28px;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .profile-card:hover .profile-icon-circle {
-            background: var(--corp-blue); color: white;
-            transform: scale(1.1) rotate(5deg);
-            border-color: var(--corp-blue);
+        .card-header-tech {
+            background: rgba(0, 191, 255, 0.08); /* Fondo azul translúcido */
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(0, 191, 255, 0.2);
+            position: relative;
         }
 
-        .card-body-content { padding: 30px 20px; text-align: center; flex-grow: 1; }
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            background-color: var(--bg-dark);
+            border: 2px solid var(--accent-blue);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            font-size: 32px;
+            color: var(--accent-blue);
+            box-shadow: 0 0 15px rgba(0, 191, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .profile-card:hover .profile-avatar {
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+            transform: rotate(5deg) scale(1.05);
+            box-shadow: 0 0 20px var(--accent-green);
+        }
 
         .profile-name {
-            font-size: 1.3rem; color: var(--corp-dark); font-weight: 700;
-            margin-bottom: 8px; transition: color 0.3s;
-        }
-        .profile-card:hover .profile-name { color: var(--corp-blue); }
-
-        .profile-role {
-            font-size: 0.85rem; color: #7f8c8d; font-weight: 600;
-            text-transform: uppercase; letter-spacing: 1px;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+            margin-bottom: 5px;
         }
 
-        .card-footer-btn {
-            background: var(--corp-dark); color: white;
-            text-align: center; padding: 15px;
-            font-size: 0.9rem; font-weight: 500;
-            transition: all 0.3s ease;
-            position: relative; overflow: hidden;
+        .profile-role-tech {
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.9rem;
+            color: rgba(224, 224, 224, 0.7);
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .card-body-tech {
+            padding: 25px 20px;
+            flex-grow: 1;
+            text-align: center;
+            color: rgba(224, 224, 224, 0.9);
+            font-size: 0.95rem;
+        }
+
+        .card-body-tech .meta-info {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            color: rgba(224, 224, 224, 0.6);
+        }
+
+        .card-body-tech .meta-info i {
+            margin-right: 8px;
+            color: var(--accent-blue);
         }
         
-        .profile-card:hover .card-footer-btn {
-            background: var(--corp-blue);
-            padding-bottom: 20px; /* Efecto sutil de crecimiento */
+        .card-footer-action {
+            background: rgba(0, 191, 255, 0.1); /* Ligero fondo azul para el botón */
+            padding: 15px 20px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--accent-blue);
+            text-transform: uppercase;
+            font-size: 0.9em;
+            letter-spacing: 0.5px;
+            border-top: 1px solid rgba(0, 191, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .profile-card:hover .card-footer-action {
+            background: var(--accent-blue);
+            color: var(--bg-dark);
+            transform: scaleY(1.1); /* Efecto sutil */
         }
 
-        .page-footer {
-            text-align: center; padding: 25px;
-            color: #95a5a6; font-size: 0.85rem;
-            background-color: white; border-top: 1px solid #e9ecef;
+        /* --- Empty State --- */
+        .empty-state {
+            background: var(--card-bg);
+            border: 1px solid rgba(0, 191, 255, 0.2);
+            border-radius: 10px;
+            padding: 60px 30px;
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+        .empty-state h4 { color: var(--accent-blue); font-weight: 700; }
+        .empty-state p { color: rgba(224, 224, 224, 0.7); }
+
+        /* --- Footer --- */
+        .footer-futuristic {
+            background: #0F0F1A;
+            color: rgba(224, 224, 224, 0.6);
+            padding: 25px;
+            text-align: center;
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(0, 191, 255, 0.1);
+        }
+        .footer-futuristic span { color: var(--accent-blue); }
+
+        /* Media Queries para responsividad */
+        @media (max-width: 768px) {
+            .header-title { font-size: 2rem; }
+            .btn-admin { padding: 8px 20px; font-size: 0.8rem; }
+            .main-content { padding: 40px 15px; }
+            .cards-container { grid-template-columns: 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <div class="hero-banner">
-        <a href="/admin/" class="btn-admin-top">
-            <i class="fas fa-cog"></i> Panel Administrativo
+    <div class="header-futuristic">
+        <h1 class="header-title">DEVHUB <span class="text-accent-blue">// TALENT POOL</span></h1>
+        <p class="header-subtitle">Plataforma centralizada de perfiles para desarrollo de software.</p>
+        <a href="/admin/" class="btn-admin">
+            <i class="fas fa-terminal me-2"></i> Panel de Administración
         </a>
-        <h1 class="hero-title">Gestión de Talento Humano</h1>
-        <p class="hero-subtitle">Sistema de visualización de perfiles profesionales</p>
     </div>
 
-    <div class="main-container">
-        <div class="cards-grid">
-            
+    <div class="main-content">
+        <div class="cards-container">
             {% for p in perfiles %}
                 <div class="profile-card" onclick="location.href='{% url 'cv_view' p.id %}'">
-                    <div class="card-header-internal">
-                        <div class="profile-icon-circle">
-                            <i class="fas fa-user-tie"></i>
+                    <div class="card-header-tech">
+                        <div class="profile-avatar">
+                            <i class="fas fa-code"></i>
+                        </div>
+                        <div class="profile-name">{{ p.nombres }} {{ p.apellidos }}</div>
+                        <div class="profile-role-tech">
+                            <i class="fas fa-globe me-1 text-accent-green"></i> {{ p.nacionalidad }}
                         </div>
                     </div>
                     
-                    <div class="card-body-content">
-                        <div class="profile-name">{{ p.nombres }} {{ p.apellidos }}</div>
-                        <div class="profile-role">
-                            <i class="fas fa-passport me-1"></i> {{ p.nacionalidad }}
+                    <div class="card-body-tech">
+                        <div class="meta-info">
+                            <i class="fas fa-id-badge"></i> Expediente ID: {{ p.id }}
                         </div>
-                        <hr style="margin: 20px auto; width: 40px; border-top: 2px solid #eee;">
-                        <small class="text-muted" style="font-size: 0.8rem;">Expediente #{{ p.id }}</small>
+                        <p class="mb-0">
+                            </p>
                     </div>
 
-                    <span class="card-footer-btn">
-                        Ver Hoja de Vida <i class="fas fa-arrow-right ms-2" style="font-size: 0.8em;"></i>
+                    <span class="card-footer-action">
+                        Ver Perfil Detallado <i class="fas fa-arrow-right ms-2"></i>
                     </span>
                 </div>
             {% empty %}
-                <div class="alert alert-light border text-center shadow-sm w-100 p-5">
-                    <h4 class="text-muted">Sin registros</h4>
-                    <p class="mb-0 text-secondary">No hay perfiles activos.</p>
+                <div class="empty-state">
+                    <h4><i class="fas fa-exclamation-triangle me-2"></i> Sin Datos de Desarrolladores</h4>
+                    <p class="mb-0">Actualmente no hay perfiles registrados en el sistema.</p>
+                    <p>Contacte al administrador para cargar nuevos talentos.</p>
                 </div>
             {% endfor %}
-
         </div>
     </div>
 
-    <div class="page-footer">
-        &copy; 2026 Plataforma de Gestión de Hojas de Vida. Uso Corporativo.
+    <div class="footer-futuristic">
+        &copy; 2026 <span>DEVHUB // Talent Pool</span>. Desarrollado con <i class="fas fa-heart text-danger"></i> y Python.
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
