@@ -1,33 +1,39 @@
 {% extends 'base.html' %}
 {% block content %}
-<main class="container">
-    <div class="row-">
-        <div class="col-md-4 offset-md-4 mt-5">
-                <h1 class="text-secondary">{{task.title}}</h1>
-                {{error}}
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="p-4 rounded-3 shadow" style="background: var(--glass); border: 1px solid rgba(0,242,255,0.2);">
+                <h1 class="mb-4" style="font-family: 'Fira Code'; color: var(--neon-cyan);">{{task.title|upper}}</h1>
+                {% if error %}<div class="alert alert-danger">{{error}}</div>{% endif %}
+                
                 <form method="POST">
                     {% csrf_token %}
-                    {{form.as_p}}
-                    <button class="btn btn-primary">
-                        Update
-                    </button>
+                    <div class="cyber-form-content">
+                        {{form.as_p}}
+                    </div>
+                    <button class="btn btn-info w-100 mt-3 py-2 fw-bold">UPDATE_RECORD</button>
                 </form>
 
-                <div class="d-flex mt-5">
-                    <form action="{% url 'complete_task' task.id %}" method="POST">
+                <div class="d-flex gap-2 mt-4 pt-4 border-top border-secondary">
+                    <form action="{% url 'complete_task' task.id %}" method="POST" class="flex-grow-1">
                         {% csrf_token %}
-                        <button class="btn btn-secondary">
-                            Complete
-                        </button>
+                        <button class="btn btn-success w-100 py-2">SET_COMPLETE</button>
                     </form>
-                    <form action="{% url 'delete_task' task.id %}" method="POST">
+                    <form action="{% url 'delete_task' task.id %}" method="POST" class="flex-grow-1">
                         {% csrf_token %}    
-                        <button class="btn btn-danger">
-                            Delete
-                        </button>
+                        <button class="btn btn-outline-danger w-100 py-2">DELETE_LOG</button>
                     </form>
                 </div>
+            </div>
         </div>
     </div>
 </main>
+<style>
+    .cyber-form-content p input, .cyber-form-content p textarea {
+        background: #000 !important; color: #fff !important; 
+        border: 1px solid #333 !important; padding: 8px !important; width: 100%; border-radius: 4px;
+    }
+    .cyber-form-content p label { color: var(--neon-cyan); font-size: 0.8rem; text-transform: uppercase; margin-top: 10px; }
+</style>
 {% endblock %}

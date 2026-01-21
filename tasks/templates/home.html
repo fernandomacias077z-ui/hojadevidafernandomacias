@@ -1,17 +1,13 @@
 {% extends 'base.html' %}
 {% block content %}
-<main class="container py-5">
-    <section class="card card-body">
-        <h1 class="display-1 text-center">Django App</h1>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore quibusdam, dolorem quaerat sapiente possimus atque nesciunt odio modi eveniet enim assumenda voluptates tempore minus dolor fugit, accusantium sequi debitis earum!
-        <div class="text-center">
-            <a class="btn btn-secondary" href="/signin/">
-                Signin
-            </a>
-            <a class="btn btn-dark" href="/signup/">
-                Signup
-            </a>
+<div class="container d-flex align-items-center justify-content-center" style="min-height: 80vh;">
+    <div class="text-center p-5 rounded-4" style="background: var(--glass); border: 1px solid rgba(0,242,255,0.1); max-width: 800px;">
+        <h1 class="display-1 fw-bold mb-4" style="font-family: 'Fira Code'; color: var(--neon-cyan); text-shadow: 0 0 20px rgba(0,242,255,0.3);">DJANGO_APP</h1>
+        <p class="lead mb-5 opacity-75">Sistema de gestión de talento humano y control de procesos en tiempo real. Interfaz optimizada para desarrolladores y administradores de sistemas.</p>
+        <div class="d-flex justify-content-center gap-3">
+            <a href="/signin/" class="btn btn-outline-info px-5 py-3 fw-bold shadow-sm">SIGNIN_ACCESS</a>
+            <a href="/signup/" class="btn btn-info px-5 py-3 fw-bold shadow">SIGNUP_NEW_ID</a>
         </div>
-    </section>
-</main>
+    </div>
+</div>
 {% endblock %}

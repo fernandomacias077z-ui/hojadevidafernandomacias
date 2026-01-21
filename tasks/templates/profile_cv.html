@@ -3,282 +3,210 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CV - Jean Pierre Zambrano</title>
+    <title>DATA_LOG // FERNANDO_IT_PROFILE</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Space+Grotesk:wght@300;500;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        /* --- ESTILO GENERAL (Minimalista Corporativo) --- */
+        :root {
+            --cyber-bg: #050508;
+            --cyber-sidebar: #0a0a12;
+            --neon-cyan: #00f2ff;
+            --text-main: #ffffff;
+            --text-dim: #94a3b8;
+        }
+
         body {
-            background-color: #eef2f6; /* Gris muy suave para el fondo web */
-            font-family: 'Open Sans', sans-serif;
-            color: #333;
-            padding-bottom: 60px;
+            background-color: #1a1a24;
+            font-family: 'Space Grotesk', sans-serif;
+            margin: 0;
         }
 
-        /* --- CONTROLES FLOTANTES --- */
+        /* --- CONTROLES --- */
         .admin-controls {
-            position: fixed; top: 25px; right: 25px; z-index: 9999;
-            display: flex; gap: 12px;
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            display: flex; gap: 10px;
         }
-        .btn-custom {
-            border: none; padding: 10px 20px; border-radius: 6px;
-            font-weight: 600; font-size: 0.85rem; cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: all 0.3s ease;
-            text-decoration: none; display: flex; align-items: center; gap: 8px;
+        .btn-cyber {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--neon-cyan);
+            color: var(--neon-cyan);
+            padding: 10px 20px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            cursor: pointer;
         }
-        .btn-download { background-color: #2c3e50; color: white; } /* Azul oscuro corporativo */
-        .btn-back { background-color: white; color: #2c3e50; }
-        .btn-custom:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
+        .btn-cyber:hover {
+            background: var(--neon-cyan);
+            color: var(--cyber-bg);
+            box-shadow: 0 0 20px var(--neon-cyan);
+        }
 
-        /* --- HOJA A4 PRINCIPAL --- */
+        /* --- CONTENEDOR A4 --- */
         #cv-container {
-            width: 850px; /* Ancho fijo para simular A4 */
-            max-width: 100%;
+            width: 850px;
             margin: 40px auto;
-            background: white;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            display: flex; /* Flexbox para columnas */
-            overflow: hidden; /* Cortar bordes */
+            background: var(--cyber-bg);
+            display: flex;
+            min-height: 1100px;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+            position: relative;
         }
 
-        /* --- COLUMNA IZQUIERDA (OSCURA) --- */
         .sidebar {
             width: 32%;
-            background-color: #34495e; /* Gris azulado oscuro */
-            color: white;
-            padding: 40px 25px;
-            text-align: left;
+            background-color: var(--cyber-sidebar);
+            padding: 50px 30px;
+            border-right: 1px solid rgba(0, 242, 255, 0.1);
         }
 
-        .profile-img-box {
-            text-align: center; margin-bottom: 35px;
-        }
-        .avatar-circle {
-            width: 110px; height: 110px;
-            background-color: #ecf0f1; color: #34495e;
-            border-radius: 50%; display: inline-flex;
-            align-items: center; justify-content: center;
-            font-size: 50px; border: 4px solid rgba(255,255,255,0.1);
-        }
-
-        .sidebar-header {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 0.95rem; text-transform: uppercase;
-            letter-spacing: 2px; color: #bdc3c7;
-            border-bottom: 1px solid rgba(255,255,255,0.15);
-            padding-bottom: 8px; margin: 30px 0 15px 0;
-            font-weight: 600;
+        .avatar-hex {
+            width: 120px; height: 120px;
+            background: var(--cyber-bg);
+            border: 2px solid var(--neon-cyan);
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 50px; color: var(--neon-cyan);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            margin-bottom: 30px;
         }
 
-        .contact-row {
-            margin-bottom: 15px; font-size: 0.85rem;
-            display: flex; gap: 12px; align-items: flex-start;
-            color: #ecf0f1;
+        .side-title {
+            font-family: 'Fira Code', monospace;
+            color: var(--neon-cyan);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 30px 0 15px;
+            border-bottom: 1px solid rgba(0, 242, 255, 0.2);
+            padding-bottom: 5px;
         }
-        .contact-row i { color: #3498db; margin-top: 4px; width: 15px; } /* Icono azul */
 
-        .ref-box { margin-bottom: 20px; }
-        .ref-name { display: block; font-weight: 700; font-size: 0.9rem; color: #fff; }
-        .ref-info { font-size: 0.85rem; color: #bdc3c7; }
+        .info-row { font-size: 0.85rem; margin-bottom: 12px; color: var(--text-dim); display: flex; gap: 10px; }
+        .info-row i { color: var(--neon-cyan); width: 15px; }
 
-        /* --- COLUMNA DERECHA (CONTENIDO) --- */
         .main-content {
             width: 68%;
-            padding: 50px 45px;
-            background-color: #fff;
+            padding: 60px 50px;
+            background: linear-gradient(135deg, #050508 0%, #0a0a15 100%);
         }
 
-        .header-name {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 2.2rem; font-weight: 700;
-            color: #2c3e50; text-transform: uppercase;
-            line-height: 1.1; margin-bottom: 5px;
-        }
-        .header-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.1rem; color: #7f8c8d;
-            font-weight: 500; margin-bottom: 35px; letter-spacing: 1px;
-        }
+        .name-header h1 { font-weight: 800; text-transform: uppercase; color: white; font-size: 3.5rem; line-height: 0.9; margin: 0; }
+        .name-header span { color: var(--neon-cyan); }
+        .tagline { font-family: 'Fira Code', monospace; color: var(--text-dim); font-size: 1rem; margin-top: 10px; }
 
-        .section-title {
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1.15rem; font-weight: 700;
-            color: #2c3e50; text-transform: uppercase;
-            display: flex; align-items: center; gap: 10px;
-            margin: 35px 0 20px 0;
-        }
-        .section-title::after {
-            content: ''; flex-grow: 1; height: 2px; background: #ecf0f1;
-        }
-        .title-icon { color: #3498db; }
+        .section-header { display: flex; align-items: center; gap: 15px; margin: 40px 0 20px; }
+        .section-header h2 { font-size: 1.2rem; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin: 0; color: #fff; }
+        .header-line { flex-grow: 1; height: 1px; background: rgba(255,255,255,0.1); }
 
-        .summary-text {
-            font-size: 0.95rem; color: #555; line-height: 1.6;
-            text-align: justify;
-        }
+        .job-card { margin-bottom: 25px; border-left: 2px solid var(--neon-cyan); padding-left: 20px; position: relative; }
+        .job-card::before { content: ""; position: absolute; left: -6px; top: 0; width: 10px; height: 10px; background: var(--neon-cyan); border-radius: 50%; box-shadow: 0 0 10px var(--neon-cyan); }
+        
+        .skill-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .skill-item { background: rgba(255,255,255,0.03); padding: 8px 15px; border: 1px solid rgba(255,255,255,0.05); font-size: 0.9rem; }
 
-        /* Linea de tiempo Experiencia */
-        .timeline-box {
-            border-left: 2px solid #ecf0f1;
-            padding-left: 20px; margin-bottom: 25px; position: relative;
-        }
-        .timeline-box::before {
-            content: ''; position: absolute; left: -6px; top: 5px;
-            width: 10px; height: 10px; background: #3498db;
-            border-radius: 50%;
-        }
-        .job-role { font-weight: 700; color: #2c3e50; font-size: 1rem; }
-        .job-company { font-weight: 600; color: #7f8c8d; font-size: 0.9rem; }
-        .job-dates {
-            font-size: 0.8rem; color: #95a5a6; font-style: italic;
-            margin-bottom: 8px; display: block;
-        }
-        .job-details { margin: 0; font-size: 0.9rem; color: #555; }
-
-        /* CLASE PARA PDF (Ocultar botones) */
         .generating-pdf .admin-controls { display: none !important; }
     </style>
 </head>
 <body>
 
     <div class="admin-controls">
-        <button onclick="generarPDF()" class="btn-custom btn-download">
-            <i class="fas fa-file-arrow-down"></i> Guardar PDF
-        </button>
-        <a href="/" class="btn-custom btn-back">
-            <i class="fas fa-home"></i> Inicio
-        </a>
-        </div>
+        <button onclick="generarPDF()" class="btn-cyber"><i class="fas fa-terminal me-2"></i> Export_PDF</button>
+        <a href="/" class="btn-cyber"><i class="fas fa-home me-2"></i> Return_Home</a>
+    </div>
 
     <div id="cv-container">
-        
         <div class="sidebar">
-            <div class="profile-img-box">
-                <div class="avatar-circle">
-                    <i class="fas fa-user-tie"></i>
-                </div>
+            <div class="text-center">
+                <div class="avatar-hex"><i class="fas fa-microchip"></i></div>
             </div>
 
-            <div class="sidebar-header">Contacto</div>
-            
-            <div class="contact-row">
-                <i class="fas fa-phone"></i>
-                <span>0981035184</span>
+            <div class="side-title">Contact_Info</div>
+            <div class="info-row"><i class="fas fa-phone"></i> 0981035184</div>
+            <div class="info-row"><i class="fas fa-envelope"></i> jeanpierrezambranodatos@gmail.com</div>
+            <div class="info-row"><i class="fas fa-map-marker-alt"></i> Manta, Ecuador</div>
+            <div class="info-row"><i class="fas fa-id-card"></i> 1317043832</div>
+
+            <div class="side-title">Education</div>
+            <div class="mb-3">
+                <div style="font-weight: 600; font-size: 0.9rem;">Tecnología de la Información</div>
+                <div style="font-size: 0.8rem; color: var(--text-dim);">ULEAM (Cursando)</div>
             </div>
-            <div class="contact-row">
-                <i class="fas fa-envelope"></i>
-                <span>jeanpierrezambranodatos@gmail.com</span>
-            </div>
-            <div class="contact-row">
-                <i class="fas fa-map-marker-alt"></i>
-                <span>Barrio Abdón Calderón, Calle 12 Av 40, Manta</span>
-            </div>
-            <div class="contact-row">
-                <i class="fas fa-id-card"></i>
-                <span>CI: 1317043832</span>
+            <div class="mb-3">
+                <div style="font-weight: 600; font-size: 0.9rem;">Bachiller en Ciencias</div>
+                <div style="font-size: 0.8rem; color: var(--text-dim);">U.E.F "Manta"</div>
             </div>
 
-            <div class="sidebar-header">Educación</div>
-            
-            <div class="ref-box">
-                <span class="ref-name">Tecnología de la Información</span>
-                <span class="ref-info">ULEAM (Cursando)</span>
-            </div>
-            <div class="ref-box">
-                <span class="ref-name">Bachiller en Ciencias</span>
-                <span class="ref-info">Unidad Educativa Fiscal "Manta"</span>
-            </div>
-
-            <div class="sidebar-header">Referencias</div>
-            
-            <div class="ref-box">
-                <span class="ref-name">Lic. Ronny Yoza</span>
-                <span class="ref-info"><i class="fas fa-phone-alt"></i> 0980579102</span>
-            </div>
-            <div class="ref-box">
-                <span class="ref-name">Ing. Elvis Garcia</span>
-                <span class="ref-info"><i class="fas fa-phone-alt"></i> 0997944719</span>
-            </div>
+            <div class="side-title">References</div>
+            <div class="mb-2" style="font-size: 0.85rem;">Lic. Ronny Yoza: <span class="text-info">0980579102</span></div>
+            <div class="mb-2" style="font-size: 0.85rem;">Ing. Elvis Garcia: <span class="text-info">0997944719</span></div>
         </div>
 
         <div class="main-content">
-            <h1 class="header-name">Jean Pierre<br>Zambrano Avila</h1>
-            <p class="header-title">Estudiante de Tecnología de la Información</p>
-
-            <div class="section-title">
-                <i class="fas fa-user title-icon"></i> Perfil Profesional
+            <div class="name-header">
+                <h1><span>FERNANDO</span></h1>
+                <div class="tagline">// IT_STUDENT_&_HARDWARE_EXPERT</div>
             </div>
-            <p class="summary-text">
-                Joven de 19 años de la ciudad de Manta, caracterizado por mi responsabilidad, dedicación y ganas de crecer profesionalmente. Busco una oportunidad laboral donde pueda demostrar mis habilidades, aprender constantemente y aportar valor real al equipo. Me motiva asumir nuevos retos, trabajar con compromiso y contribuir al éxito de la empresa mediante mi actitud, disciplina y capacidad de adaptación.
+
+            <div class="section-header">
+                <h2>01. Professional_Profile</h2>
+                <div class="header-line"></div>
+            </div>
+            <p style="color: var(--text-dim); line-height: 1.6; text-align: justify; font-size: 0.95rem;">
+                Estudiante de 20 años de la carrera de Tecnología de la Información en Manta. Me especializo en el diagnóstico y reparación de hardware, combinando mi formación académica con experiencia técnica práctica. Me caracterizo por mi responsabilidad, disciplina y capacidad de adaptación tecnológica, buscando aportar soluciones eficientes en entornos de IT.
             </p>
 
-            <div class="section-title">
-                <i class="fas fa-briefcase title-icon"></i> Experiencia Laboral
+            <div class="section-header">
+                <h2>02. Technical_Experience</h2>
+                <div class="header-line"></div>
             </div>
 
-            <div class="timeline-box">
-                <div class="job-role">Atención al Cliente</div>
-                <div class="job-company">Billar Ronny Pol's</div>
-                <ul class="job-details" style="padding-left: 15px; margin-top: 5px;">
-                    <li>Atención directa al cliente y gestión de mesas.</li>
-                    <li>Manejo de cobros, cuentas y orden del área.</li>
-                </ul>
-            </div>
-
-            <div class="timeline-box">
-                <div class="job-role">Atención al Cliente</div>
-                <div class="job-company">Mini Mercado (Barrio)</div>
-                <ul class="job-details" style="padding-left: 15px; margin-top: 5px;">
-                    <li>Atención personalizada al cliente y asistencia en compras.</li>
-                    <li>Organización de productos y apoyo en tareas generales del negocio.</li>
-                </ul>
-            </div>
-
-            <div class="section-title">
-                <i class="fas fa-star title-icon"></i> Aptitudes
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <ul class="job-details">
-                        <li>Responsabilidad y Disciplina</li>
-                        <li>Atención al Cliente</li>
-                    </ul>
-                </div>
-                <div class="col-6">
-                    <ul class="job-details">
-                        <li>Trabajo en Equipo</li>
-                        <li>Adaptabilidad</li>
-                    </ul>
+            <div class="job-card">
+                <div style="font-weight: 700; color: var(--neon-cyan);">Especialista en Hardware</div>
+                <div class="job-meta">Soporte Técnico // Mantenimiento Preventivo y Correctivo</div>
+                <div style="color: var(--text-dim); font-size: 0.9rem;">
+                    Diagnóstico de fallas en componentes físicos, ensamble de equipos de alto rendimiento, limpieza técnica y sustitución de hardware dañado.
                 </div>
             </div>
 
+            <div class="job-card">
+                <div style="font-weight: 700; color: var(--neon-cyan);">Atención al Cliente</div>
+                <div class="job-meta">Billar Ronny Pol's & Retail Local</div>
+                <div style="color: var(--text-dim); font-size: 0.9rem;">
+                    Gestión de cobros, atención directa al público y resolución de problemas bajo presión, manteniendo el orden y la eficiencia operativa.
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2>03. Tech_Skills</h2>
+                <div class="header-line"></div>
+            </div>
+            <div class="skill-grid">
+                <div class="skill-item"><i class="fas fa-tools text-info me-2"></i>Reparación de Hardware</div>
+                <div class="skill-item"><i class="fas fa-network-wired text-info me-2"></i>Soporte Técnico IT</div>
+                <div class="skill-item"><i class="fas fa-laptop-medical text-info me-2"></i>Mantenimiento de Equipos</div>
+                <div class="skill-item"><i class="fas fa-users text-info me-2"></i>Trabajo en Equipo</div>
+            </div>
         </div>
     </div>
 
     <script>
         function generarPDF() {
             const element = document.getElementById('cv-container');
-            const btn = document.querySelector('.btn-download');
-            
-            // Estado de carga
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
+            const btn = document.querySelector('.btn-cyber');
+            btn.innerHTML = 'GENERATING...';
             document.body.classList.add('generating-pdf');
-
-            const opt = {
-                margin:       0,
-                filename:     'CV_Jean_Pierre_Zambrano.pdf',
-                image:        { type: 'jpeg', quality: 0.98 },
-                html2canvas:  { scale: 2, useCORS: true, scrollY: 0 },
-                jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+            const opt = { margin: 0, filename: 'CV_FERNANDO_IT.pdf', image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
-
             html2pdf().set(opt).from(element).save().then(() => {
                 document.body.classList.remove('generating-pdf');
-                btn.innerHTML = originalText;
+                btn.innerHTML = '<i class="fas fa-terminal me-2"></i> Export_PDF';
             });
         }
     </script>

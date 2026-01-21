@@ -1,26 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-    <main class="container">
-        <div class="row">
-            <div class="col-md-4 offset-md-4 mt-5">
-                <form action="/signin/" method="POST" class="card card-body">
-                    <h1 class="text-center">Signin</h1>
-                    {{error}}
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+            <div class="p-4 rounded-3 shadow" style="background: var(--glass); border: 1px solid var(--neon-cyan);">
+                <h1 class="text-center mb-4" style="font-family: 'Fira Code'; color: var(--neon-cyan);">AUTH_LOGIN</h1>
+                {% if error %}<div class="alert alert-danger py-2" style="font-size: 0.8rem;">{{error}}</div>{% endif %}
+                <form action="/signin/" method="POST">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="username">Username: </label>
-                        <input type="text" name="username" id="username" class="form-control" placeholder="Write your username">
+                        <label class="form-label small text-info">USER_ID</label>
+                        <input type="text" name="username" class="form-control bg-dark text-white border-secondary" placeholder="Username">
                     </div>
                     <div class="mb-3">
-                        <label for="password">Password: </label>
-                        <input type="text" name="password" id="password" class="form-control" placeholder="Write your password">
+                        <label class="form-label small text-info">SECRET_KEY</label>
+                        <input type="password" name="password" class="form-control bg-dark text-white border-secondary" placeholder="Password">
                     </div>
-                    <button>
-                        Signin
-                    </button>
+                    <button class="btn btn-info w-100 py-2 fw-bold">EXECUTE_LOGIN</button>
                 </form>
             </div>
         </div>
-    </main>
-
+    </div>
+</main>
 {% endblock %}

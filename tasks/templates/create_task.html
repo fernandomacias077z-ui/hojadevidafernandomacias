@@ -1,16 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-<main class="container">
-    <div class="row">
-        <div class="col-md-4 offset-md-4 mt-5">
-            <form action="/tasks/create/" method="POST" class="card card-body">
-                <h1>Create Task</h1>
-                {{error}}
+<main class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form action="/tasks/create/" method="POST" class="p-4 rounded-3 shadow" style="background: var(--glass); border: 1px solid rgba(0,242,255,0.2);">
+                <h1 class="mb-4" style="font-family: 'Fira Code'; color: var(--neon-cyan);">_CREATE_PROCESS</h1>
+                {% if error %}<div class="text-danger mb-3">{{error}}</div>{% endif %}
                 {% csrf_token %}
-                {{form.as_p}}
-                <button class="btn btn-primary">Save</button>
+                <div class="cyber-form-content">
+                    {{form.as_p}}
+                </div>
+                <button class="btn btn-info w-100 py-2 mt-4 fw-bold shadow">SAVE_TO_DATABASE</button>
             </form>
         </div>
     </div>
 </main>
+<style>
+    .cyber-form-content p input, .cyber-form-content p textarea {
+        background: #000 !important; color: #fff !important; 
+        border: 1px solid #333 !important; padding: 8px !important; width: 100%; border-radius: 4px;
+    }
+    .cyber-form-content p label { color: var(--neon-cyan); font-size: 0.8rem; text-transform: uppercase; margin-top: 10px; }
+</style>
 {% endblock %}
