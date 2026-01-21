@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# Este modelo alimenta a tasks.html (tus proyectos)
+# Modelo simplificado para que no de errores de base de datos
 class Task(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(blank=True)
@@ -11,13 +11,4 @@ class Task(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.title
-
-# Este modelo alimenta la experiencia en profile_cv.html
-class Experience(models.Model):
-    company = models.CharField(max_length=200)
-    position = models.CharField(max_length=200)
-    description = models.TextField()
-    start_date = models.DateField()
-    end_date = models.DateField(null=True, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+        return self.title + ' - by ' + self.user.username

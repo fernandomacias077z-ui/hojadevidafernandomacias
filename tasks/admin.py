@@ -1,10 +1,8 @@
 from django.contrib import admin
-from .models import Task, DatosPersonales, ExperienciaLaboral, Habilidad
+from .models import Task
 
-# Mantenemos el registro de Task que ya tenías
-admin.site.register(Task)
+# Registramos solo el modelo Task para que el admin de Django funcione
+class TaskAdmin(admin.ModelAdmin):
+    readonly_fields = ("created", )
 
-# Registramos los nuevos modelos para tu CV estilo Credentially
-admin.site.register(DatosPersonales)
-admin.site.register(ExperienciaLaboral)
-admin.site.register(Habilidad)
+admin.site.register(Task, TaskAdmin)
