@@ -2,7 +2,7 @@
 {% block content %}
 
 <style>
-    /* Estilos existentes de tu perfil */
+    /* Estilos existentes */
     .profile-card {
         border-radius: 20px;
         background: #fff;
@@ -51,7 +51,7 @@
         background: #e0f2fe;
     }
 
-    /* Estilos para los nuevos botones de acción */
+    /* Botones de acción */
     .action-btn-container {
         display: flex;
         gap: 15px;
@@ -101,6 +101,16 @@
     }
 
     .mono { font-family: 'Fira Code', monospace; }
+
+    /* Estilos para impresión (PDF) */
+    @media print {
+        .profile-card {
+            break-inside: avoid;
+            box-shadow: none !important;
+            border: 1px solid #e2e8f0 !important;
+        }
+        body { background: white !important; }
+    }
 </style>
 
 <div class="container py-4 animate-fade-in">
@@ -109,20 +119,20 @@
             <i class="bi bi-person-badge" style="font-size: 3rem; color: var(--dev-blue);"></i>
         </div>
         <h2 class="fw-bold" style="color: var(--dark-dev);">Información Personal</h2>
-        <p class="text-muted">Ficha técnica del perfil profesional y datos de contacto.</p>
+        <p class="text-muted">Ficha técnica del perfil profesional y trayectoria.</p>
         <div style="width: 50px; height: 4px; background: var(--dev-blue); margin: 0 auto; border-radius: 2px;"></div>
     </div>
 
     <div class="row justify-content-center">
         <div class="col-lg-10">
-            <div class="profile-card shadow-sm mb-4">
+            <div class="profile-card shadow-sm mb-5">
                 <div class="terminal-header">
                     <i class="bi bi-terminal me-2"></i> root@uleam:~/bruno$ cat personal_info.json
                 </div>
                 
                 <div class="card-body p-4 p-md-5">
                     <div class="mb-5">
-                        <h5 class="fw-bold mb-3"><i class="bi bi-cpu me-2 text-primary"></i> Informacion Personal</h5>
+                        <h5 class="fw-bold mb-3"><i class="bi bi-cpu me-2 text-primary"></i> Perfil Profesional</h5>
                         <div class="p-4 bg-light rounded-4 border-start border-4 border-primary">
                             <p class="text-secondary mb-0 lh-lg">
                                 Estudiante de Tecnología de la Información en la <strong>ULEAM</strong>. Enfocado en ciberseguridad, desarrollo web y gestión de infraestructura técnica. Comprometido con la eficiencia sistémica y el aprendizaje continuo.
@@ -134,63 +144,73 @@
                         <div class="col-md-6">
                             <h5 class="fw-bold mb-4 border-bottom pb-2 text-dark">Core Data</h5>
                             <div class="ps-2">
-                                <div class="mb-3">
-                                    <span class="info-label">Cédula:</span>
-                                    <span class="info-value">1317920625</span>
-                                </div>
-                                <div class="mb-3">
-                                    <span class="info-label">Nacimiento:</span>
-                                    <span class="info-value">28/10/2006</span>
-                                </div>
-                                <div class="mb-3">
-                                    <span class="info-label">Origen:</span>
-                                    <span class="info-value">Manta, EC</span>
-                                </div>
-                                <div class="mb-3">
-                                    <span class="info-label">Género:</span>
-                                    <span class="info-value">Hombre</span>
-                                </div>
+                                <div class="mb-3"><span class="info-label">Cédula:</span> <span class="info-value">1317920625</span></div>
+                                <div class="mb-3"><span class="info-label">Nacimiento:</span> <span class="info-value">28/10/2006</span></div>
+                                <div class="mb-3"><span class="info-label">Origen:</span> <span class="info-value">Manta, EC</span></div>
+                                <div class="mb-3"><span class="info-label">Género:</span> <span class="info-value">Hombre</span></div>
                             </div>
                         </div>
-
                         <div class="col-md-6">
                             <h5 class="fw-bold mb-4 border-bottom pb-2 text-dark">Connect</h5>
                             <div class="ps-2">
-                                <div class="mb-3">
-                                    <span class="info-label">Phone:</span>
-                                    <span class="info-value">0980643265</span>
-                                </div>
+                                <div class="mb-3"><span class="info-label">Phone:</span> <span class="info-value">0980643265</span></div>
                                 <div class="mb-3">
                                     <span class="info-label">WhatsApp:</span>
-                                    <a href="https://wa.me/593980643265" target="_blank" class="badge bg-success text-decoration-none py-2 px-3 mono">
+                                    <a href="https://wa.me/593980643265" target="_blank" class="badge bg-success text-decoration-none py-2 px-3 mono d-print-none">
                                         <i class="bi bi-whatsapp me-1"></i> ENVIAR
                                     </a>
+                                    <span class="info-value d-none d-print-inline">0980643265</span>
                                 </div>
-                                <div class="mb-3">
-                                    <span class="info-label">Relación:</span>
-                                    <span class="info-value">Soltero</span>
-                                </div>
-                                <div class="mb-3">
-                                    <span class="info-label">Licencia:</span>
-                                    <span class="info-value">Nulo</span>
-                                </div>
+                                <div class="mb-3"><span class="info-label">Relación:</span> <span class="info-value">Soltero</span></div>
+                                <div class="mb-3"><span class="info-label">Licencia:</span> <span class="info-value">Nulo</span></div>
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <div class="row g-4 mt-4">
-                        <div class="col-md-6">
-                            <div class="detail-box">
-                                <h6 class="fw-bold mb-2 text-dark"><i class="bi bi-geo-alt-fill me-2 text-danger"></i> Domicilio Actual</h6>
-                                <p class="small mb-0 text-secondary mono">Sector Jocay, Manta, Ecuador</p>
+            <div class="mb-4">
+                <h5 class="fw-bold mb-4" style="color: var(--dark-dev);">
+                    <i class="bi bi-briefcase-fill me-2 text-primary"></i> EXPERIENCIA LABORAL
+                </h5>
+                
+                <div class="profile-card shadow-sm mb-3" style="border-top-color: var(--dev-blue);">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h6 class="fw-bold mb-1 text-primary">Mesero / Operaciones</h6>
+                                <p class="small mb-0 text-dark fw-bold">Kiosco de Gema | Manta</p>
+                                <p class="small text-muted mono">Ene 2026 - Actualidad</p>
+                            </div>
+                            <span class="badge bg-info px-3 py-2 rounded-pill d-print-none">En curso</span>
+                        </div>
+                        <p class="small mb-0 text-secondary">Atención al cliente personalizada y gestión de pedidos. Enfoque en eficiencia operativa y satisfacción del comensal en entornos de alta demanda.</p>
+                    </div>
+                </div>
+
+                <div class="profile-card shadow-sm mb-3" style="border-top-color: #64748b;">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h6 class="fw-bold mb-1" style="color: #475569;">Mesero Profesional</h6>
+                                <p class="small mb-0 text-dark fw-bold">Restaurante "La Sazón" | Manta</p>
+                                <p class="small text-muted mono">Ene 2025 - Ene 2026</p>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="detail-box" style="border-left-color: #10b981; background: #f0fdf4;">
-                                <h6 class="fw-bold mb-2 text-dark"><i class="bi bi-briefcase-fill me-2 text-success"></i> Estación de Trabajo</h6>
-                                <p class="small mb-0 text-secondary mono">Kiosco de Gema, Manta</p>
+                        <p class="small mb-0 text-secondary">Optimización de la calidad del servicio bajo presión. Toma de decisiones estratégicas para equilibrar necesidades del cliente con objetivos del negocio.</p>
+                    </div>
+                </div>
+
+                <div class="profile-card shadow-sm mb-3" style="border-top-color: var(--dark-dev);">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <div>
+                                <h6 class="fw-bold mb-1 text-dark">Cajero / Soporte Técnico</h6>
+                                <p class="small mb-0 text-dark fw-bold">Laen Tecnologhy | Manta</p>
+                                <p class="small text-muted mono">Ene 2024 - Jul 2024</p>
                             </div>
                         </div>
+                        <p class="small mb-0 text-secondary">Gestión de caja y atención al cliente. Soporte técnico básico en equipos electrónicos y gestión de contenido digital para redes sociales.</p>
                     </div>
                 </div>
             </div>
@@ -200,7 +220,7 @@
                     <i class="bi bi-gear-fill"></i> AJUSTES MENÚ
                 </button>
                 <button class="btn-action-dark" onclick="window.print()">
-                    <i class="bi bi-file-earmark-code-fill"></i> EXPORTAR CV
+                    <i class="bi bi-file-earmark-code-fill"></i> EXPORTAR CV (PDF)
                 </button>
             </div>
         </div>
