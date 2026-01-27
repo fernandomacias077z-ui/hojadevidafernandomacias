@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    /* Animación de pulso azul para el proyecto activo */
+    .badge-pulse {
+        animation: pulse-blue 2s infinite;
+        background-color: var(--dev-blue) !important;
+        color: white !important;
+    }
+
+    @keyframes pulse-blue {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(56, 189, 248, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+    }
+
+    .project-card {
+        transition: all 0.3s ease;
+        border-left: 5px solid var(--dev-blue) !important;
+        background: #fff;
+    }
+    .project-card:hover {
+        transform: translateX(10px);
+        background-color: #f8fafc;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05) !important;
+    }
+    .mono { font-family: 'Fira Code', monospace; }
+</style>
+
+<div class="animate-fade-in container py-4">
+    <div class="text-center mb-5">
+        <div class="mb-2">
+            <i class="bi bi-code-square" style="font-size: 3rem; color: var(--dev-blue);"></i>
+        </div>
+        <h2 class="fw-bold" style="color: var(--dark-dev);">Productos Académicos</h2>
+        <p class="text-muted">Proyectos técnicos realizados durante mi formación en TI.</p>
+        <div style="width: 50px; height: 4px; background: var(--dev-blue); margin: 0 auto; border-radius: 2px;"></div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm rounded-4 p-4 project-card">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center d-none d-md-block">
+                        <i class="bi bi-terminal-fill" style="font-size: 3rem; color: var(--dark-dev);"></i>
+                    </div>
+                    <div class="col-md-7">
+                        <h5 class="fw-bold mb-1">Sistema de Portafolio Web Dinámico</h5>
+                        <p class="text-muted small mb-2 mono">Python / Django / Bootstrap</p>
+                        <p class="mb-0 text-secondary">Desarrollo de una plataforma profesional para la gestión de perfiles laborales, aplicando arquitectura MVT y diseño responsivo.</p>
+                    </div>
+                    <div class="col-md-3 text-end mt-3 mt-md-0">
+                        <span class="badge px-3 py-2 badge-pulse mono">
+                            <i class="bi bi-cpu me-1"></i> EN CURSO
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-12">
+            <div class="card border-0 shadow-sm rounded-4 p-4 project-card" style="border-left-color: #cbd5e1 !important; opacity: 0.8;">
+                <div class="row align-items-center">
+                    <div class="col-md-2 text-center d-none d-md-block">
+                        <i class="bi bi-lightbulb text-muted" style="font-size: 3rem;"></i>
+                    </div>
+                    <div class="col-md-7">
+                        <h5 class="fw-bold mb-1 text-muted">Gestión de Inventario Electrónico</h5>
+                        <p class="text-muted small mb-2 mono">Planificado</p>
+                        <p class="mb-0 text-muted italic">Proyecto en fase de ideación para el control de componentes de hardware.</p>
+                    </div>
+                    <div class="col-md-3 text-end mt-3 mt-md-0">
+                        <span class="badge bg-light text-muted px-3 py-2 mono border">PENDIENTE</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{% url 'home' %}" class="btn btn-link text-decoration-none text-secondary mono">
+            <i class="bi bi-arrow-left"></i> Volver al panel
+        </a>
+    </div>
+</div>
+
+{% endblock %}

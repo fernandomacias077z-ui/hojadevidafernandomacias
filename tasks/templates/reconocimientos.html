@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .recognition-card {
+        border-radius: 20px;
+        border-top: 5px solid var(--dev-blue);
+        transition: all 0.3s ease;
+        background: #fff;
+    }
+    .recognition-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+    }
+    .status-badge {
+        background-color: #f0f9ff;
+        color: var(--dev-blue);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        display: inline-block;
+        font-family: 'Fira Code', monospace;
+    }
+    .uleam-logo-placeholder {
+        width: 60px;
+        height: 60px;
+        background: #f8fafc;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+</style>
+
+<div class="container py-5 animate-fade-in">
+    <div class="text-center mb-5">
+        <i class="bi bi-award-fill" style="font-size: 3rem; color: var(--dev-blue);"></i>
+        <h2 class="fw-bold display-6 mt-2" style="color: var(--dark-dev);">Reconocimientos y Formación</h2>
+        <p class="text-muted">Logros académicos y metas profesionales en desarrollo.</p>
+        <div style="width: 60px; height: 4px; background: var(--dev-blue); margin: 0 auto; border-radius: 2px;"></div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card recognition-card border-0 shadow-sm p-4 p-md-5">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="uleam-logo-placeholder me-3">
+                        <i class="bi bi-mortarboard" style="font-size: 1.8rem; color: var(--dev-blue);"></i>
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-1" style="color: var(--dark-dev);">Tecnología de la Información</h4>
+                        <p class="mb-0 fw-semibold" style="color: var(--dev-blue);">Universidad Laica Eloy Alfaro de Manabí</p>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <span class="status-badge">
+                        <i class="bi bi-clock-history me-2"></i>Carrera en Curso
+                    </span>
+                </div>
+
+                <p class="text-secondary lh-lg">
+                    Actualmente enfocado en la formación profesional de grado, adquiriendo conocimientos sólidos en desarrollo de sistemas, redes, y gestión de infraestructuras tecnológicas dentro de la <strong>ULEAM</strong>.
+                </p>
+
+                <hr class="my-4" style="border-top: 1px dashed #e2e8f0;">
+
+                <div class="d-flex align-items-center text-muted small">
+                    <i class="bi bi-info-circle me-2"></i>
+                    <span>Nuevas certificaciones y menciones serán añadidas conforme se completen los hitos académicos.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{% url 'home' %}" class="btn btn-dark px-4 rounded-pill shadow-sm" style="background-color: var(--dark-dev);">
+            <i class="bi bi-arrow-left me-2"></i>Volver al Inicio
+        </a>
+    </div>
+</div>
+
+{% endblock %}

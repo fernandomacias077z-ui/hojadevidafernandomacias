@@ -1,42 +1,70 @@
 {% extends 'base.html' %}
-{% block content %}
-<header class="py-5 mt-5">
-    <div class="container">
-        <div class="row align-items-center">
-            <div class="col-lg-7" data-aos="fade-right">
-                <h1 class="display-3 fw-bold mb-3">Hola, soy <span style="color: var(--primary)">Fernando Macias</span></h1>
-                <p class="lead text-secondary mb-4">Web Developer // Técnico en Informática // Estudiante de la U.E.F. "Manta"</p>
-                <a href="{% url 'signup' %}" class="btn btn-custom btn-lg px-4">EMPEZAR PROYECTO</a>
-            </div>
-            <div class="col-lg-5 text-center" data-aos="zoom-in">
-                <div class="p-5 rounded-circle shadow-lg" style="background: linear-gradient(45deg, #4facfe 0%, #00f2fe 100%); width: 300px; height: 300px; margin: auto;">
-                    <img src="https://via.placeholder.com/200" class="rounded-circle img-fluid" alt="Perfil">
-                </div>
-            </div>
-        </div>
-    </div>
-</header>
 
-<section class="container py-5">
-    <div class="row">
-        <div class="col-md-6" data-aos="fade-up">
-            <h2 class="fw-bold mb-4 border-bottom border-primary d-inline-block">SOBRE MÍ</h2>
-            <p class="text-secondary">Estudiante de Informática en la **U.E.F. "Manta"**. Apasionado por el desarrollo de soluciones web con Django y Python. Este portafolio es parte de mi memoria técnica y demuestra mis habilidades en backend y frontend.</p>
-            <div class="mt-4">
-                <h5>Habilidades:</h5>
-                <div class="mb-2">Python <div class="progress" style="height: 5px;"><div class="progress-bar bg-info" style="width: 90%"></div></div></div>
-                <div class="mb-2">Django <div class="progress" style="height: 5px;"><div class="progress-bar bg-info" style="width: 85%"></div></div></div>
-                <div class="mb-2">JavaScript <div class="progress" style="height: 5px;"><div class="progress-bar bg-info" style="width: 70%"></div></div></div>
+{% block content %}
+<style>
+    .hero-section {
+        min-height: 60vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    .main-title {
+        font-size: clamp(2rem, 7vw, 4rem);
+        font-weight: 800;
+        color: var(--dark-dev);
+        letter-spacing: -1px;
+    }
+    .accent-text { color: var(--dev-blue); }
+    
+    .mono { font-family: 'Fira Code', monospace; }
+
+    .stat-card {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        border: 1px solid #e2e8f0;
+        transition: transform 0.3s ease;
+    }
+    .stat-card:hover { transform: translateY(-5px); border-color: var(--dev-blue); }
+</style>
+
+<div class="hero-section animate-fade-in">
+    <div class="mb-5">
+        <h1 class="main-title mb-3">
+            Construyendo el <span class="accent-text">Futuro</span> de la Tecnología.
+        </h1>
+        <p class="lead text-secondary mono mb-0">
+            Estudiante de TI @ ULEAM
+        </p>
+    </div>
+
+    <div class="row g-4 w-100" style="max-width: 800px;">
+        <div class="col-md-4">
+            <div class="stat-card shadow-sm">
+                <h3 class="fw-bold mb-1" style="color: var(--dev-blue);">2+</h3>
+                <p class="text-muted small mb-0 fw-bold">Años de Estudio</p>
             </div>
         </div>
-        <div class="col-md-6" data-aos="fade-up" data-aos-delay="200">
-            <h2 class="fw-bold mb-4 border-bottom border-primary d-inline-block">EDUCACIÓN</h2>
-            <div class="card card-body mb-3">
-                <h5 class="text-primary">Bachiller en Informática</h5>
-                <p class="mb-0">U.E.F. "Manta" (2020 - 2023)</p>
-                <small class="text-secondary">Desarrollo de sistemas, redes y soporte técnico.</small>
+        <div class="col-md-4">
+            <div class="stat-card shadow-sm">
+                <h3 class="fw-bold mb-1" style="color: var(--dev-blue);">1</h3>
+                <p class="text-muted small mb-0 fw-bold">Curso Realizado</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card shadow-sm">
+                <h3 class="fw-bold mb-1" style="color: var(--dev-blue);">1</h3>
+                <p class="text-muted small mb-0 fw-bold">Proyecto Tech</p>
             </div>
         </div>
     </div>
-</section>
+
+    <div class="mt-5">
+        <a href="{% url 'experiencia' %}" class="btn btn-dark btn-lg px-5 rounded-pill shadow-sm" style="background: var(--dark-dev);">
+            Ver mi trayectoria <i class="bi bi-arrow-right ms-2"></i>
+        </a>
+    </div>
+</div>
 {% endblock %}

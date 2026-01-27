@@ -2,19 +2,12 @@ import os
 from pathlib import Path
 import dj_database_url
 
-# 1. DEFINICIÓN DEL DIRECTORIO BASE (Indispensable al principio)
 BASE_DIR = Path(__file__).resolve().parent.parent
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-bruno-key')
+DEBUG = 'RENDER' not in os.environ 
 
-# 2. SEGURIDAD
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-tu-clave-aqui')
-DEBUG = 'RENDER' not in os.environ # False en Render, True en local
+ALLOWED_HOSTS = ['*']
 
-ALLOWED_HOSTS = []
-render_external_hostname = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
-if render_external_hostname:
-    ALLOWED_HOSTS.append(render_external_hostname)
-
-# 3. APLICACIONES
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -22,12 +15,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tasks', # Tu aplicación
+    'tasks',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # Para archivos estáticos
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -38,11 +31,10 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'django_portfolio.urls'
 
-# 4. TEMPLATES (Aquí fallaba antes)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'], 
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], 
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -57,7 +49,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_portfolio.wsgi.application'
 
-# 5. BASE DE DATOS (Configurada para Render)
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///db.sqlite3',
@@ -65,9 +56,12 @@ DATABASES = {
     )
 }
 
-# 6. ARCHIVOS ESTÁTICOS
+# ESTÁTICOS
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

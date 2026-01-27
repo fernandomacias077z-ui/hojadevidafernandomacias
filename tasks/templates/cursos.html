@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .course-card {
+        border-radius: 20px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-top: 5px solid var(--dev-blue); /* Usando la variable de base.html */
+        background: #fff;
+    }
+    .course-card:hover { 
+        transform: translateY(-10px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+    }
+    /* Animación de pulso profesional en azul */
+    .badge-pulse { animation: pulse-blue 2s infinite; }
+    @keyframes pulse-blue {
+        0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(56, 189, 248, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+    }
+    .mono { font-family: 'Fira Code', monospace; font-size: 0.85rem; }
+</style>
+
+<div class="container py-4">
+    <div class="text-center mb-5">
+        <h2 class="fw-bold" style="color: var(--dark-dev);"><i class="bi bi-mortarboard-fill" style="color: var(--dev-blue);"></i> Cursos Realizados</h2>
+        <p class="text-muted">Certificaciones técnicas y formación continua.</p>
+        <div style="width: 50px; height: 3px; background: var(--dev-blue); margin: 0 auto;"></div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card course-card border-0 shadow-sm h-100 p-4" style="border-top-color: #10b981 !important;">
+                <h5 class="fw-bold">Linux Unhatched</h5>
+                <span class="badge mb-3 mono" style="background-color: #10b981; color: white; width: fit-content;">Terminado</span>
+                <p class="text-secondary small">Cisco Academy - Fundamentos esenciales de Linux.</p>
+                
+                <div class="mt-auto">
+                    <a href="https://drive.google.com/file/d/1NXClA4JVobpiza2e8OAjc3XLl7yZfn98/view?usp=sharing" 
+                       target="_blank" 
+                       class="btn btn-dark w-100 mb-2 rounded-pill shadow-sm btn-confetti"
+                       style="background-color: var(--dark-dev); border: none;">
+                        <i class="bi bi-eye-fill me-2"></i> Ver Certificado
+                    </a>
+                    <a href="https://drive.google.com/uc?export=download&id=1NXClA4JVobpiza2e8OAjc3XLl7yZfn98" 
+                       class="btn btn-outline-secondary w-100 rounded-pill btn-sm mono">
+                        <i class="bi bi-download me-1"></i> Descargar PDF
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card course-card border-0 shadow-sm h-100 p-4">
+                <h5 class="fw-bold">Soporte IT</h5>
+                <span class="badge badge-pulse mb-3 mono" style="background-color: var(--dev-blue); color: white; width: fit-content;">En curso</span>
+                <p class="text-secondary small">Google / Coursera - Soporte técnico profesional de TI.</p>
+                <div class="mt-auto pt-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small class="text-muted mono">Progreso</small>
+                        <small class="fw-bold mono">65%</small>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar" role="progressbar" style="width: 65%; background-color: var(--dev-blue);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card course-card border-0 shadow-sm h-100 p-4">
+                <h5 class="fw-bold">Ciberseguridad</h5>
+                <span class="badge badge-pulse mb-3 mono" style="background-color: var(--dev-blue); color: white; width: fit-content;">En curso</span>
+                <p class="text-secondary small">Cisco Academy - Introducción a la seguridad digital.</p>
+                <div class="mt-auto pt-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <small class="text-muted mono">Progreso</small>
+                        <small class="fw-bold mono">40%</small>
+                    </div>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar" role="progressbar" style="width: 40%; background-color: var(--dev-blue);"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        <a href="{% url 'home' %}" class="btn btn-link text-decoration-none text-secondary mono">
+            <i class="bi bi-arrow-left"></i> Volver al inicio
+        </a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<script>
+    document.querySelector('.btn-confetti').addEventListener('click', function() {
+        confetti({
+            particleCount: 150,
+            spread: 70,
+            origin: { y: 0.6 },
+            colors: ['#38bdf8', '#0f172a', '#10b981']
+        });
+    });
+</script>
+
+{% endblock %}

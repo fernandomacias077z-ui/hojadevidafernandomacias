@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .product-card { 
+        transition: transform 0.3s ease, box-shadow 0.3s ease; 
+        border-top: 4px solid var(--dev-blue);
+        background: #fff;
+    }
+    .product-card:hover { 
+        transform: translateY(-8px); 
+        box-shadow: 0 12px 25px rgba(0,0,0,0.1) !important;
+    }
+    .img-container {
+        position: relative;
+        background-color: #f8fafc;
+    }
+    .img-container img { 
+        transition: transform 0.5s ease; 
+        mix-blend-mode: multiply; /* Mejora la integración de imágenes con fondo blanco */
+    }
+    .product-card:hover .img-container img { 
+        transform: scale(1.08); 
+    }
+    .price-tag {
+        color: var(--dev-blue);
+        font-family: 'Fira Code', monospace;
+        font-weight: 700;
+    }
+    .mono { font-family: 'Fira Code', monospace; }
+</style>
+
+<div class="mb-5 animate-fade-in">
+    <h2 class="fw-bold" style="color: var(--dark-dev);">
+        <i class="bi bi-cart4" style="color: var(--dev-blue);"></i> Venta de Garage
+    </h2>
+    <p class="text-muted">Artículos técnicos en excelente estado para tus proyectos de electrónica y hardware.</p>
+    <div style="width: 50px; height: 4px; background: var(--dev-blue); border-radius: 2px;"></div>
+</div>
+
+<div class="row g-4 animate-fade-in">
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden product-card">
+            <div class="img-container p-4 d-flex justify-content-center align-items-center" style="height: 220px;">
+                <img src="https://i.postimg.cc/FH552V83/proto.png" class="img-fluid rounded" alt="Protoboard" style="max-height: 100%; object-fit: contain;">
+            </div>
+            <div class="card-body p-4 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="fw-bold mb-0">Protoboard</h5>
+                    <span class="badge bg-warning text-dark mono" style="font-size: 0.7rem;">REGULAR</span>
+                </div>
+                <h4 class="price-tag mb-3">$5,00</h4>
+                <p class="text-secondary small flex-grow-1">Herramienta esencial en electrónica para armar y probar circuitos temporales sin necesidad de soldar componentes.</p>
+                
+                <div class="border-top pt-3 mt-3 d-flex justify-content-between align-items-center">
+                    <small class="text-muted mono" style="font-size: 0.75rem;">ID: #PB-2026</small>
+                    <a href="https://wa.me/593980643265?text=Hola%20Bruno,%20me%20interesa%20la%20Protoboard" target="_blank" class="btn btn-dark btn-sm px-3 rounded-pill">
+                        <i class="bi bi-whatsapp me-1"></i> Interesado
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 col-lg-4">
+        <div class="card border-0 shadow-sm rounded-4 h-100 overflow-hidden product-card">
+            <div class="img-container p-4 d-flex justify-content-center align-items-center" style="height: 220px;">
+                <img src="https://i.postimg.cc/5yr1YcsC/imagen-2026-01-26-225722937.png" class="img-fluid rounded" alt="Relee 5V" style="max-height: 100%; object-fit: contain;">
+            </div>
+            <div class="card-body p-4 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h5 class="fw-bold mb-0">Relee 5V 2 Canales</h5>
+                    <span class="badge bg-success text-white mono" style="font-size: 0.7rem;">NUEVO / BUENO</span>
+                </div>
+                <h4 class="price-tag mb-3">$1,50</h4>
+                <p class="text-secondary small flex-grow-1">Módulo de relevadores ideal para proyectos con Arduino o Raspberry Pi, permitiendo controlar cargas de alta potencia.</p>
+                
+                <div class="border-top pt-3 mt-3 d-flex justify-content-between align-items-center">
+                    <small class="text-muted mono" style="font-size: 0.75rem;">ID: #RL-2026</small>
+                    <a href="https://wa.me/593980643265?text=Hola%20Bruno,%20me%20interesa%20el%20Relee%205V" target="_blank" class="btn btn-dark btn-sm px-3 rounded-pill">
+                        <i class="bi bi-whatsapp me-1"></i> Interesado
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-5 pb-5">
+    <a href="{% url 'home' %}" class="btn btn-link text-decoration-none text-secondary mono">
+        <i class="bi bi-arrow-left"></i> Volver al panel principal
+    </a>
+</div>
+
+{% endblock %}

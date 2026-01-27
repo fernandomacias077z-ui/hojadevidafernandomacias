@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    /* Estilos para las tarjetas de experiencia - Ahora con el Azul Cyber */
+    .exp-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        border-left: 5px solid var(--dev-blue) !important;
+        background: #fff;
+    }
+    .exp-card:hover {
+        transform: translateX(8px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.05) !important;
+    }
+    
+    /* Animación de pulso actualizada */
+    .badge-pulse {
+        animation: pulse-blue 2s infinite;
+        background-color: var(--dev-blue) !important;
+        color: white;
+    }
+    @keyframes pulse-blue {
+        0% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(56, 189, 248, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(56, 189, 248, 0); }
+    }
+
+    .main-title {
+        color: var(--dark-dev);
+        font-weight: 800;
+        letter-spacing: -0.5px;
+    }
+
+    .mono {
+        font-family: 'Fira Code', monospace;
+    }
+</style>
+
+<div class="animate-fade-in container py-4">
+    <div class="text-center mb-5">
+        <h2 class="main-title">
+            <i class="bi bi-briefcase-fill" style="color: var(--dev-blue);"></i> Experiencia Laboral
+        </h2>
+        <p class="text-muted">Trayectoria académica y práctica adquirida durante mi formación profesional.</p>
+        <div style="width: 50px; height: 4px; background: var(--dev-blue); margin: 0 auto; border-radius: 2px;"></div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4 exp-card">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                    <h5 class="fw-bold mb-1" style="color: var(--dev-blue);">Mesero.</h5>
+                    <p class="mb-1 fw-semibold" style="color: #475569;">Kiosco de Gema | Manta</p>
+                    <p class="text-muted small mb-0 mono">Ene 2026 - Actualidad</p>
+                </div>
+                <span class="badge badge-pulse px-3 py-2 mono">En curso</span>
+            </div>
+            <hr class="opacity-10">
+            <p class="mb-0 text-secondary">
+                <strong style="color: var(--dark-dev);">Funciones:</strong> Atención al cliente personalizada, gestión de pedidos y optimización del servicio en entorno dinámico. Enfoque en eficiencia operativa y satisfacción del comensal.
+            </p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4 exp-card" style="border-left-color: #64748b !important;">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                    <h5 class="fw-bold mb-1" style="color: #64748b;">Mesero.</h5>
+                    <p class="mb-1 fw-semibold" style="color: #475569;">Restaurante "La Sazón" | Manta</p>
+                    <p class="text-muted small mb-0 mono">Ene 2025 - Ene 2026</p>
+                </div>
+                <span class="badge bg-secondary px-3 py-2 mono text-white">Finalizado</span>
+            </div>
+            <hr class="opacity-10">
+            <p class="mb-0 text-secondary">
+                <strong style="color: var(--dark-dev);">Funciones:</strong> Optimización de la eficiencia operativa y la calidad del juicio bajo presión. Toma de decisiones estratégicas que equilibran las necesidades del cliente con los objetivos operativos del negocio.
+            </p>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4 exp-card" style="border-left-color: #334155 !important;">
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                    <h5 class="fw-bold mb-1" style="color: #334155;">Servicio al Cliente / Cajero.</h5>
+                    <p class="mb-1 fw-semibold" style="color: #475569;">Laen Tecnologhy | Manta</p>
+                    <p class="text-muted small mb-0 mono">Ene 2024 - Jul 2024</p>
+                </div>
+                <span class="badge bg-secondary px-3 py-2 mono text-white">Finalizado</span>
+            </div>
+            <hr class="opacity-10">
+            <p class="mb-0 text-secondary">
+                <strong style="color: var(--dark-dev);">Funciones:</strong> Desarrollo de estrategias de atención al cliente y gestión de contenido para redes sociales. Soporte en reparaciones técnicas de equipos electrónicos.
+            </p>
+        </div>
+    </div>
+
+    <div class="text-center mt-5 pb-5">
+        <a href="{% url 'home' %}" class="btn btn-dark px-5 py-2 shadow-sm" style="border-radius: 50px; font-weight: 600; background-color: var(--dark-dev);">
+            <i class="bi bi-arrow-left me-2"></i> Volver al inicio
+        </a>
+    </div>
+</div>
+
+{% endblock %}
