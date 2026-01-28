@@ -1,27 +1,37 @@
-<div class="container py-5">
-    <h2 class="text-white fw-bold mb-4">Garage <span class="text-info">Tech</span></h2>
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container-fluid animate__animated animate__fadeIn">
+    <h2 class="mono fw-bold mb-4" style="color: var(--dev-blue);">
+        <i class="bi bi-gpu-card"></i> GARAGE_TECH_EXPLORER
+    </h2>
+    
     <div class="row g-4">
         {% for p in proyectos %}
-        <div class="col-md-4">
-            <div class="card h-100 bg-dark text-white border-info card-animada">
-                <div class="overflow-hidden position-relative">
+        <div class="col-md-6 col-xl-4">
+            <div class="card h-100 border-0 shadow-sm card-animada">
+                <div class="overflow-hidden position-relative" style="border-radius: 12px 12px 0 0;">
                     {% if p.imagen %}
                         <img src="{{ p.imagen.url }}" class="card-img-top img-zoom" alt="{{ p.nombre }}">
                     {% else %}
-                        <div class="bg-secondary d-flex align-items-center justify-content-center" style="height: 200px;">
-                            <i class="bi bi-image text-dark fs-1"></i>
+                        <div class="bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                            <i class="bi bi-box-seam text-secondary fs-1"></i>
                         </div>
                     {% endif %}
-                    <span class="badge bg-info text-dark position-absolute top-0 end-0 m-2">Disponible</span>
                 </div>
+                
                 <div class="card-body">
-                    <h5 class="card-title fw-bold">{{ p.nombre }}</h5>
-                    <p class="text-info fs-4 fw-bold mb-2">${{ p.precio }}</p>
-                    <p class="card-text small text-secondary">{{ p.descripcion }}</p>
+                    <h5 class="fw-bold mb-1">{{ p.nombre }}</h5>
+                    <div class="text-info mono fw-bold mb-3 fs-4">${{ p.precio }}</div>
+                    <p class="text-secondary small">{{ p.descripcion }}</p>
                 </div>
-                <div class="card-footer border-info bg-transparent d-flex justify-content-between align-items-center">
-                    <small class="text-info">{{ p.tecnologias }}</small>
-                    <a href="https://wa.me/593980643265?text=Hola, me interesa el {{ p.nombre }}" class="btn btn-sm btn-outline-info">Consultar</a>
+                
+                <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center pb-3">
+                    <span class="badge bg-light text-dark mono small border">{{ p.tecnologias }}</span>
+                    <a href="https://wa.me/593980643265?text=Interés en: {{ p.nombre }}" 
+                       class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                        <i class="bi bi-whatsapp"></i> Consultar
+                    </a>
                 </div>
             </div>
         </div>
@@ -30,22 +40,28 @@
 </div>
 
 <style>
-    /* Animación de la tarjeta al pasar el mouse */
-    .card-animada { 
-        transition: transform 0.3s ease, box-shadow 0.3s ease; 
-        cursor: pointer;
+    /* Estilos que complementan tu base.html */
+    .card-animada {
+        transition: var(--transition-smooth);
+        border-radius: 15px;
     }
-    .card-animada:hover { 
-        transform: translateY(-10px); 
-        box-shadow: 0 10px 25px rgba(0, 202, 227, 0.4); 
+    .card-animada:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(56, 189, 248, 0.2) !important;
     }
-    /* Efecto de zoom suave en la imagen */
-    .img-zoom { 
-        transition: transform 0.6s ease; 
-        height: 220px; 
-        object-fit: cover; 
+    .img-zoom {
+        transition: transform 0.5s ease;
+        height: 200px;
+        object-fit: cover;
     }
-    .card-animada:hover .img-zoom { 
-        transform: scale(1.1); 
+    .card-animada:hover .img-zoom {
+        transform: scale(1.08);
+    }
+    /* Soporte para modo oscuro en el badge del footer */
+    body.dark-mode .badge.bg-light {
+        background-color: #334155 !important;
+        color: #38bdf8 !important;
+        border-color: #475569 !important;
     }
 </style>
+{% endblock %}
