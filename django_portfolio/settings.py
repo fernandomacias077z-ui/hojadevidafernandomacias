@@ -3,6 +3,8 @@ from pathlib import Path
 import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# SEGURIDAD
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-bruno-key')
 DEBUG = 'RENDER' not in os.environ 
 
@@ -52,6 +54,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'django_portfolio.wsgi.application'
 
+# BASE DE DATOS
 DATABASES = {
     'default': dj_database_url.config(
         default='sqlite:///db.sqlite3',
@@ -59,15 +62,16 @@ DATABASES = {
     )
 }
 
-# ESTÁTICOS Y MULTIMEDIA
+# ARCHIVOS ESTÁTICOS (CSS, JS)
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-# Configuración de Imágenes (NUEVO)
+# MANEJO DE IMÁGENES (MEDIA) - Necesario para el Garage
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# Configuración de WhiteNoise
 if not DEBUG:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
