@@ -1,22 +1,40 @@
 from django.shortcuts import render
+from .models import DatosPersonales, ExperienciaLaboral
 
 def home(request):
+    datos = DatosPersonales.objects.first()
     context = {
-        'nombre': 'Bruno Fernando Macias Moreira',
-        'perfil': 'Bachiller en Informática y profesional de servicio con alta capacidad de trabajo bajo presión y resolución técnica.',
-        'ubicacion': 'Jocay j4 y j9, Manta, Ecuador',
-        'telefono': '0980643265',
+        'nombre': datos.nombre if datos else 'Bruno Fernando Macias Moreira',
+        'ubicacion': datos.origen if datos else 'Manta, Ecuador',
+        'telefono': datos.telefono if datos else '0980643265',
         'email': 'Franyo678@gmail.com'
     }
     return render(request, 'home.html', context)
 
-# Vistas simples que solo cargan el template correspondiente
 def perfil_view(request):
-    return render(request, 'perfil.html')
+    datos = DatosPersonales.objects.first()
+    # Traemos las experiencias para que el resumen aparezca en el perfil
+    experiencias = ExperienciaLaboral.objects.all().order_by('-id')
+    return render(request, 'perfil.html', {
+        'datos': datos,
+        'experiencias': experiencias
+    })
+
+# --- ESTA ES LA VISTA QUE FALTABA ---
+def imprimir_cv(request):
+    datos = DatosPersonales.objects.first()
+    experiencias = ExperienciaLaboral.objects.all().order_by('-id')
+    return render(request, 'cv_profesional.html', {
+        'datos': datos,
+        'experiencias': experiencias
+    })
 
 def experiencia(request): 
-    return render(request, 'experiencia.html')
+    # Esta vista es para la página detallada de experiencia
+    experiencias = ExperienciaLaboral.objects.all().order_by('-id')
+    return render(request, 'experiencia.html', {'experiencias': experiencias})
 
+# --- Vistas para las secciones adicionales ---
 def cursos(request): 
     return render(request, 'cursos.html')
 

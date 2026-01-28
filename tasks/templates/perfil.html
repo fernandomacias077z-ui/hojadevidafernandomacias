@@ -2,184 +2,144 @@
 {% block content %}
 
 <style>
-    /* --- Estilos para la Web --- */
-    .profile-card {
-        border-radius: 20px;
-        background: #fff;
-        border-top: 5px solid var(--dev-blue);
-        transition: all 0.3s ease;
+    /* 1. CONFIGURACIÓN DE COLORES (VARIABLES) */
+    :root {
+        --bg-sitio: #ffffff;
+        --bg-tarjeta: #f8fafc;
+        --texto-principal: #0f172a;
+        --texto-gris: #64748b;
+        --cian: #00cae3;
+        --borde: #e2e8f0;
     }
-    .profile-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+
+    /* 2. MODO OSCURO (Se activa con la clase .dark-mode en el body) */
+    body.dark-mode {
+        --bg-sitio: #0f172a;
+        --bg-tarjeta: #1e293b;
+        --texto-principal: #f8fafc;
+        --texto-gris: #94a3b8;
+        --borde: #334151;
     }
-    .terminal-header {
-        background: #f8fafc;
-        padding: 12px 20px;
-        border-bottom: 1px solid #e2e8f0;
-        font-family: 'Fira Code', monospace;
-        font-size: 0.85rem;
-        color: #64748b;
-        border-radius: 15px 15px 0 0;
+
+    /* 3. APLICACIÓN GLOBAL - Esto asegura que toda la pantalla cambie */
+    body {
+        background-color: var(--bg-sitio) !important;
+        color: var(--texto-principal) !important;
+        transition: background 0.3s ease, color 0.3s ease;
+        margin: 0;
+        min-height: 100vh;
     }
-    .info-label {
+
+    .titulo-perfil {
+        color: var(--texto-principal) !important;
         font-weight: 800;
-        color: var(--dark-dev);
-        width: 130px;
-        display: inline-block;
-        font-size: 0.9rem;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
     }
-    .info-value {
-        color: var(--dev-blue);
-        font-family: 'Fira Code', monospace;
+
+    .card-perfil {
+        background-color: var(--bg-tarjeta) !important;
+        border: 1px solid var(--borde) !important;
+        border-radius: 15px;
+        padding: 25px;
+        height: 100%;
+        color: var(--texto-principal) !important; /* Fuerza el color dentro de la card */
+    }
+
+    /* COLORES CIAN */
+    .text-cian { color: var(--cian) !important; }
+    
+    .badge-periodo {
+        border: 1px solid var(--cian);
+        color: var(--cian);
+        padding: 2px 10px;
+        border-radius: 10px;
+        font-size: 0.8rem;
+    }
+
+    /* BOTONES */
+    .btn-principal {
+        background-color: var(--cian);
+        color: #000 !important;
+        font-weight: 700;
+        border: none;
+        padding: 12px;
+        border-radius: 10px;
+    }
+
+    .btn-secundario {
+        border: 1px solid var(--cian);
+        color: var(--cian);
+        background: transparent;
+        padding: 12px;
+        border-radius: 10px;
         font-weight: 600;
     }
-    .action-btn-container { display: flex; gap: 15px; margin-top: 2rem; }
-    .btn-action-outline, .btn-action-dark {
-        flex: 1; border-radius: 15px; padding: 15px; font-weight: 700;
-        display: flex; align-items: center; justify-content: center; gap: 10px; transition: all 0.3s ease;
-    }
-    .btn-action-outline { background: white; color: #64748b; border: 2px solid #e2e8f0; }
-    .btn-action-dark { background: var(--dark-dev); color: white; border: none; }
-    .mono { font-family: 'Fira Code', monospace; }
 
-    /* --- ESTILOS DE IMPRESIÓN (EL PDF) --- */
-    @media print {
-        .sidebar, .d-print-none, .terminal-header, .action-btn-container, .btn-outline-dark, .bi-link-45deg {
-            display: none !important;
-        }
-        .wrapper { display: block !important; }
-        .main-content { margin-left: 0 !important; padding: 0 !important; width: 100% !important; }
-        body { background: white !important; }
-        
-        .profile-card {
-            box-shadow: none !important;
-            border: 1px solid #eee !important;
-            border-top: 3px solid #0f172a !important;
-            break-inside: avoid;
-            margin-bottom: 15px !important;
-        }
-        .cv-header-print {
-            display: flex !important;
-            align-items: center;
-            gap: 30px;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 20px;
-        }
-        .cv-photo-print {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 2px solid #0f172a;
-            object-fit: cover;
-        }
-        h5 { margin-top: 20px !important; color: #0f172a !important; }
+    .btn-secundario:hover {
+        background-color: var(--cian);
+        color: #000 !important;
     }
-    .cv-header-print { display: none; }
 </style>
 
-<div class="container py-4 animate-fade-in">
-    
-    <div class="cv-header-print">
-        <img src="https://i.postimg.cc/L41m7wwd/perfil.jpg" class="cv-photo-print" alt="Bruno Macias">
-        <div>
-            <h1 class="fw-bold mb-1">BRUNO FERNANDO MACIAS MOREIRA</h1>
-            <p class="text-muted mono mb-0">Estudiante de TI | 1317920625 | Manta, Ecuador</p>
-        </div>
+<div class="container py-5">
+    <div class="mb-4">
+        <h1 class="titulo-perfil display-5">{{ datos.nombre|upper|default:"BRUNO FERNANDO" }}</h1>
+        <p class="text-cian fw-bold">PANEL DE CONTROL PROFESIONAL</p>
     </div>
 
-    <div class="text-center mb-5 d-print-none">
-        <div class="mb-2">
-            <i class="bi bi-person-badge" style="font-size: 3rem; color: var(--dev-blue);"></i>
-        </div>
-        <h2 class="fw-bold" style="color: var(--dark-dev);">Perfil Profesional</h2>
-        <p class="text-muted">Ficha técnica y trayectoria laboral/académica.</p>
-    </div>
-
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-            <div class="profile-card shadow-sm mb-4">
-                <div class="terminal-header"><i class="bi bi-terminal me-2"></i> info.json</div>
-                <div class="card-body p-4">
-                    <div class="row g-4">
-                        <div class="col-md-6">
-                            <div class="mb-2"><span class="info-label">Cédula:</span> <span class="info-value">1317920625</span></div>
-                            <div class="mb-2"><span class="info-label">Teléfono:</span> <span class="info-value">0980643265</span></div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="mb-2"><span class="info-label">Origen:</span> <span class="info-value">Manta, EC</span></div>
-                            <div class="mb-2"><span class="info-label">Estado:</span> <span class="info-value">Soltero</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="mb-5">
-                <h5 class="fw-bold mb-3"><i class="bi bi-briefcase-fill me-2 text-primary"></i> EXPERIENCIA LABORAL</h5>
-                <div class="profile-card shadow-sm mb-2 p-3">
-                    <h6 class="fw-bold mb-0 text-primary">Mesero / Operaciones - Kiosco de Gema</h6>
-                    <p class="small text-muted mb-0">2026 - Actualidad</p>
-                </div>
-                <div class="profile-card shadow-sm mb-2 p-3">
-                    <h6 class="fw-bold mb-0 text-dark">Mesero Profesional - La Sazón</h6>
-                    <p class="small text-muted mb-0">2025 - 2026</p>
-                </div>
-                <div class="profile-card shadow-sm mb-2 p-3">
-                    <h6 class="fw-bold mb-0 text-dark">Cajero / Soporte - Laen Tecnologhy</h6>
-                    <p class="small text-muted mb-0">2024</p>
-                </div>
-            </div>
-
-            <div class="mb-5">
-                <h5 class="fw-bold mb-3"><i class="bi bi-patch-check-fill me-2 text-success"></i> CURSOS Y FORMACIÓN</h5>
+    <div class="row g-4">
+        <div class="col-md-5">
+            <div class="card-perfil shadow-sm">
+                <h5 class="fw-bold mb-4 border-bottom pb-2">
+                    <i class="bi bi-person-circle me-2 text-cyan"></i> DATOS PERSONALES
+                </h5>
+                <p class="mb-1 small text-uppercase" style="color: var(--texto-gris)">Identificación</p>
+                <p class="fs-5 fw-bold mb-3">{{ datos.cedula }}</p>
                 
-                <div class="profile-card shadow-sm mb-2 p-3" style="border-top-color: #10b981;">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="fw-bold mb-0 text-dark">Seguridad en Redes y Sistemas</h6>
-                            <p class="small text-muted mb-0">Certificación Técnica | 2025</p>
-                        </div>
-                        <i class="bi bi-link-45deg text-success d-print-none"></i>
-                    </div>
-                </div>
+                <p class="mb-1 small text-uppercase" style="color: var(--texto-gris)">Teléfono</p>
+                <p class="fs-5 fw-bold mb-3">{{ datos.telefono }}</p>
 
-                <div class="profile-card shadow-sm mb-2 p-3" style="border-top-color: #10b981;">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div>
-                            <h6 class="fw-bold mb-0 text-dark">Desarrollo Web Full Stack</h6>
-                            <p class="small text-muted mb-0">Bootcamp Intensivo | 2024</p>
-                        </div>
-                        <i class="bi bi-link-45deg text-success d-print-none"></i>
-                    </div>
-                </div>
-
-                <div class="profile-card shadow-sm mb-2 p-3" style="border-top-color: #10b981;">
-                    <div>
-                        <h6 class="fw-bold mb-0 text-dark">Atención al Cliente y Resolución de Conflictos</h6>
-                        <p class="small text-muted mb-0">Seminario Profesional | 2024</p>
-                    </div>
-                </div>
+                <p class="mb-1 small text-uppercase" style="color: var(--texto-gris)">Ubicación</p>
+                <p class="fs-5 fw-bold">{{ datos.origen }}</p>
             </div>
+        </div>
 
-            <div class="action-btn-container d-print-none">
-                <button class="btn-action-outline" data-bs-toggle="modal" data-bs-target="#configModal">
-                    <i class="bi bi-gear-fill"></i> AJUSTES
-                </button>
-                <button class="btn-action-dark" onclick="window.print()">
-                    <i class="bi bi-file-earmark-code-fill"></i> EXPORTAR CV (PDF)
-                </button>
+        <div class="col-md-7">
+            <div class="card-perfil shadow-sm">
+                <h5 class="fw-bold mb-4 border-bottom pb-2">
+                    <i class="bi bi-briefcase-fill me-2 text-cyan"></i> EXPERIENCIA RECIENTE
+                </h5>
+                {% for exp in experiencias %}
+                <div class="mb-4">
+                    <div class="d-flex justify-content-between">
+                        <h6 class="text-cian fw-bold">{{ exp.puesto }}</h6>
+                        <span class="badge-periodo">{{ exp.periodo }}</span>
+                    </div>
+                    <p class="fw-bold mb-1">{{ exp.empresa }}</p>
+                    <p class="small" style="color: var(--texto-gris); text-align: justify;">{{ exp.funciones|truncatewords:20 }}</p>
+                </div>
+                {% endfor %}
             </div>
         </div>
     </div>
 
-    <div class="text-center mt-5 pb-5 d-print-none">
-        <a href="{% url 'home' %}" class="btn btn-outline-dark px-4 rounded-pill shadow-sm mono">
-            <i class="bi bi-arrow-left me-2"></i> VOLVER
-        </a>
+    <div class="row mt-4 g-3">
+        <div class="col-6 col-md-4">
+            <a href="/admin/tasks/datospersonales/" class="btn btn-secundario w-100">EDITAR</a>
+        </div>
+        <div class="col-6 col-md-4">
+            <a href="/admin/tasks/experiencialaboral/" class="btn btn-secundario w-100">AÑADIR</a>
+        </div>
+        <div class="col-12 col-md-4">
+            <a href="{% url 'imprimir_cv' %}" target="_blank" class="btn btn-principal w-100 shadow">
+                <i class="bi bi-file-pdf"></i> GENERAR CV
+            </a>
+        </div>
     </div>
 </div>
+
+<script>
+    // Script opcional para que detecte el cambio de clase si tienes el botón en el menú
+    // Si tu menú lateral ya añade 'dark-mode' al body, esto funcionará solo.
+</script>
 
 {% endblock %}

@@ -2,55 +2,91 @@
 {% block content %}
 
 <style>
+    /* 1. RE-DEFINICIÓN DE VARIABLES PARA COHERENCIA TOTAL */
+    :root {
+        --bg-sitio: #ffffff;
+        --bg-tarjeta: #f8fafc;
+        --texto-principal: #0f172a;
+        --texto-gris: #64748b;
+        --cian: #00cae3;
+        --borde: #e2e8f0;
+    }
+
+    body.dark-mode {
+        --bg-sitio: #0f172a;
+        --bg-tarjeta: #1e293b;
+        --texto-principal: #f8fafc;
+        --texto-gris: #94a3b8;
+        --borde: #334151;
+    }
+
+    /* 2. APLICACIÓN AL BODY */
+    body {
+        background-color: var(--bg-sitio) !important;
+        color: var(--texto-principal) !important;
+        transition: all 0.3s ease;
+    }
+
+    /* 3. TARJETA ADAPTABLE */
     .recognition-card {
         border-radius: 20px;
-        border-top: 5px solid var(--dev-blue);
+        border-top: 5px solid var(--cian) !important;
         transition: all 0.3s ease;
-        background: #fff;
+        background-color: var(--bg-tarjeta) !important; /* Cambia con el modo */
+        color: var(--texto-principal) !important;
+        border: 1px solid var(--borde);
     }
+
     .recognition-card:hover {
         transform: translateY(-5px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2) !important;
     }
+
+    /* 4. BADGE DINÁMICO */
     .status-badge {
-        background-color: #f0f9ff;
-        color: var(--dev-blue);
+        background-color: rgba(0, 202, 227, 0.1); /* Fondo cian transparente */
+        color: var(--cian);
         padding: 0.5rem 1rem;
         border-radius: 50px;
         font-weight: 700;
         font-size: 0.85rem;
         display: inline-block;
-        font-family: 'Fira Code', monospace;
+        border: 1px solid var(--cian);
     }
+
     .uleam-logo-placeholder {
         width: 60px;
         height: 60px;
-        background: #f8fafc;
+        background: var(--bg-sitio); /* Fondo inverso a la tarjeta */
         border-radius: 12px;
         display: flex;
         align-items: center;
         justify-content: center;
+        border: 1px solid var(--borde);
     }
+
+    .text-dinamico { color: var(--texto-principal) !important; }
+    .text-gris-dinamico { color: var(--texto-gris) !important; }
 </style>
 
 <div class="container py-5 animate-fade-in">
     <div class="text-center mb-5">
-        <i class="bi bi-award-fill" style="font-size: 3rem; color: var(--dev-blue);"></i>
-        <h2 class="fw-bold display-6 mt-2" style="color: var(--dark-dev);">Reconocimientos y Formación</h2>
-        <p class="text-muted">Logros académicos y metas profesionales en desarrollo.</p>
-        <div style="width: 60px; height: 4px; background: var(--dev-blue); margin: 0 auto; border-radius: 2px;"></div>
+        <i class="bi bi-award-fill" style="font-size: 3.5rem; color: var(--cian);"></i>
+        <h2 class="fw-bold display-6 mt-2 text-dinamico">Reconocimientos y Formación</h2>
+        <p class="text-gris-dinamico">Logros académicos y metas profesionales en desarrollo.</p>
+        <div style="width: 60px; height: 4px; background: var(--cian); margin: 0 auto; border-radius: 2px;"></div>
     </div>
 
     <div class="row justify-content-center">
         <div class="col-md-8 col-lg-7">
-            <div class="card recognition-card border-0 shadow-sm p-4 p-md-5">
+            <div class="card recognition-card shadow-sm p-4 p-md-5">
                 <div class="d-flex align-items-center mb-4">
                     <div class="uleam-logo-placeholder me-3">
-                        <i class="bi bi-mortarboard" style="font-size: 1.8rem; color: var(--dev-blue);"></i>
+                        <i class="bi bi-mortarboard" style="font-size: 1.8rem; color: var(--cian);"></i>
                     </div>
                     <div>
-                        <h4 class="fw-bold mb-1" style="color: var(--dark-dev);">Tecnología de la Información</h4>
-                        <p class="mb-0 fw-semibold" style="color: var(--dev-blue);">Universidad Laica Eloy Alfaro de Manabí</p>
+                        <h4 class="fw-bold mb-1 text-dinamico">Tecnología de la Información</h4>
+                        <p class="mb-0 fw-semibold" style="color: var(--cian);">Universidad Laica Eloy Alfaro de Manabí</p>
                     </div>
                 </div>
 
@@ -60,14 +96,14 @@
                     </span>
                 </div>
 
-                <p class="text-secondary lh-lg">
-                    Actualmente enfocado en la formación profesional de grado, adquiriendo conocimientos sólidos en desarrollo de sistemas, redes, y gestión de infraestructuras tecnológicas dentro de la <strong>ULEAM</strong>.
+                <p class="text-gris-dinamico lh-lg">
+                    Actualmente enfocado en la formación profesional de grado, adquiriendo conocimientos sólidos en desarrollo de sistemas, redes, y gestión de infraestructuras tecnológicas dentro de la <strong class="text-dinamico">ULEAM</strong>.
                 </p>
 
-                <hr class="my-4" style="border-top: 1px dashed #e2e8f0;">
+                <hr class="my-4" style="border-top: 1px dashed var(--borde);">
 
-                <div class="d-flex align-items-center text-muted small">
-                    <i class="bi bi-info-circle me-2"></i>
+                <div class="d-flex align-items-center text-gris-dinamico small">
+                    <i class="bi bi-info-circle me-2 text-cian"></i>
                     <span>Nuevas certificaciones y menciones serán añadidas conforme se completen los hitos académicos.</span>
                 </div>
             </div>
@@ -75,7 +111,8 @@
     </div>
 
     <div class="text-center mt-5">
-        <a href="{% url 'home' %}" class="btn btn-dark px-4 rounded-pill shadow-sm" style="background-color: var(--dark-dev);">
+        <a href="{% url 'home' %}" class="btn px-4 rounded-pill shadow-sm" 
+           style="background-color: var(--texto-principal); color: var(--bg-sitio); font-weight: 700;">
             <i class="bi bi-arrow-left me-2"></i>Volver al Inicio
         </a>
     </div>
