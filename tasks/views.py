@@ -1,48 +1,36 @@
 from django.shortcuts import render
-from .models import DatosPersonales, ExperienciaLaboral
+from .models import DatosPersonales, ExperienciaLaboral, Curso, Reconocimiento, ProyectoGarage
 
 def home(request):
     datos = DatosPersonales.objects.first()
-    context = {
-        'nombre': datos.nombre if datos else 'Bruno Fernando Macias Moreira',
-        'ubicacion': datos.origen if datos else 'Manta, Ecuador',
-        'telefono': datos.telefono if datos else '0980643265',
-        'email': 'Franyo678@gmail.com'
-    }
-    return render(request, 'home.html', context)
+    return render(request, 'home.html', {'datos': datos})
 
 def perfil_view(request):
     datos = DatosPersonales.objects.first()
-    # Traemos las experiencias para que el resumen aparezca en el perfil
     experiencias = ExperienciaLaboral.objects.all().order_by('-id')
-    return render(request, 'perfil.html', {
-        'datos': datos,
-        'experiencias': experiencias
-    })
+    return render(request, 'perfil.html', {'datos': datos, 'experiencias': experiencias})
 
-# --- ESTA ES LA VISTA QUE FALTABA ---
 def imprimir_cv(request):
     datos = DatosPersonales.objects.first()
     experiencias = ExperienciaLaboral.objects.all().order_by('-id')
-    return render(request, 'cv_profesional.html', {
-        'datos': datos,
-        'experiencias': experiencias
-    })
+    return render(request, 'cv_profesional.html', {'datos': datos, 'experiencias': experiencias})
 
 def experiencia(request): 
-    # Esta vista es para la página detallada de experiencia
     experiencias = ExperienciaLaboral.objects.all().order_by('-id')
     return render(request, 'experiencia.html', {'experiencias': experiencias})
 
-# --- Vistas para las secciones adicionales ---
 def cursos(request): 
-    return render(request, 'cursos.html')
+    lista_cursos = Curso.objects.all()
+    return render(request, 'cursos.html', {'cursos': lista_cursos})
 
 def reconocimientos(request): 
-    return render(request, 'reconocimientos.html')
-
-def productos_academicos(request): 
-    return render(request, 'productos_academicos.html')
+    lista_reconocimientos = Reconocimiento.objects.all()
+    return render(request, 'reconocimientos.html', {'reconocimientos': lista_reconocimientos})
 
 def garage(request): 
-    return render(request, 'garage.html')
+    productos = ProyectoGarage.objects.all()
+    return render(request, 'garage.html', {'proyectos': productos})
+
+# ESTA ES LA FUNCIÓN QUE TE DABA EL ERROR:
+def productos_academicos(request): 
+    return render(request, 'productos_academicos.html')

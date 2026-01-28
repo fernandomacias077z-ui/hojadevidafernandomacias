@@ -46,10 +46,12 @@ class Reconocimiento(models.Model):
 class ProyectoGarage(models.Model):
     nombre = models.CharField(max_length=100)
     descripcion = models.TextField()
-    tecnologias = models.CharField(max_length=200)
+    precio = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
+    tecnologias = models.CharField(max_length=200, help_text="Ej: Hardware, Gadget")
+    imagen = models.ImageField(upload_to='garage/', null=True, blank=True)
 
     class Meta:
         verbose_name_plural = "Proyectos Garage Tech"
 
     def __str__(self):
-        return self.nombre
+        return f"{self.nombre} - ${self.precio}"
