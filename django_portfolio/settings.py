@@ -25,7 +25,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware', # Debe estar aquí para servir archivos en Render
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -47,6 +47,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media', # CLAVE: Permite usar la URL de la imagen en el HTML
             ],
         },
     },
@@ -67,11 +68,11 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-# MANEJO DE IMÁGENES (MEDIA) - Necesario para el Garage
+# MANEJO DE IMÁGENES (MEDIA) - Configuración para el Admin
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Configuración de WhiteNoise
+# Configuración de WhiteNoise para producción
 if not DEBUG:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
