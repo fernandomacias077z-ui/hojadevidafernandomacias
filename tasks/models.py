@@ -1,16 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# --- PERFIL DE USUARIO ---
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    full_name = models.CharField(max_length=200, default="Bruno Fernando Macias Moreira")
-    email = models.EmailField(default="Franyo678@gmail.com")
-    phone = models.CharField(max_length=20, default="0980643265")
-    location = models.CharField(max_length=200, default="Jocay j4 y j9, Manta, Ecuador")
-    summary = models.TextField(default="Profesional de sala con experiencia en restaurantes...")
-
-# --- MODELOS PARA TU CV ---
 class DatosPersonales(models.Model):
     nombre = models.CharField(max_length=100)
     cedula = models.CharField(max_length=20, default="1317920625")
@@ -27,13 +17,8 @@ class DatosPersonales(models.Model):
 class ExperienciaLaboral(models.Model):
     puesto = models.CharField(max_length=100)
     empresa = models.CharField(max_length=100)
-    periodo = models.CharField(max_length=100, help_text="Ej: Ene 2026 - Actualidad")
+    periodo = models.CharField(max_length=100)
     funciones = models.TextField()
-    estado = models.CharField(
-        max_length=20, 
-        choices=[('En curso', 'En curso'), ('Finalizado', 'Finalizado')], 
-        default='Finalizado'
-    )
 
     class Meta:
         verbose_name_plural = "Experiencia Laboral"
@@ -41,20 +26,30 @@ class ExperienciaLaboral(models.Model):
     def __str__(self):
         return f"{self.puesto} en {self.empresa}"
 
-class Habilidad(models.Model):
-    nombre = models.CharField(max_length=50)
+class Curso(models.Model):
+    titulo = models.CharField(max_length=200)
+    plataforma = models.CharField(max_length=100)
+    progreso = models.IntegerField(default=100)
+
+    def __str__(self):
+        return self.titulo
+
+class Reconocimiento(models.Model):
+    titulo = models.CharField(max_length=200)
+    institucion = models.CharField(max_length=200)
+    descripcion = models.TextField()
+    estado = models.CharField(max_length=100, default="Carrera en Curso")
+
+    def __str__(self):
+        return self.titulo
+
+class ProyectoGarage(models.Model):
+    nombre = models.CharField(max_length=100)
+    descripcion = models.TextField()
+    tecnologias = models.CharField(max_length=200)
 
     class Meta:
-        verbose_name_plural = "Habilidades"
+        verbose_name_plural = "Proyectos Garage Tech"
 
     def __str__(self):
         return self.nombre
-
-# --- OTROS ---
-class Task(models.Model):
-    title = models.CharField(max_length=200)
-    description = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.title
