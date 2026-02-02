@@ -67,6 +67,10 @@ class Educacion(models.Model):
     descripcion = models.TextField(blank=True, null=True, verbose_name="Descripción corta")
     fecha = models.DateField(null=True, blank=True, verbose_name="Fecha de Finalización")
 
+    # --- NUEVOS CAMPOS (Igual que en Experiencia) ---
+    logo = models.ImageField(upload_to='educacion/logos/', null=True, blank=True, verbose_name="Logo Institución")
+    archivo = models.FileField(upload_to='educacion/archivos/', null=True, blank=True, verbose_name="Archivo Adjunto (PDF)")
+
     class Meta:
         verbose_name = "Producto Académico"
         verbose_name_plural = "Productos Académicos"
@@ -83,7 +87,13 @@ class Proyecto(models.Model):
     fecha = models.DateField(null=True, blank=True, verbose_name="Fecha de Realización")
     tecnologias = models.CharField(max_length=200, blank=True, null=True)
     link = models.URLField(blank=True, null=True)
+    
+    # Este 'imagen' ya existía (quizás lo usas de portada), pero agregamos el LOGO pequeño y el ARCHIVO
     imagen = models.ImageField(upload_to='proyectos/', blank=True, null=True)
+    
+    # --- NUEVOS CAMPOS ---
+    logo = models.ImageField(upload_to='proyectos/logos/', null=True, blank=True, verbose_name="Logo Proyecto/Cliente")
+    archivo = models.FileField(upload_to='proyectos/archivos/', null=True, blank=True, verbose_name="Archivo Adjunto (PDF)")
 
     class Meta:
         verbose_name = "Proyecto"

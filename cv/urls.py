@@ -6,10 +6,8 @@ urlpatterns = [
     path('experiencia/', views.experiencia, name='experiencia'),
     path('educacion/', views.educacion, name='educacion'),
     path('proyectos/', views.proyectos, name='proyectos'),
+    path('cursos/', views.cursos, name='cursos'),
     path('certificados/', views.certificados, name='certificados'),
     path('garage/', views.garage, name='garage'),
     path('descargar-cv/', views.descargar_cv_pdf, name='descargar_cv_pdf'),
-    
-    # --- AGREGA ESTA LÍNEA ---
-    path('cursos/', views.cursos, name='cursos'),
 ]

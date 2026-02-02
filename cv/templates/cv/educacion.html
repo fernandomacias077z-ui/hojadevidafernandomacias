@@ -12,11 +12,18 @@
         <div class="col-lg-6 d-flex align-items-stretch">
             <div class="card border-0 shadow-sm rounded-4 w-100 hover-card overflow-hidden">
                 <div class="bg-success" style="height: 5px;"></div>
-                <div class="card-body p-4">
+                
+                <div class="card-body p-4 d-flex flex-column">
+                    
                     <div class="d-flex align-items-start mb-3">
-                        <div class="d-flex align-items-center justify-content-center bg-success-subtle text-success rounded-circle flex-shrink-0" style="width: 45px; height: 45px;">
-                            <i class="bi bi-journal-text fs-5"></i>
-                        </div>
+                        
+                        {% if prod.logo %}
+                            <img src="{{ prod.logo.url }}" class="rounded-circle shadow-sm object-fit-cover flex-shrink-0" style="width: 50px; height: 50px;" alt="Logo">
+                        {% else %}
+                            <div class="d-flex align-items-center justify-content-center bg-success-subtle text-success rounded-circle flex-shrink-0" style="width: 50px; height: 50px;">
+                                <i class="bi bi-journal-text fs-5"></i>
+                            </div>
+                        {% endif %}
                         <div class="ms-3">
                             <h6 class="fw-bold text-dark mb-1">{{ prod.titulo }}</h6>
                             <div class="text-success fw-bold small">{{ prod.institucion }}</div>
@@ -25,8 +32,17 @@
                             {% endif %}
                         </div>
                     </div>
-                    <p class="text-secondary small mb-0">{{ prod.descripcion }}</p>
-                </div>
+
+                    <p class="text-secondary small mb-3 flex-grow-1">{{ prod.descripcion }}</p>
+
+                    {% if prod.archivo %}
+                    <div class="mt-auto pt-3 border-top border-light text-end">
+                        <a href="{{ prod.archivo.url }}" target="_blank" class="btn btn-outline-success btn-sm rounded-pill fw-bold transition-btn">
+                            <i class="bi bi-file-earmark-pdf me-1"></i> Ver Documento
+                        </a>
+                    </div>
+                    {% endif %}
+                    </div>
             </div>
         </div>
 
@@ -43,6 +59,10 @@
     <style>
         .hover-card { transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
         .hover-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important; }
+        
+        .transition-btn { transition: transform 0.2s; }
+        .transition-btn:hover { transform: scale(1.05); }
+
         @media (min-width: 992px) {
             .dynamic-grid > .col-lg-6:last-child:nth-child(odd) { width: 100%; max-width: 100%; flex: 0 0 100%; }
         }
