@@ -6,10 +6,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # 2. CONFIGURACIÓN DE SEGURIDAD
 SECRET_KEY = 'django-insecure-f&()g4n=ks!29$_u8p6#=+^x$^oxu)@dz%^)^if0qi+kpm)rvl'
-DEBUG = True
-ALLOWED_HOSTS = []
 
-# 3. APLICACIONES (Aquí agregamos 'tasks')
+# IMPORTANTE: En Render DEBUG debería ser False, pero dejémoslo True para ver errores si surgen ahora.
+DEBUG = True 
+
+# CAMBIO 1: Permitir que Render entre a la página. '*' permite cualquier dominio.
+ALLOWED_HOSTS = ['*']
+
+# 3. APLICACIONES
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -17,11 +21,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tasks', # Tu aplicación registrada
+    'tasks', 
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    # CAMBIO 2: WhiteNoise debe ir JUSTO AQUÍ, después de SecurityMiddleware
+    "whitenoise.middleware.WhiteNoiseMiddleware", 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -65,16 +71,20 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# 6. IDIOMA Y HORA (Cambiado a español para Ecuador)
+# 6. IDIOMA Y HORA
 LANGUAGE_CODE = 'es-ec'
 TIME_ZONE = 'America/Guayaquil'
 USE_I18N = True
 USE_TZ = True
 
 # 7. ARCHIVOS ESTÁTICOS Y MULTIMEDIA
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'  # Agregué la barra inicial / para mejor compatibilidad
 
-# Configuración necesaria para las imágenes de ProyectoGarage
+# CAMBIO 3: Configuración VITAL para Render (Esto arregla el error "ImproperlyConfigured")
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# Configuración multimedia
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
