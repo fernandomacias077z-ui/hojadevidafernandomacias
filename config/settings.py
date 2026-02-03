@@ -1,29 +1,23 @@
 import os
-from pathlib import Path
-import dj_database_url
+# ... (otras importaciones)
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-prod-key-123')
-DEBUG = 'RENDER' not in os.environ 
-
-ALLOWED_HOSTS = ['*']
-
+# 1. APLICACIONES INSTALADAS
 INSTALLED_APPS = [
-    'cloudinary_storage', # <--- IMPORTANTE: Poner al inicio
+    'cloudinary_storage', # <--- IMPORTANTE: Al principio
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    'django.contrib.staticfiles', # <--- Asegúrate de que esto esté aquí
     'cv',
-    'cloudinary', # <--- IMPORTANTE: Poner al final
+    'cloudinary', # <--- IMPORTANTE: Al final
 ]
 
+# 2. MIDDLEWARE (Revisa que WhiteNoise esté aquí)
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', 
+    "whitenoise.middleware.WhiteNoiseMiddleware", # <--- OBLIGATORIO PARA QUE EL ADMIN SE VEA BIEN
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -32,45 +26,24 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'config.urls'
+# ... resto del archivo ...
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
+# 3. CONFIGURACIÓN HÍBRIDA (La solución definitiva)
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',
-        conn_max_age=600
-    )
-}
-
+# A) ARCHIVOS ESTÁTICOS (CSS, JS, ADMIN) -> Usan WhiteNoise
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# Esta línea es la que hace que el Admin funcione en Render:
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
+# B) ARCHIVOS MEDIA (Tus fotos subidas) -> Usan Cloudinary
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-# --- CONFIGURACIÓN CLOUDINARY (IMÁGENES) ---
-# --- CONFIGURACIÓN CLOUDINARY ---
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'PEGA_AQUI_TU_CLOUD_NAME',
-    'API_KEY': 'PEGA_AQUI_TU_API_KEY',
-    'API_SECRET': 'PEGA_AQUI_TU_API_SECRET',
-}
-
-# Esto le dice a Django: "Usa Cloudinary para las fotos, no el disco local"
+# Esta línea es la que hace que tus fotos no se borren:
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+# C) TUS CREDENCIALES DE CLOUDINARY (No las borres)
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'PON_AQUI_TU_CLOUD_NAME',
+    'API_KEY': 'PON_AQUI_TU_API_KEY',
+    'API_SECRET': 'PON_AQUI_TU_API_SECRET',
+}
