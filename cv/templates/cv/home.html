@@ -1,7 +1,5 @@
 {% extends 'cv/base.html' %}
-{% load static %}
-
-{% block content %}
+{% load static %} {% block content %}
 
 <style>
     /* =========================================
@@ -158,17 +156,13 @@
 
         <div class="col-lg-5 order-1 order-lg-2 text-center mb-5 mb-lg-0">
             
-            <div class="target-zone p-1" id="photoTarget">
+            <div class="target-zone p-1" id="photoTarget" style="min-width: 350px; min-height: 350px; background: #000;">
                 
-                {% if perfil.foto %}
-                    <img src="{{ perfil.foto.url }}" class="img-fluid" style="max-width: 350px; filter: grayscale(100%) contrast(1.2);">
-                {% else %}
-                    <div style="width: 350px; height: 350px; background: #000; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; flex-direction: column;">
-                        <i class="bi bi-person-x" style="font-size: 5rem; color: #333;"></i>
-                        <span class="text-secondary font-monospace mt-3 small">NO_SIGNAL</span>
-                    </div>
-                {% endif %}
-                
+                <img src="{% static 'cv/img/perfil.png' %}" 
+                     class="img-fluid" 
+                     alt="Foto de Perfil"
+                     style="max-width: 350px; width: 100%; height: auto; filter: grayscale(100%) contrast(1.2); display: block; margin: 0 auto;">
+
                 <div class="cyber-sight" id="customCursor">
                     <div class="sight-line-h"></div>
                     <div class="sight-line-v"></div>
