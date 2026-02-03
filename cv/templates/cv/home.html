@@ -1,25 +1,22 @@
 {% extends 'cv/base.html' %}
-{% load static %}
-
-{% block content %}
+{% load static %} {% block content %}
 
 <style>
     /* --- 1. ESTILOS DE LA MIRA TÁCTICA (MOUSE TRACKER) --- */
     .target-zone {
         position: relative;
         overflow: hidden;
-        cursor: none; /* Oculta el cursor normal dentro de esta zona */
+        cursor: none;
         border: 2px solid #00ff41;
         display: inline-block;
-        /* Animación del borde */
         animation: neon-border-cycle 4s infinite alternate; 
     }
 
     .cyber-sight {
         position: absolute;
-        top: 50%; left: 50%; /* Se ajustará con JS */
+        top: 50%; left: 50%;
         transform: translate(-50%, -50%);
-        pointer-events: none; /* Permite hacer clic a través de la mira */
+        pointer-events: none;
         opacity: 0;
         transition: opacity 0.2s ease;
         z-index: 50;
@@ -27,10 +24,8 @@
         display: flex; align-items: center; justify-content: center;
     }
 
-    /* Mostrar mira al pasar el mouse */
     .target-zone:hover .cyber-sight { opacity: 1; }
 
-    /* Círculo giratorio de la mira */
     .sight-circle {
         width: 60px; height: 60px;
         border: 1px dashed #00ff41;
@@ -39,7 +34,6 @@
         animation: spin-sight 10s linear infinite, neon-border-cycle 4s infinite alternate;
     }
 
-    /* Punto central */
     .sight-dot {
         width: 4px; height: 4px;
         background-color: #ff003c;
@@ -47,7 +41,6 @@
         box-shadow: 0 0 10px #ff003c;
     }
 
-    /* Líneas de la cruz */
     .sight-line-h, .sight-line-v {
         position: absolute;
         background-color: #00ff41;
@@ -57,7 +50,6 @@
     .sight-line-h { width: 100%; height: 1px; top: 50%; }
     .sight-line-v { height: 100%; width: 1px; left: 50%; }
 
-    /* Coordenadas numéricas dinámicas */
     .sight-coords {
         position: absolute; bottom: -30px; right: -40px;
         font-family: 'JetBrains Mono', monospace; font-size: 10px;
@@ -68,10 +60,7 @@
 
     @keyframes spin-sight { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-
-    /* --- 2. ANIMACIONES DINÁMICAS (COLORES CAMBIANTES) --- */
-    
-    /* Borde que cambia de color (Verde > Azul > Rojo) */
+    /* --- 2. ANIMACIONES DINÁMICAS --- */
     @keyframes neon-border-cycle {
         0% { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
         33% { border-color: #00d2ff; box-shadow: 0 0 10px rgba(0, 210, 255, 0.2); }
@@ -79,7 +68,6 @@
         100% { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
     }
 
-    /* Texto que cambia de color */
     @keyframes neon-text-cycle {
         0% { color: #00ff41; text-shadow: 0 0 5px rgba(0, 255, 65, 0.5); }
         33% { color: #00d2ff; text-shadow: 0 0 5px rgba(0, 210, 255, 0.5); }
@@ -87,7 +75,6 @@
         100% { color: #00ff41; text-shadow: 0 0 5px rgba(0, 255, 65, 0.5); }
     }
 
-    /* Fondo dinámico para etiquetas */
     @keyframes neon-bg-cycle {
         0% { background-color: #00ff41; color: black; }
         33% { background-color: #00d2ff; color: black; }
@@ -95,12 +82,10 @@
         100% { background-color: #00ff41; color: black; }
     }
 
-    /* Clases de utilidad para aplicar animaciones */
     .border-dynamic { animation: neon-border-cycle 6s infinite linear; }
     .text-dynamic { animation: neon-text-cycle 6s infinite linear; }
     .bg-dynamic { animation: neon-bg-cycle 6s infinite linear; }
 
-    /* Efecto Hover en tarjetas */
     .hacker-card {
         background-color: rgba(5, 5, 5, 0.9);
         border: 1px solid #333;
@@ -110,11 +95,10 @@
     }
     .hacker-card:hover {
         transform: translateY(-5px);
-        animation: neon-border-cycle 2s infinite linear; /* Se activa al pasar mouse */
+        animation: neon-border-cycle 2s infinite linear;
     }
     .hacker-card h4 { font-weight: bold; margin-bottom: 1rem; color: #fff; }
 
-    /* Cursor parpadeante */
     .cursor-blink::after { content: '_'; animation: blink 1s infinite; }
     @keyframes blink { 50% { opacity: 0; } }
 
@@ -165,13 +149,7 @@
             
             <div class="target-zone p-1" id="photoTarget">
                 
-                {% if perfil.foto %}
-                    <img src="{{ perfil.foto.url }}" class="img-fluid" style="max-width: 350px; filter: grayscale(100%) contrast(1.2);">
-                {% else %}
-                    <div style="width: 350px; height: 350px; background: #000; display: flex; align-items: center; justify-content: center;">
-                        <i class="bi bi-person-fill" style="font-size: 8rem; color: #333;"></i>
-                    </div>
-                {% endif %}
+                <img src="{% static 'cv/img/perfil.png' %}" class="img-fluid" style="max-width: 350px; filter: grayscale(100%) contrast(1.2);">
                 
                 <div class="cyber-sight" id="customCursor">
                     <div class="sight-line-h"></div>
@@ -230,16 +208,11 @@
     const coordY = document.getElementById('coordY');
 
     container.addEventListener('mousemove', (e) => {
-        // Obtenemos la posición relativa a la caja de la foto
         const rect = container.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
-
-        // Movemos la mira
         cursor.style.left = x + 'px';
         cursor.style.top = y + 'px';
-
-        // Actualizamos los números de coordenadas para efecto técnico
         coordX.innerText = Math.round(x).toString().padStart(3, '0');
         coordY.innerText = Math.round(y).toString().padStart(3, '0');
     });
