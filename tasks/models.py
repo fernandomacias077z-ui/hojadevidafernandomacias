@@ -2,19 +2,39 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 
+# MODELO ACTUALIZADO SEGÚN TU SQL
 class DatosPersonales(models.Model):
-    nombre = models.CharField(max_length=200)
-    cedula = models.CharField(max_length=20)
-    telefono = models.CharField(max_length=20)
-    origen = models.CharField(max_length=200)
-    estado_civil = models.CharField(max_length=50, default="Soltero")
+    SEXO_CHOICES = [('M', 'Masculino'), ('F', 'Femenino')]
+    
+    idperfil = models.IntegerField(primary_key=True, verbose_name="ID Perfil")
+    descripcionperfil = models.CharField(max_length=50, blank=True, null=True)
+    perfilactivo = models.IntegerField(default=1)
+    apellidos = models.CharField(max_length=60)
+    nombres = models.CharField(max_length=60)
+    nacionalidad = models.CharField(max_length=20)
+    lugarnacimiento = models.CharField(max_length=60)
+    fechanacimiento = models.DateField()
+    numerocedula = models.CharField(max_length=10)
+    sexo = models.CharField(max_length=1, choices=SEXO_CHOICES)
+    estadocivil = models.CharField(max_length=50)
+    licenciaconducir = models.CharField(max_length=6, blank=True, null=True)
+    telefonoconvencional = models.CharField(max_length=15, blank=True, null=True)
+    telefonofijo = models.CharField(max_length=15, blank=True, null=True)
+    direcciontrabajo = models.CharField(max_length=50, blank=True, null=True)
+    direcciondomiciliaria = models.CharField(max_length=50)
+    sitioweb = models.CharField(max_length=60, blank=True, null=True)
+
+    @property
+    def nombre(self):
+        return f"{self.nombres} {self.apellidos}"
 
     class Meta:
         verbose_name_plural = "Datos Personales"
 
     def __str__(self):
-        return self.nombre
+        return f"{self.nombres} {self.apellidos}"
 
+# RECOBRANDO LOS MODELOS QUE FALTABAN (Importante para tus vistas)
 class ExperienciaLaboral(models.Model):
     puesto = models.CharField(max_length=200)
     empresa = models.CharField(max_length=200)
@@ -26,17 +46,6 @@ class ExperienciaLaboral(models.Model):
     class Meta:
         verbose_name_plural = "Experiencias Laborales"
 
-    def clean(self):
-        super().clean()
-        if self.fecha_fin and self.fecha_inicio and self.fecha_fin < self.fecha_inicio:
-            raise ValidationError({'fecha_fin': _('La fecha de fin no puede ser anterior a la de inicio.')})
-        if self.actualidad and self.fecha_fin:
-            raise ValidationError({'fecha_fin': _('Si es un trabajo actual, no debe tener fecha de fin.')})
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
-
     def __str__(self):
         return f"{self.puesto} - {self.empresa}"
 
@@ -47,13 +56,6 @@ class Curso(models.Model):
 
     def __str__(self):
         return self.nombre
-
-class ProyectoGarage(models.Model):
-    titulo = models.CharField(max_length=200)
-    descripcion = models.TextField()
-
-    def __str__(self):
-        return self.titulo
 
 class Habilidad(models.Model):
     nombre = models.CharField(max_length=100)
@@ -70,25 +72,18 @@ class Reconocimiento(models.Model):
     institucion = models.CharField(max_length=200)
     fecha_inicio = models.DateField()
     fecha_fin = models.DateField(null=True, blank=True)
-    en_curso = models.BooleanField(default=False, verbose_name="¿Está en curso?")
+    en_curso = models.BooleanField(default=False)
     descripcion = models.TextField(blank=True)
 
     class Meta:
         verbose_name_plural = "Reconocimientos"
 
-    def clean(self):
-        super().clean()
-        if self.fecha_fin and self.fecha_inicio and self.fecha_fin < self.fecha_inicio:
-            raise ValidationError({'fecha_fin': _('La fecha de fin no puede ser anterior a la de inicio.')})
-        if self.en_curso and self.fecha_fin:
-            raise ValidationError({'fecha_fin': _('Si el reconocimiento está en curso, no debe tener fecha de fin.')})
-        if not self.en_curso and not self.fecha_fin:
-            raise ValidationError({'fecha_fin': _('Debe indicar una fecha de fin si el reconocimiento ya fue terminado.')})
+    def __str__(self):
+        return self.nombre
 
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        super().save(*args, **kwargs)
+class ProyectoGarage(models.Model):
+    titulo = models.CharField(max_length=200)
+    descripcion = models.TextField()
 
     def __str__(self):
-        estado = " (En curso)" if self.en_curso else ""
-        return f"{self.nombre}{estado}"
+        return self.titulo
