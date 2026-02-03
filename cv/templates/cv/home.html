@@ -93,7 +93,17 @@
         </div>
 
         <div class="col-lg-5 order-1 order-lg-2 text-center mb-5 mb-lg-0">
-            <div class="target-zone p-1" id="photoTarget" style="min-width: 350px; min-height: 350px; background: #000;">
+            <div class="target-zone p-1" id="photoTarget">
+    <img src="{% static 'cv/img/perfil.jpg' %}" 
+         class="img-fluid" 
+         alt="Bruno Fernando"
+         style="max-width: 350px; width: 100%; height: auto; display: block; margin: 0 auto; filter: contrast(1.1);">
+    
+    <div class="cyber-sight">
+        <div class="sight-line-h"></div>
+        <div class="sight-line-v"></div>
+    </div>
+</div>
                 
                 {% if perfil.foto %}
                     <img src="{{ perfil.foto.url }}" class="img-fluid" style="max-width: 350px; filter: grayscale(100%) contrast(1.2);">

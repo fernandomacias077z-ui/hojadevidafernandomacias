@@ -5,7 +5,7 @@
 {% block branding %}
 <h1 id="site-name">
     <a href="{% url 'admin:index' %}" style="font-family: 'JetBrains Mono', monospace; text-transform: uppercase; letter-spacing: 2px;">
-        &gt;_ SYSTEM_ROOT_ACCESS
+        &gt;_ SISTEMA_ROOT
     </a>
 </h1>
 {% endblock %}
@@ -14,12 +14,12 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
 
 <style>
-    /* --- ANIMACIONES GLOBALES (COPIADAS DE TU WEB) --- */
+    /* --- ANIMACIONES RGB (IGUAL QUE TU WEB) --- */
     @keyframes neon-border-cycle {
-        0%   { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.3); }
-        33%  { border-color: #ff003c; box-shadow: 0 0 10px rgba(255, 0, 60, 0.3); }
-        66%  { border-color: #00f3ff; box-shadow: 0 0 10px rgba(0, 243, 255, 0.3); }
-        100% { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.3); }
+        0%   { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.3); color: #00ff41; }
+        33%  { border-color: #ff003c; box-shadow: 0 0 10px rgba(255, 0, 60, 0.3); color: #ff003c; }
+        66%  { border-color: #00f3ff; box-shadow: 0 0 10px rgba(0, 243, 255, 0.3); color: #00f3ff; }
+        100% { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.3); color: #00ff41; }
     }
 
     @keyframes neon-text-cycle {
@@ -29,146 +29,80 @@
         100% { color: #00ff41; text-shadow: 0 0 5px rgba(0, 255, 65, 0.5); }
     }
 
-    /* --- SOBREESCRIBIENDO ESTILOS DE DJANGO ADMIN --- */
-    
-    /* Fondo General */
+    /* --- SOBREESCRIBIENDO DJANGO ADMIN --- */
     body, html, #container {
         background-color: #020202 !important;
         color: #e0e0e0 !important;
         font-family: 'JetBrains Mono', monospace !important;
+        background-image: 
+            linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px) !important;
+        background-size: 40px 40px !important;
     }
 
-    /* Header (Barra superior) */
+    /* Header */
     #header {
         background: rgba(0, 0, 0, 0.95) !important;
-        border-bottom: 2px solid #00ff41 !important;
+        border-bottom: 2px solid;
         animation: neon-border-cycle 12s infinite alternate;
-        color: white !important;
     }
     
-    #header a:link, #header a:visited {
-        color: white !important;
-    }
+    #header a { color: white !important; }
+    #site-name a { animation: neon-text-cycle 12s infinite alternate; }
+    #user-tools { color: #888; }
 
-    /* Branding (Nombre del sitio) */
-    #site-name a {
-        animation: neon-text-cycle 12s infinite alternate;
-        font-weight: bold;
-    }
-
-    /* Módulos / Tablas */
-    .module, .module table, .module caption {
+    /* Módulos y Tablas */
+    .module {
         background: #0a0a0a !important;
-        border: none !important;
-    }
-    
-    .module caption {
-        background: #111 !important;
-        color: #00ff41 !important;
         border: 1px solid #333 !important;
-        animation: neon-border-cycle 12s infinite alternate;
-    }
-
-    /* Enlaces */
-    a:link, a:visited {
-        color: #00ff41 !important;
-        text-decoration: none;
-        transition: 0.3s;
+        border-radius: 0 !important;
     }
     
-    a:hover {
+    .module caption, .module h2 {
+        background: #111 !important;
         color: white !important;
-        text-shadow: 0 0 8px #00ff41;
+        animation: neon-text-cycle 12s infinite alternate;
     }
 
     /* Botones */
-    .button, input[type=submit], input[type=button], .submit-row input {
+    .button, input[type=submit], .submit-row input {
         background: black !important;
-        border: 1px solid #00ff41 !important;
-        color: #00ff41 !important;
+        border: 1px solid !important;
         text-transform: uppercase;
-        border-radius: 0 !important;
         font-weight: bold;
-        animation: neon-border-cycle 12s infinite alternate, neon-text-cycle 12s infinite alternate;
         padding: 10px 20px !important;
+        border-radius: 0 !important;
+        animation: neon-border-cycle 12s infinite alternate;
         transition: 0.3s;
+        cursor: pointer;
     }
 
     .button:hover, input[type=submit]:hover {
-        background: #00ff41 !important;
+        background: white !important;
         color: black !important;
         animation: none !important;
-        box-shadow: 0 0 20px #00ff41;
+        box-shadow: 0 0 20px white;
     }
 
-    /* Botón de Borrar (Rojo) */
-    .deletelink {
-        background: transparent !important;
-        border: 1px solid #ff003c !important;
-        color: #ff003c !important;
-        border-radius: 0 !important;
-        padding: 8px 15px !important;
-    }
-    .deletelink:hover {
-        background: #ff003c !important;
-        color: white !important;
-    }
-
-    /* Inputs de texto (Login y formularios) */
-    input[type=text], input[type=password], input[type=email], textarea, select {
+    /* Inputs */
+    input[type=text], input[type=password], textarea, select {
         background-color: #050505 !important;
         border: 1px solid #333 !important;
-        color: #00ff41 !important;
-        font-family: 'JetBrains Mono', monospace !important;
+        color: white !important;
         border-radius: 0 !important;
-        padding: 10px !important;
+        padding: 8px !important;
     }
     
-    input:focus, textarea:focus, select:focus {
-        border-color: #00ff41 !important;
-        box-shadow: 0 0 10px rgba(0, 255, 65, 0.3) !important;
+    input:focus {
+        border-color: white !important;
         outline: none;
     }
 
-    /* Login Box Específico */
-    .login .content {
-        background: black !important;
-        border: 2px solid #00ff41 !important;
-        animation: neon-border-cycle 12s infinite alternate;
-        padding: 40px !important;
-    }
-    
-    .login #header {
-        display: none; /* Ocultar header por defecto en login para hacerlo más limpio */
-    }
+    /* Links */
+    a:link, a:visited { color: #888; transition: 0.3s; }
+    a:hover { color: white !important; animation: neon-text-cycle 1s infinite; }
 
-    /* Breadcrumbs (Ruta de navegación) */
-    div.breadcrumbs {
-        background: #111 !important;
-        border-bottom: 1px solid #333 !important;
-        color: #888 !important;
-    }
-
-    /* Filas de tabla */
-    tr.row1 { background: #0a0a0a !important; }
-    tr.row2 { background: #0f0f0f !important; }
-    
-    tr:hover td {
-        background: #1a1a1a !important;
-        color: white !important;
-    }
-
-    /* Mensajes de éxito/error */
-    .messagelist li.success {
-        background: rgba(0, 255, 65, 0.1) !important;
-        border-left: 5px solid #00ff41 !important;
-        color: #00ff41 !important;
-    }
-    .messagelist li.error {
-        background: rgba(255, 0, 60, 0.1) !important;
-        border-left: 5px solid #ff003c !important;
-        color: #ff003c !important;
-    }
-
+    /* Mensajes */
+    .messagelist li { background: #111 !important; border-left: 5px solid; animation: neon-border-cycle 12s infinite alternate; }
 </style>
 {% endblock %}

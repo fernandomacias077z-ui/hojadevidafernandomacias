@@ -75,7 +75,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'cv', 'static'),
 ]
 
-if not DEBUG:
+if not os.environ.get('DEBUG'):
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

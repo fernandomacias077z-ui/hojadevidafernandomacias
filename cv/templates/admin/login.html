@@ -1,0 +1,152 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+    /* Ocultar barra superior en login */
+    #header { display: none !important; }
+
+    /* Centrar todo */
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        overflow: hidden;
+    }
+
+    #container {
+        width: 100%;
+        max-width: 450px;
+        background: transparent !important;
+        margin: 0 auto;
+    }
+
+    #content {
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    #content-main {
+        float: none !important;
+        width: 100% !important;
+    }
+
+    /* CAJA DE LOGIN HACKER */
+    .login .content {
+        background: rgba(0, 0, 0, 0.9) !important;
+        border: 2px solid;
+        animation: neon-border-cycle 12s infinite alternate; /* RGB CYCLE */
+        padding: 40px !important;
+        box-shadow: 0 0 30px rgba(0,0,0,0.8) !important;
+        margin-top: 0 !important;
+    }
+
+    /* TÍTULO */
+    .login h1 {
+        margin: 0 0 20px 0 !important;
+        font-size: 1.5rem;
+        text-align: center;
+        text-transform: uppercase;
+        animation: neon-text-cycle 12s infinite alternate; /* RGB TEXT */
+    }
+
+    /* FORMULARIO */
+    .form-row {
+        border: none !important;
+        padding: 10px 0 !important;
+    }
+
+    .form-row label {
+        display: block;
+        margin-bottom: 5px;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        color: #888;
+        padding: 0 !important;
+    }
+
+    .form-row input {
+        width: 100%;
+        box-sizing: border-box;
+        background: #111 !important;
+        border: 1px solid #333 !important;
+        color: white !important;
+        padding: 12px !important;
+        font-family: 'JetBrains Mono', monospace;
+    }
+
+    .form-row input:focus {
+        border-color: white !important;
+        box-shadow: 0 0 10px rgba(255,255,255,0.2);
+    }
+
+    /* BOTÓN */
+    .submit-row {
+        padding: 20px 0 0 0 !important;
+        background: transparent !important;
+        border: none !important;
+        display: flex;
+        justify-content: center;
+    }
+
+    .submit-row input {
+        width: 100%;
+        background: black !important;
+        border: 1px solid !important;
+        animation: neon-border-cycle 12s infinite alternate; /* RGB BUTTON */
+        color: white !important;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 12px !important;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .submit-row input:hover {
+        background: white !important;
+        color: black !important;
+        animation: none !important;
+        box-shadow: 0 0 20px white;
+    }
+
+    /* Eliminar textos extra */
+    .password-reset-link { display: none; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-box">
+    <h1>&gt;_ SOLICITUD_ACCESO</h1>
+    
+    {% if form.errors and not form.non_field_errors %}
+    <p class="errornote" style="color: #ff003c !important; border: 1px solid #ff003c; padding: 10px; background: rgba(255,0,60,0.1);">
+        ACCESO DENEGADO. CREDENCIALES INVÁLIDAS.
+    </p>
+    {% endif %}
+
+    {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+    <p class="errornote" style="color: #ff003c !important;">
+        {{ error }}
+    </p>
+    {% endfor %}
+    {% endif %}
+
+    <form action="{{ app_path }}" method="post" id="login-form">{% csrf_token %}
+    <div class="form-row">
+        <label>ID_USUARIO:</label>
+        {{ form.username }}
+    </div>
+    <div class="form-row">
+        <label>CONTRASEÑA:</label>
+        {{ form.password }}
+        <input type="hidden" name="next" value="{{ next }}">
+    </div>
+    <div class="submit-row">
+        <input type="submit" value="INICIAR_SESIÓN">
+    </div>
+    </form>
+</div>
+{% endblock %}

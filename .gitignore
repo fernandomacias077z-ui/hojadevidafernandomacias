@@ -1,5 +1,25 @@
-db.sqlite3
-__pycache__
-*.pyc
+# --- SEGURIDAD Y ENTORNO (CRÍTICO) ---
 .env
+env/
 venv/
+ENV/
+*.env
+auth_key.json
+
+# --- DJANGO ---
+db.sqlite3
+db.sqlite3-journal
+media/
+staticfiles/
+__pycache__/
+*.py[cod]
+*$py.class
+
+# --- SISTEMA Y LOGS ---
+*.log
+.DS_Store
+Thumbs.db
+
+# --- SECRETOS DE DESPLIEGUE ---
+.ssh/
+secrets.json
