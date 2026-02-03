@@ -2,34 +2,31 @@ import os
 from pathlib import Path
 import dj_database_url
 
-# --- 1. DEFINICIÓN DE RUTA BASE (ESTO FALTABA Y DABA ERROR) ---
+# --- 1. RUTA BASE ---
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- 2. SEGURIDAD ---
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-clave-secreta-por-defecto')
-
-# En Render DEBUG será False. En tu PC será True.
-DEBUG = 'RENDER' not in os.environ
-
+SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-prod-key-123')
+DEBUG = 'RENDER' not in os.environ 
 ALLOWED_HOSTS = ['*']
 
-# --- 3. APLICACIONES INSTALADAS (EL ORDEN ES CRUCIAL) ---
+# --- 3. APPS INSTALADAS ---
 INSTALLED_APPS = [
-    'cloudinary_storage',       # <--- OBLIGATORIO: Debe ir PRIMERO
+    'cloudinary_storage',       # Debe ir primero para interceptar fotos
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles', # <--- OBLIGATORIO para el Admin
-    'cv',                       # Tu aplicación
-    'cloudinary',               # <--- OBLIGATORIO: Debe ir al FINAL
+    'django.contrib.staticfiles', # Necesario para WhiteNoise
+    'cv',
+    'cloudinary',               # Debe ir al final
 ]
 
-# --- 4. MIDDLEWARE (WHITENOISE AQUÍ ES VITAL) ---
+# --- 4. MIDDLEWARE ---
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # <--- ESTO PINTA EL ADMIN DE AZUL
+    'whitenoise.middleware.WhiteNoiseMiddleware', # ESTO ARREGLA EL ADMIN GRIS
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -56,8 +53,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
-
 # --- 5. BASE DE DATOS ---
 DATABASES = {
     'default': dj_database_url.config(
@@ -66,36 +61,17 @@ DATABASES = {
     )
 }
 
-# --- 6. VALIDADORES DE CONTRASEÑA ---
-AUTH_PASSWORD_VALIDATORS = [
-    { 'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator', },
-    { 'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', },
-    { 'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator', },
-    { 'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator', },
-]
-
-# --- 7. IDIOMA Y ZONA HORARIA ---
-LANGUAGE_CODE = 'es-es'
-TIME_ZONE = 'America/Guayaquil'
-USE_I18N = True
-USE_TZ = True
-
-# --- 8. ARCHIVOS ESTÁTICOS (CSS/JS - ESTO ARREGLA EL ADMIN) ---
+# --- 6. ARCHIVOS ESTÁTICOS (ADMIN / CSS) ---
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# Esta configuración activa la compresión de WhiteNoise para producción
-# Sin esto, el Admin sale gris/roto en Render
 if not DEBUG:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# --- 9. ARCHIVOS MEDIA (FOTOS - ESTO ARREGLA LAS FOTOS NEGRAS) ---
+# --- 7. ARCHIVOS MEDIA (FOTOS / CLOUDINARY) ---
 MEDIA_URL = '/media/'
-# Esto le dice a Django: "Guarda las fotos en Cloudinary, no en el disco local"
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-# --- 10. TUS CREDENCIALES DE CLOUDINARY ---
-# (Pon aquí tus claves reales que copiaste de cloudinary.com)
+# REEMPLAZA ESTO CON TUS CLAVES DE CLOUDINARY.COM
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'TU_CLOUD_NAME',
     'API_KEY': 'TU_API_KEY',

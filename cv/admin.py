@@ -1,47 +1,31 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from .models import Perfil, Experiencia, Educacion, Proyecto, Certificado, Producto, Curso
 
-# --- PERSONALIZACIÓN DEL ADMIN ---
-admin.site.site_header = "Admin"
-admin.site.site_title = "Panel de Admin"
-admin.site.index_title = "Panel de Control"
+admin.site.site_header = "SISTEMA_ROOT_ADMIN"
 
 @admin.register(Perfil)
 class PerfilAdmin(admin.ModelAdmin):
-    list_display = ('nombre', 'apellido', 'dni', 'profesion')
-    search_fields = ('nombre', 'apellido', 'dni')
-
-@admin.register(Experiencia)
-class ExperienciaAdmin(admin.ModelAdmin):
-    list_display = ('cargo', 'empresa', 'perfil', 'fecha_inicio')
-    list_filter = ('perfil',) # Filtro lateral para ver experiencias por perfil
-
-@admin.register(Educacion)
-class EducacionAdmin(admin.ModelAdmin):
-    list_display = ('titulo', 'institucion', 'perfil', 'fecha')
-    list_filter = ('perfil',)
+    list_display = ('nombre', 'apellido', 'profesion', 'ver_foto')
+    
+    def ver_foto(self, obj):
+        if obj.foto:
+            return format_html('<img src="{}" style="width: 50px; height: 50px; border-radius: 50%;" />', obj.foto.url)
+        return "SIN_FOTO"
+    ver_foto.short_description = 'Imagen'
 
 @admin.register(Proyecto)
 class ProyectoAdmin(admin.ModelAdmin):
-    list_display = ('titulo', 'perfil', 'fecha')
-    list_filter = ('perfil',)
-
-@admin.register(Certificado)
-class CertificadoAdmin(admin.ModelAdmin):
-    list_display = ('titulo', 'institucion', 'perfil', 'fecha')
-    list_filter = ('perfil',)
-
-@admin.register(Producto)
-class ProductoAdmin(admin.ModelAdmin):
-    list_display = ('titulo', 'precio', 'estado', 'perfil', 'disponible')
-    list_filter = ('perfil', 'estado')
-
-@admin.register(Curso)
-class CursoAdmin(admin.ModelAdmin):
-    list_display = ('titulo', 'fecha', 'perfil', 'ver_pdf')
-    list_filter = ('perfil',)
-    search_fields = ('titulo', 'descripcion')
+    list_display = ('titulo', 'fecha', 'ver_imagen')
     
-    def ver_pdf(self, obj):
-        return "Sí" if obj.pdf_archivo else "No"
-    ver_pdf.short_description = "¿Tiene PDF?"
+    def ver_imagen(self, obj):
+        if obj.imagen:
+            return format_html('<img src="{}" style="width: 60px; height: 40px; border-radius: 4px;" />', obj.imagen.url)
+        return "-"
+
+# Registrar los demás sin cambios visuales adicionales
+admin.site.register(Experiencia)
+admin.site.register(Educacion)
+admin.site.register(Certificado)
+admin.site.register(Producto)
+admin.site.register(Curso)
