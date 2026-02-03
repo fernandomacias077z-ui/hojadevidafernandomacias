@@ -10,13 +10,15 @@ DEBUG = 'RENDER' not in os.environ
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
+    'cloudinary_storage', # <--- IMPORTANTE: Poner al inicio
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cv', 
+    'cv',
+    'cloudinary', # <--- IMPORTANTE: Poner al final
 ]
 
 MIDDLEWARE = [
@@ -61,3 +63,14 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# --- CONFIGURACIÓN CLOUDINARY (IMÁGENES) ---
+# --- CONFIGURACIÓN CLOUDINARY ---
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'PEGA_AQUI_TU_CLOUD_NAME',
+    'API_KEY': 'PEGA_AQUI_TU_API_KEY',
+    'API_SECRET': 'PEGA_AQUI_TU_API_SECRET',
+}
+
+# Esto le dice a Django: "Usa Cloudinary para las fotos, no el disco local"
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'

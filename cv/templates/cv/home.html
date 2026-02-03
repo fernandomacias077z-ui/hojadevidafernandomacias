@@ -1,114 +1,63 @@
 {% extends 'cv/base.html' %}
-{% load static %} {% block content %}
+{% load static %}
+
+{% block content %}
 
 <style>
-    /* =========================================
-       1. ESTILOS DE LA MIRA TÁCTICA Y ANIMACIONES
-       ========================================= */
-    
-    /* Zona del objetivo (Contenedor de la foto) */
+    /* ESTILOS DE MIRA Y ANIMACIONES (IGUAL QUE ANTES) */
     .target-zone {
-        position: relative;
-        overflow: hidden;
-        cursor: none; /* Ocultamos el cursor real */
-        border: 2px solid #00ff41;
-        display: inline-block;
+        position: relative; overflow: hidden; cursor: none;
+        border: 2px solid #00ff41; display: inline-block;
         animation: neon-border-cycle 4s infinite alternate; 
     }
-
-    /* La mira en sí (Overlay) */
     .cyber-sight {
-        position: absolute;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        pointer-events: none;
-        opacity: 0;
-        transition: opacity 0.2s ease;
-        z-index: 50;
-        width: 100px; height: 100px;
-        display: flex; align-items: center; justify-content: center;
+        position: absolute; top: 50%; left: 50%;
+        transform: translate(-50%, -50%); pointer-events: none;
+        opacity: 0; transition: opacity 0.2s ease; z-index: 50;
+        width: 100px; height: 100px; display: flex; align-items: center; justify-content: center;
     }
-
-    /* Mostrar mira solo al pasar el mouse */
     .target-zone:hover .cyber-sight { opacity: 1; }
-
-    /* Elementos de la mira */
     .sight-circle {
-        width: 60px; height: 60px;
-        border: 1px dashed #00ff41;
-        border-radius: 50%;
-        position: absolute;
-        animation: spin-sight 10s linear infinite, neon-border-cycle 4s infinite alternate;
+        width: 60px; height: 60px; border: 1px dashed #00ff41; border-radius: 50%;
+        position: absolute; animation: spin-sight 10s linear infinite, neon-border-cycle 4s infinite alternate;
     }
-
-    .sight-dot {
-        width: 4px; height: 4px;
-        background-color: #ff003c;
-        border-radius: 50%;
-        box-shadow: 0 0 10px #ff003c;
-    }
-
-    .sight-line-h, .sight-line-v {
-        position: absolute;
-        background-color: #00ff41;
-        opacity: 0.6;
-        box-shadow: 0 0 5px #00ff41;
-    }
+    .sight-dot { width: 4px; height: 4px; background-color: #ff003c; border-radius: 50%; box-shadow: 0 0 10px #ff003c; }
+    .sight-line-h, .sight-line-v { position: absolute; background-color: #00ff41; opacity: 0.6; box-shadow: 0 0 5px #00ff41; }
     .sight-line-h { width: 100%; height: 1px; top: 50%; }
     .sight-line-v { height: 100%; width: 1px; left: 50%; }
-
     .sight-coords {
         position: absolute; bottom: -30px; right: -40px;
         font-family: 'JetBrains Mono', monospace; font-size: 10px;
-        background: rgba(0,0,0,0.8); color: #00ff41;
-        padding: 2px 4px; border: 1px solid #00ff41;
-        white-space: nowrap;
+        background: rgba(0,0,0,0.8); color: #00ff41; padding: 2px 4px; border: 1px solid #00ff41; white-space: nowrap;
     }
-
     @keyframes spin-sight { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-    /* =========================================
-       2. ANIMACIONES DE COLOR (NEÓN)
-       ========================================= */
     @keyframes neon-border-cycle {
         0% { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
         33% { border-color: #00d2ff; box-shadow: 0 0 10px rgba(0, 210, 255, 0.2); }
         66% { border-color: #ff003c; box-shadow: 0 0 10px rgba(255, 0, 60, 0.2); }
         100% { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
     }
-
     @keyframes neon-text-cycle {
         0% { color: #00ff41; text-shadow: 0 0 5px rgba(0, 255, 65, 0.5); }
         33% { color: #00d2ff; text-shadow: 0 0 5px rgba(0, 210, 255, 0.5); }
         66% { color: #ff003c; text-shadow: 0 0 5px rgba(255, 0, 60, 0.5); }
         100% { color: #00ff41; text-shadow: 0 0 5px rgba(0, 255, 65, 0.5); }
     }
-
     @keyframes neon-bg-cycle {
         0% { background-color: #00ff41; color: black; }
         33% { background-color: #00d2ff; color: black; }
         66% { background-color: #ff003c; color: white; }
         100% { background-color: #00ff41; color: black; }
     }
-
     .border-dynamic { animation: neon-border-cycle 6s infinite linear; }
     .text-dynamic { animation: neon-text-cycle 6s infinite linear; }
     .bg-dynamic { animation: neon-bg-cycle 6s infinite linear; }
-
-    /* Tarjetas */
     .hacker-card {
-        background-color: rgba(5, 5, 5, 0.9);
-        border: 1px solid #333;
-        padding: 1.5rem; height: 100%;
-        transition: all 0.3s ease;
-        position: relative; overflow: hidden;
+        background-color: rgba(5, 5, 5, 0.9); border: 1px solid #333; padding: 1.5rem; height: 100%;
+        transition: all 0.3s ease; position: relative; overflow: hidden;
     }
-    .hacker-card:hover {
-        transform: translateY(-5px);
-        animation: neon-border-cycle 2s infinite linear;
-    }
+    .hacker-card:hover { transform: translateY(-5px); animation: neon-border-cycle 2s infinite linear; }
     .hacker-card h4 { font-weight: bold; margin-bottom: 1rem; color: #fff; }
-
     .cursor-blink::after { content: '_'; animation: blink 1s infinite; }
     @keyframes blink { 50% { opacity: 0; } }
 </style>
@@ -127,14 +76,8 @@
         
         <div class="col-lg-7 order-2 order-lg-1">
             <p class="mb-2 text-secondary font-monospace">> ./ejecutando_bio.exe</p>
-            
-            <h1 class="display-1 fw-bold mb-0 text-white typing-cursor" style="letter-spacing: -2px;">
-                {{ perfil.nombre|upper }}
-            </h1>
-            <h2 class="h3 mb-4 text-dynamic font-monospace">
-                > {{ perfil.profesion }}
-            </h2>
-
+            <h1 class="display-1 fw-bold mb-0 text-white typing-cursor" style="letter-spacing: -2px;">{{ perfil.nombre|upper }}</h1>
+            <h2 class="h3 mb-4 text-dynamic font-monospace">> {{ perfil.profesion }}</h2>
             <div class="p-4 mb-5 position-relative border-dynamic" style="background: rgba(0, 10, 0, 0.8);">
                 <div class="position-absolute top-0 start-0 px-2 bg-dynamic font-monospace small">LOGS_PERFIL</div>
                 <p class="mb-0 mt-3 text-light font-monospace" style="line-height: 1.6;">
@@ -143,113 +86,66 @@
                     <span class="cursor-blink text-success"></span>
                 </p>
             </div>
-
             <div class="d-flex gap-4">
-                <button class="btn btn-outline-success font-monospace px-4 py-2" data-bs-toggle="modal" data-bs-target="#pdfModal">
-                    <i class="bi bi-file-earmark-code me-2"></i>EXPORTAR_CV
-                </button>
-                <a href="https://wa.me/{{ perfil.telefono }}" target="_blank" class="btn btn-outline-light font-monospace px-4 py-2">
-                    <i class="bi bi-chat-dots me-2"></i>INICIAR_CHAT
-                </a>
+                <button class="btn btn-outline-success font-monospace px-4 py-2" data-bs-toggle="modal" data-bs-target="#pdfModal"><i class="bi bi-file-earmark-code me-2"></i>EXPORTAR_CV</button>
+                <a href="https://wa.me/{{ perfil.telefono }}" target="_blank" class="btn btn-outline-light font-monospace px-4 py-2"><i class="bi bi-chat-dots me-2"></i>INICIAR_CHAT</a>
             </div>
         </div>
 
         <div class="col-lg-5 order-1 order-lg-2 text-center mb-5 mb-lg-0">
-            
             <div class="target-zone p-1" id="photoTarget" style="min-width: 350px; min-height: 350px; background: #000;">
                 
-                <img src="{% static 'cv/img/perfil.png' %}" 
-                     class="img-fluid" 
-                     alt="Foto de Perfil"
-                     style="max-width: 350px; width: 100%; height: auto; filter: grayscale(100%) contrast(1.2); display: block; margin: 0 auto;">
+                {% if perfil.foto %}
+                    <img src="{{ perfil.foto.url }}" class="img-fluid" style="max-width: 350px; filter: grayscale(100%) contrast(1.2);">
+                {% else %}
+                    <div style="width: 350px; height: 350px; display: flex; align-items: center; justify-content: center; border: 1px dashed #333;">
+                        <span class="text-secondary font-monospace">SIN_IMAGEN</span>
+                    </div>
+                {% endif %}
 
                 <div class="cyber-sight" id="customCursor">
-                    <div class="sight-line-h"></div>
-                    <div class="sight-line-v"></div>
-                    <div class="sight-circle"></div>
-                    <div class="sight-dot"></div>
-                    <div class="sight-coords">
-                        POS: <span id="coordX">000</span> : <span id="coordY">000</span>
-                    </div>
+                    <div class="sight-line-h"></div><div class="sight-line-v"></div><div class="sight-circle"></div><div class="sight-dot"></div>
+                    <div class="sight-coords">POS: <span id="coordX">000</span> : <span id="coordY">000</span></div>
                 </div>
-
-                <div class="position-absolute bottom-0 end-0 px-2 small bg-dynamic font-monospace">
-                    ID_VERIFICADO
-                </div>
-                <div class="position-absolute top-0 start-0 px-2 small text-dynamic font-monospace bg-black">
-                    REC ●
-                </div>
+                <div class="position-absolute bottom-0 end-0 px-2 small bg-dynamic font-monospace">ID_VERIFICADO</div>
+                <div class="position-absolute top-0 start-0 px-2 small text-dynamic font-monospace bg-black">REC ●</div>
             </div>
-
         </div>
     </div>
 
     <div class="row g-4 mt-5 mx-2 pb-5">
-        <div class="col-md-4">
-            <a href="{% url 'experiencia' %}" class="text-decoration-none">
-                <div class="hacker-card">
-                    <h4 class="text-dynamic">> /HISTORIAL</h4>
-                    <p class="small text-secondary mb-0 font-monospace">Rastreo de actividad laboral y experiencia en combate.</p>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-4">
-            <a href="{% url 'proyectos' %}" class="text-decoration-none">
-                <div class="hacker-card">
-                    <h4 class="text-dynamic">> /REPOSITORIOS</h4>
-                    <p class="small text-secondary mb-0 font-monospace">Código fuente desplegado y armas digitales.</p>
-                </div>
-            </a>
-        </div>
-        <div class="col-md-4">
-            <a href="{% url 'garage' %}" class="text-decoration-none">
-                <div class="hacker-card">
-                    <h4 class="text-dynamic">> /MERCADO_NEGRO</h4>
-                    <p class="small text-secondary mb-0 font-monospace">Hardware y componentes disponibles para adquisición.</p>
-                </div>
-            </a>
-        </div>
+        <div class="col-md-4"><a href="{% url 'experiencia' %}" class="text-decoration-none"><div class="hacker-card"><h4 class="text-dynamic">> /HISTORIAL</h4><p class="small text-secondary mb-0 font-monospace">Rastreo de actividad laboral.</p></div></a></div>
+        <div class="col-md-4"><a href="{% url 'proyectos' %}" class="text-decoration-none"><div class="hacker-card"><h4 class="text-dynamic">> /REPOSITORIOS</h4><p class="small text-secondary mb-0 font-monospace">Código fuente desplegado.</p></div></a></div>
+        <div class="col-md-4"><a href="{% url 'garage' %}" class="text-decoration-none"><div class="hacker-card"><h4 class="text-dynamic">> /MERCADO_NEGRO</h4><p class="small text-secondary mb-0 font-monospace">Hardware y componentes.</p></div></a></div>
     </div>
 
 </div>
 
 <script>
-    // LÓGICA DE LA MIRA TÁCTICA
     const container = document.getElementById('photoTarget');
     const cursor = document.getElementById('customCursor');
     const coordX = document.getElementById('coordX');
     const coordY = document.getElementById('coordY');
-
     if (container) {
         container.addEventListener('mousemove', (e) => {
             const rect = container.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
-            
-            cursor.style.left = x + 'px';
-            cursor.style.top = y + 'px';
-            
+            cursor.style.left = x + 'px'; cursor.style.top = y + 'px';
             coordX.innerText = Math.round(x).toString().padStart(3, '0');
             coordY.innerText = Math.round(y).toString().padStart(3, '0');
         });
     }
-
-    // LÓGICA DEL PDF (VISTA PREVIA VS DESCARGA)
     function descargarDirecto() {
         document.getElementById('actionField').value = 'download';
         const form = document.getElementById('pdfForm');
-        form.target = '_self'; // Descarga normal
-        form.submit();
+        form.target = '_self'; form.submit();
     }
-    
     function abrirVistaPrevia() {
         document.getElementById('actionField').value = 'preview';
         const form = document.getElementById('pdfForm');
-        form.target = 'pdf_preview_frame'; // Apunta al iFrame
-        
-        const viewerModal = new bootstrap.Modal(document.getElementById('pdfViewerModal'));
-        viewerModal.show();
-        
+        form.target = 'pdf_preview_frame';
+        new bootstrap.Modal(document.getElementById('pdfViewerModal')).show();
         form.submit();
     }
 </script>
@@ -261,11 +157,9 @@
                 <h5 class="modal-title font-monospace text-success">> ASISTENTE_EXPORTACIÓN.exe</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
-            
             <form id="pdfForm" method="POST" action="{% url 'descargar_cv_pdf' %}">
                 {% csrf_token %}
                 <input type="hidden" name="action" id="actionField" value="download">
-                
                 <div class="modal-body p-4">
                     <p class="text-secondary font-monospace mb-3 small">SELECCIONAR MÓDULOS:</p>
                     <div class="d-grid gap-3">
@@ -276,14 +170,9 @@
                         <div class="form-check border p-2 border-secondary rounded hover-bg-dark"><input class="form-check-input bg-dark border-secondary" type="checkbox" name="incluir_certificados" checked><label class="form-check-label font-monospace">[x] CERTIFICADOS</label></div>
                     </div>
                 </div>
-                
                 <div class="modal-footer border-top border-secondary d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-light font-monospace" onclick="abrirVistaPrevia()">
-                        <i class="bi bi-eye"></i> VISTA_PREVIA
-                    </button>
-                    <button type="button" class="btn btn-danger font-monospace fw-bold" onclick="descargarDirecto()">
-                        <i class="bi bi-download"></i> EJECUTAR
-                    </button>
+                    <button type="button" class="btn btn-outline-light font-monospace" onclick="abrirVistaPrevia()"><i class="bi bi-eye"></i> VISTA_PREVIA</button>
+                    <button type="button" class="btn btn-danger font-monospace fw-bold" onclick="descargarDirecto()"><i class="bi bi-download"></i> EJECUTAR</button>
                 </div>
             </form>
         </div>
@@ -293,13 +182,8 @@
 <div class="modal fade" id="pdfViewerModal" tabindex="-1">
     <div class="modal-dialog modal-xl modal-dialog-centered" style="height: 90vh;">
         <div class="modal-content h-100 border border-secondary" style="background-color: #0a0a0a;">
-            <div class="modal-header border-bottom border-secondary py-2">
-                <span class="small fw-bold text-success font-monospace">> VISTA_PREVIA_ACTIVA</span>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body p-0 bg-black">
-                <iframe name="pdf_preview_frame" class="w-100 h-100 border-0" style="filter: invert(0.9) hue-rotate(180deg);"></iframe>
-            </div>
+            <div class="modal-header border-bottom border-secondary py-2"><span class="small fw-bold text-success font-monospace">> VISTA_PREVIA_ACTIVA</span><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body p-0 bg-black"><iframe name="pdf_preview_frame" class="w-100 h-100 border-0" style="filter: invert(0.9) hue-rotate(180deg);"></iframe></div>
         </div>
     </div>
 </div>
