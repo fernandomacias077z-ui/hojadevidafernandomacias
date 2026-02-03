@@ -12,6 +12,7 @@ class Perfil(models.Model):
     ubicacion = models.CharField(max_length=200)
     sector = models.CharField(max_length=100, verbose_name="Barrio/Sector", null=True, blank=True)
     resumen = models.TextField()
+    # Cloudinary interceptará este campo automáticamente gracias a settings.py
     foto = models.ImageField(upload_to='perfil/', null=True, blank=True)
 
     class Meta:
@@ -86,10 +87,8 @@ class Proyecto(models.Model):
     def __str__(self):
         return self.titulo
 
-    # --- ESTA ES LA FUNCIÓN QUE FALTABA ---
     def obtener_lista_tecnologias(self):
         if self.tecnologias:
-            # Separa por comas, limpia espacios y devuelve una lista
             return [t.strip() for t in self.tecnologias.split(',')]
         return []
 
