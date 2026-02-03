@@ -23,9 +23,4 @@ class ProyectoAdmin(admin.ModelAdmin):
             return format_html('<img src="{}" style="width: 60px; height: 40px; border-radius: 4px;" />', obj.imagen.url)
         return "-"
 
-# Registrar los demás sin cambios visuales adicionales
-admin.site.register(Experiencia)
-admin.site.register(Educacion)
-admin.site.register(Certificado)
-admin.site.register(Producto)
-admin.site.register(Curso)
+admin.site.register([Experiencia, Educacion, Certificado, Producto, Curso])
