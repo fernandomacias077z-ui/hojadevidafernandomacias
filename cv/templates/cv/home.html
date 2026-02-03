@@ -1,17 +1,24 @@
 {% extends 'cv/base.html' %}
-{% load static %} {% block content %}
+{% load static %}
+
+{% block content %}
 
 <style>
-    /* --- 1. ESTILOS DE LA MIRA TÁCTICA (MOUSE TRACKER) --- */
+    /* =========================================
+       1. ESTILOS DE LA MIRA TÁCTICA Y ANIMACIONES
+       ========================================= */
+    
+    /* Zona del objetivo (Contenedor de la foto) */
     .target-zone {
         position: relative;
         overflow: hidden;
-        cursor: none;
+        cursor: none; /* Ocultamos el cursor real */
         border: 2px solid #00ff41;
         display: inline-block;
         animation: neon-border-cycle 4s infinite alternate; 
     }
 
+    /* La mira en sí (Overlay) */
     .cyber-sight {
         position: absolute;
         top: 50%; left: 50%;
@@ -24,8 +31,10 @@
         display: flex; align-items: center; justify-content: center;
     }
 
+    /* Mostrar mira solo al pasar el mouse */
     .target-zone:hover .cyber-sight { opacity: 1; }
 
+    /* Elementos de la mira */
     .sight-circle {
         width: 60px; height: 60px;
         border: 1px dashed #00ff41;
@@ -60,7 +69,9 @@
 
     @keyframes spin-sight { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-    /* --- 2. ANIMACIONES DINÁMICAS --- */
+    /* =========================================
+       2. ANIMACIONES DE COLOR (NEÓN)
+       ========================================= */
     @keyframes neon-border-cycle {
         0% { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
         33% { border-color: #00d2ff; box-shadow: 0 0 10px rgba(0, 210, 255, 0.2); }
@@ -86,6 +97,7 @@
     .text-dynamic { animation: neon-text-cycle 6s infinite linear; }
     .bg-dynamic { animation: neon-bg-cycle 6s infinite linear; }
 
+    /* Tarjetas */
     .hacker-card {
         background-color: rgba(5, 5, 5, 0.9);
         border: 1px solid #333;
@@ -101,7 +113,6 @@
 
     .cursor-blink::after { content: '_'; animation: blink 1s infinite; }
     @keyframes blink { 50% { opacity: 0; } }
-
 </style>
 
 <div class="container-fluid p-0" style="min-height: 80vh;">
@@ -117,7 +128,7 @@
     <div class="row align-items-center mb-5 px-4">
         
         <div class="col-lg-7 order-2 order-lg-1">
-            <p class="mb-2 text-secondary font-monospace">> ./ejecutando_presentacion.sh</p>
+            <p class="mb-2 text-secondary font-monospace">> ./ejecutando_bio.exe</p>
             
             <h1 class="display-1 fw-bold mb-0 text-white typing-cursor" style="letter-spacing: -2px;">
                 {{ perfil.nombre|upper }}
@@ -149,7 +160,14 @@
             
             <div class="target-zone p-1" id="photoTarget">
                 
-                <img src="{% static 'cv/img/perfil.png' %}" class="img-fluid" style="max-width: 350px; filter: grayscale(100%) contrast(1.2);">
+                {% if perfil.foto %}
+                    <img src="{{ perfil.foto.url }}" class="img-fluid" style="max-width: 350px; filter: grayscale(100%) contrast(1.2);">
+                {% else %}
+                    <div style="width: 350px; height: 350px; background: #000; border: 1px dashed #333; display: flex; align-items: center; justify-content: center; flex-direction: column;">
+                        <i class="bi bi-person-x" style="font-size: 5rem; color: #333;"></i>
+                        <span class="text-secondary font-monospace mt-3 small">NO_SIGNAL</span>
+                    </div>
+                {% endif %}
                 
                 <div class="cyber-sight" id="customCursor">
                     <div class="sight-line-h"></div>
@@ -202,20 +220,44 @@
 </div>
 
 <script>
+    // LÓGICA DE LA MIRA TÁCTICA
     const container = document.getElementById('photoTarget');
     const cursor = document.getElementById('customCursor');
     const coordX = document.getElementById('coordX');
     const coordY = document.getElementById('coordY');
 
-    container.addEventListener('mousemove', (e) => {
-        const rect = container.getBoundingClientRect();
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-        cursor.style.left = x + 'px';
-        cursor.style.top = y + 'px';
-        coordX.innerText = Math.round(x).toString().padStart(3, '0');
-        coordY.innerText = Math.round(y).toString().padStart(3, '0');
-    });
+    if (container) {
+        container.addEventListener('mousemove', (e) => {
+            const rect = container.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            cursor.style.left = x + 'px';
+            cursor.style.top = y + 'px';
+            
+            coordX.innerText = Math.round(x).toString().padStart(3, '0');
+            coordY.innerText = Math.round(y).toString().padStart(3, '0');
+        });
+    }
+
+    // LÓGICA DEL PDF (VISTA PREVIA VS DESCARGA)
+    function descargarDirecto() {
+        document.getElementById('actionField').value = 'download';
+        const form = document.getElementById('pdfForm');
+        form.target = '_self'; // Descarga normal
+        form.submit();
+    }
+    
+    function abrirVistaPrevia() {
+        document.getElementById('actionField').value = 'preview';
+        const form = document.getElementById('pdfForm');
+        form.target = 'pdf_preview_frame'; // Apunta al iFrame
+        
+        const viewerModal = new bootstrap.Modal(document.getElementById('pdfViewerModal'));
+        viewerModal.show();
+        
+        form.submit();
+    }
 </script>
 
 <div class="modal fade" id="pdfModal" tabindex="-1" aria-hidden="true">
@@ -225,9 +267,11 @@
                 <h5 class="modal-title font-monospace text-success">> ASISTENTE_EXPORTACIÓN.exe</h5>
                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
             </div>
+            
             <form id="pdfForm" method="POST" action="{% url 'descargar_cv_pdf' %}">
                 {% csrf_token %}
                 <input type="hidden" name="action" id="actionField" value="download">
+                
                 <div class="modal-body p-4">
                     <p class="text-secondary font-monospace mb-3 small">SELECCIONAR MÓDULOS:</p>
                     <div class="d-grid gap-3">
@@ -238,9 +282,14 @@
                         <div class="form-check border p-2 border-secondary rounded hover-bg-dark"><input class="form-check-input bg-dark border-secondary" type="checkbox" name="incluir_certificados" checked><label class="form-check-label font-monospace">[x] CERTIFICADOS</label></div>
                     </div>
                 </div>
+                
                 <div class="modal-footer border-top border-secondary d-flex justify-content-between">
-                    <button type="button" class="btn btn-outline-light font-monospace" onclick="abrirVistaPrevia()"><i class="bi bi-eye"></i> VISTA_PREVIA</button>
-                    <button type="button" class="btn btn-danger font-monospace fw-bold" onclick="descargarDirecto()"><i class="bi bi-download"></i> EJECUTAR</button>
+                    <button type="button" class="btn btn-outline-light font-monospace" onclick="abrirVistaPrevia()">
+                        <i class="bi bi-eye"></i> VISTA_PREVIA
+                    </button>
+                    <button type="button" class="btn btn-danger font-monospace fw-bold" onclick="descargarDirecto()">
+                        <i class="bi bi-download"></i> EJECUTAR
+                    </button>
                 </div>
             </form>
         </div>
@@ -260,10 +309,5 @@
         </div>
     </div>
 </div>
-
-<script>
-    function descargarDirecto() { document.getElementById('actionField').value = 'download'; const form = document.getElementById('pdfForm'); form.target = '_self'; form.submit(); }
-    function abrirVistaPrevia() { document.getElementById('actionField').value = 'preview'; const form = document.getElementById('pdfForm'); form.target = 'pdf_preview_frame'; const viewerModal = new bootstrap.Modal(document.getElementById('pdfViewerModal')); viewerModal.show(); form.submit(); }
-</script>
 
 {% endblock %}
