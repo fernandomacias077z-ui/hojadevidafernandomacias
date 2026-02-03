@@ -1,66 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <style>
-        @page { size: a4 portrait; margin: 2cm; }
-        body { font-family: Helvetica, sans-serif; font-size: 12px; color: #333; }
-        h1 { color: #000; text-transform: uppercase; font-size: 20px; border-bottom: 2px solid #000; padding-bottom: 5px; }
-        h2 { color: #666; font-size: 14px; margin-top: 5px; }
-        .section { margin-bottom: 15px; }
-        .job-title { font-weight: bold; font-size: 13px; color: #000; }
-        .company { font-style: italic; color: #444; }
-        .date { color: #666; font-size: 10px; }
-        p { text-align: justify; margin-top: 2px; }
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+        body {
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #333;
+            line-height: 1.4;
+        }
+        .header {
+            text-align: center;
+            border-bottom: 2px solid #2c3e50;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #2c3e50;
+            text-transform: uppercase;
+        }
+        .section-title {
+            background-color: #f4f4f4;
+            padding: 5px 10px;
+            color: #2c3e50;
+            text-transform: uppercase;
+            font-size: 14px;
+            border-left: 5px solid #2c3e50;
+            margin-top: 20px;
+        }
+        .item {
+            margin-bottom: 15px;
+            padding-left: 10px;
+        }
+        .item-title {
+            font-weight: bold;
+            font-size: 12px;
+        }
+        .item-date {
+            font-style: italic;
+            color: #666;
+            font-size: 11px;
+        }
+        .description {
+            font-size: 11px;
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
+
     {% if perfil %}
+    <div class="header">
         <h1>{{ perfil.nombre }} {{ perfil.apellido }}</h1>
-        <h2>{{ perfil.profesion }}</h2>
-        <p>{{ perfil.email }} | {{ perfil.telefono }} | {{ perfil.ubicacion }}</p>
-        <p>{{ perfil.resumen }}</p>
+        <p>{{ perfil.profesion }} | {{ perfil.email|default:"" }}</p>
+    </div>
     {% endif %}
 
     {% if experiencia %}
-        <br><h1>Experiencia</h1>
-        {% for exp in experiencia %}
-            <div class="section">
-                <div class="job-title">{{ exp.cargo }} <span class="date">({{ exp.fecha_inicio|date:"Y" }} - {% if exp.fecha_fin %}{{ exp.fecha_fin|date:"Y" }}{% else %}Actual{% endif %})</span></div>
-                <div class="company">{{ exp.empresa }}</div>
-                <p>{{ exp.descripcion }}</p>
-            </div>
-        {% endfor %}
+    <div class="section-title">Trayectoria Profesional</div>
+    {% for exp in experiencia %}
+    <div class="item">
+        <div class="item-title">{{ exp.cargo }} en {{ exp.empresa }}</div>
+        <div class="item-date">{{ exp.fecha_inicio|date:"M Y" }} - {% if exp.fecha_fin %}{{ exp.fecha_fin|date:"M Y" }}{% else %}Actualidad{% endif %}</div>
+    </div>
+    {% endfor %}
     {% endif %}
 
     {% if educacion %}
-        <br><h1>Educación</h1>
-        {% for edu in educacion %}
-            <div class="section">
-                <div class="job-title">{{ edu.titulo }}</div>
-                <div class="company">{{ edu.institucion }} <span class="date">({{ edu.fecha|date:"Y" }})</span></div>
-            </div>
-        {% endfor %}
+    <div class="section-title">Formación Académica</div>
+    {% for edu in educacion %}
+    <div class="item">
+        <div class="item-title">{{ edu.titulo }}</div>
+        <div class="item-date">{{ edu.fecha|date:"Y" }}</div>
+    </div>
+    {% endfor %}
     {% endif %}
-    
+
     {% if proyectos %}
-        <br><h1>Proyectos</h1>
-        {% for proy in proyectos %}
-            <div class="section">
-                <div class="job-title">{{ proy.titulo }}</div>
-                <p>{{ proy.descripcion }}</p>
-            </div>
-        {% endfor %}
+    <div class="section-title">Proyectos Destacados</div>
+    {% for pro in proyectos %}
+    <div class="item">
+        <div class="item-title">{{ pro.nombre }}</div>
+        <div class="description">{{ pro.descripcion|default:"" }}</div>
+    </div>
+    {% endfor %}
     {% endif %}
 
     {% if certificados %}
-        <br><h1>Certificaciones</h1>
-        {% for cert in certificados %}
-            <div class="section">
-                <div class="job-title">{{ cert.titulo }}</div>
-                <div class="company">{{ cert.institucion }} <span class="date">({{ cert.fecha|date:"Y" }})</span></div>
-            </div>
-        {% endfor %}
+    <div class="section-title">Certificaciones y Logros</div>
+    {% for cert in certificados %}
+    <div class="item">
+        <div class="item-title">{{ cert.nombre }}</div>
+    </div>
+    {% endfor %}
     {% endif %}
+
 </body>
 </html>

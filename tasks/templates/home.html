@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    /* 1. VARIABLES DINÁMICAS SINCRONIZADAS */
+    .hero-section {
+        min-height: 75vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-color: transparent;
+    }
+
+    .main-title {
+        font-size: clamp(2.5rem, 8vw, 4.5rem);
+        font-weight: 800;
+        color: var(--texto-principal) !important; 
+        letter-spacing: -2px;
+        line-height: 1.1;
+    }
+
+    /* Usamos tu color Cian característico */
+    .accent-text { 
+        color: var(--cian);
+        text-shadow: 0 0 20px rgba(0, 202, 227, 0.2);
+    }
+    
+    .mono-home { 
+        font-family: 'Fira Code', monospace; 
+        color: var(--texto-gris) !important; 
+        font-size: 1.1rem;
+    }
+
+    /* 2. TARJETAS DE ESTADÍSTICAS DINÁMICAS */
+    .stat-card {
+        background: var(--bg-sidebar) !important;
+        border-radius: 20px;
+        padding: 30px;
+        border: 1px solid var(--borde) !important;
+        transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    .stat-card:hover { 
+        transform: translateY(-10px); 
+        border-color: var(--cian) !important;
+        box-shadow: 0 15px 30px rgba(0, 202, 227, 0.1) !important;
+    }
+
+    .stat-number {
+        color: var(--cian) !important;
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 0;
+    }
+
+    /* 3. BOTÓN PRINCIPAL */
+    .btn-trayectoria {
+        background-color: var(--cian) !important;
+        color: #000 !important;
+        border: none;
+        padding: 15px 45px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .btn-trayectoria:hover {
+        transform: scale(1.05);
+        box-shadow: 0 10px 20px rgba(0, 202, 227, 0.3) !important;
+        color: #000 !important;
+    }
+</style>
+
+<div class="hero-section animate__animated animate__fadeIn">
+    <div class="mb-5 px-3">
+        <h1 class="main-title mb-4">
+            Construyendo el <span class="accent-text">Futuro</span><br>de la Tecnología.
+        </h1>
+        <p class="mono-home">
+            <i class="bi bi-terminal-fill me-2"></i>Estudiante de TI @ ULEAM | Full Stack Developer en formación
+        </p>
+    </div>
+
+    <div class="row g-4 w-100 px-3" style="max-width: 900px;">
+        <div class="col-md-4">
+            <div class="stat-card shadow-sm text-center">
+                <h3 class="stat-number">{{ total_cursos }}</h3>
+                <p class="small mb-0 fw-bold text-uppercase mt-2" style="color: var(--texto-gris); letter-spacing: 1px;">
+                    Certificaciones
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card shadow-sm text-center">
+                <h3 class="stat-number">{{ total_experiencia }}</h3>
+                <p class="small mb-0 fw-bold text-uppercase mt-2" style="color: var(--texto-gris); letter-spacing: 1px;">
+                    Experiencias
+                </p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card shadow-sm text-center">
+                <h3 class="stat-number">{{ total_proyectos }}</h3>
+                <p class="small mb-0 fw-bold text-uppercase mt-2" style="color: var(--texto-gris); letter-spacing: 1px;">
+                    Items Garage
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5 pt-3">
+        <a href="{% url 'experiencia' %}" class="btn btn-trayectoria rounded-pill shadow-sm">
+            EXPLORAR TRAYECTORIA <i class="bi bi-chevron-right ms-2"></i>
+        </a>
+    </div>
+</div>
+
+{% endblock %}

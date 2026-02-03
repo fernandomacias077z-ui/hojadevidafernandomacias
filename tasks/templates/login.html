@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .login-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .login-card {
+        background: var(--bg-sidebar) !important;
+        border: 1px solid var(--borde) !important;
+        border-radius: 20px;
+        padding: 40px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        transition: border-color 0.3s ease;
+    }
+
+    .login-card:focus-within {
+        border-color: var(--cian) !important;
+    }
+
+    .form-control-cyber {
+        background-color: rgba(0,0,0,0.05) !important;
+        border: 1px solid var(--borde) !important;
+        color: var(--texto-principal) !important;
+        padding: 12px 15px;
+        border-radius: 10px;
+    }
+
+    body.dark-mode .form-control-cyber {
+        background-color: rgba(255,255,255,0.05) !important;
+    }
+
+    .form-control-cyber:focus {
+        border-color: var(--cian) !important;
+        box-shadow: 0 0 0 0.25rem rgba(0, 202, 227, 0.15);
+    }
+
+    .btn-login {
+        background-color: var(--cian) !important;
+        color: #000 !important;
+        font-weight: 800;
+        letter-spacing: 1px;
+        padding: 12px;
+        border-radius: 10px;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 202, 227, 0.4);
+    }
+
+    .terminal-header {
+        font-family: 'Fira Code', monospace;
+        font-size: 0.8rem;
+        color: var(--cian);
+        text-align: center;
+        margin-bottom: 20px;
+        opacity: 0.7;
+    }
+</style>
+
+<div class="login-container animate__animated animate__zoomIn">
+    <div class="login-card">
+        <div class="terminal-header">>>> SYSTEM_ACCESS_REQUEST</div>
+        <h2 class="text-center fw-bold mb-4" style="color: var(--texto-principal);">AUTH_LOGIN</h2>
+        
+        {% if error %}
+        <div class="alert alert-danger py-2 small mono text-center" style="border-radius: 10px;">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> Acceso denegado
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="small mono mb-1 opacity-75">USER_ID</label>
+                <input type="text" name="username" class="form-control form-control-cyber" placeholder="Introduce usuario" required>
+            </div>
+            <div class="mb-4">
+                <label class="small mono mb-1 opacity-75">ACCESS_TOKEN</label>
+                <input type="password" name="password" class="form-control form-control-cyber" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-login w-100">
+                EXECUTE_LOGIN <i class="bi bi-shield-lock-fill ms-2"></i>
+            </button>
+        </form>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'home' %}" class="text-decoration-none small mono" style="color: var(--texto-gris);">
+                <i class="bi bi-arrow-left"></i> CANCEL_SESSION
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
