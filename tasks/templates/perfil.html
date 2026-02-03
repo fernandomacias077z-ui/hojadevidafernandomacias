@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    :root { --cian: #00cae3; --bg-card: #f8fafc; }
+    body.dark-mode { --bg-card: #1e293b; }
+    
+    .card-perfil { 
+        background-color: var(--bg-card) !important; 
+        border-radius: 20px; 
+        border: 1px solid rgba(0, 202, 227, 0.15);
+        padding: 25px; 
+        height: 100%; 
+        transition: transform 0.3s ease;
+    }
+    .card-perfil:hover { transform: translateY(-5px); border-color: var(--cian); }
+
+    .badge-habilidad {
+        background: rgba(0, 202, 227, 0.1);
+        color: var(--cian);
+        border: 1px solid var(--cian);
+        border-radius: 8px;
+        padding: 4px 10px;
+        margin: 2px;
+        font-size: 0.8rem;
+        font-weight: bold;
+        display: inline-block;
+    }
+
+    .btn-cian { 
+        background-color: var(--cian); 
+        color: #000 !important; 
+        font-weight: 700; 
+        border-radius: 12px; 
+        padding: 15px; 
+        border: none;
+    }
+
+    #area-pdf-oculta { display: none; }
+</style>
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h1 class="fw-bold mb-0 text-uppercase">{{ datos.nombre }}</h1>
+            <p class="text-info fw-bold mb-0">PANEL DE CONTROL PROFESIONAL</p>
+        </div>
+        <a href="/admin/" class="btn btn-outline-info rounded-pill px-4 fw-bold">
+            <i class="bi bi-gear-fill"></i> AJUSTES
+        </a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="card-perfil">
+                <h5 class="fw-bold border-bottom pb-2 mb-3">MIS DATOS</h5>
+                <p class="mb-1"><strong>TEL:</strong> {{ datos.telefono }}</p>
+                <p class="mb-1"><strong>UBICACIÓN:</strong> {{ datos.origen }}</p>
+                <p class="mb-0"><strong>C.I:</strong> {{ datos.cedula }}</p>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card-perfil">
+                <h5 class="fw-bold border-bottom pb-2 mb-3">EXPERIENCIA</h5>
+                {% for exp in experiencias %}
+                    <div class="mb-2">
+                        <span class="text-info fw-bold d-block" style="font-size: 0.9rem;">{{ exp.puesto }}</span>
+                        <small class="text-muted">{{ exp.empresa }}</small>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card-perfil">
+                <h5 class="fw-bold border-bottom pb-2 mb-3">HABILIDADES</h5>
+                <div class="d-flex flex-wrap">
+                    {% for hab in habilidades %}
+                        <span class="badge-habilidad">{{ hab.nombre }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <div class="card-perfil">
+                <h5 class="fw-bold border-bottom pb-2 mb-3">CERTIFICACIONES</h5>
+                {% for curso in cursos %}
+                    <div class="mb-1">
+                        <span class="text-info fw-bold d-block" style="font-size: 0.85rem;">{{ curso.nombre }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <button class="btn btn-cian w-100 shadow-lg" data-bs-toggle="modal" data-bs-target="#modalConfig">
+            <i class="bi bi-file-earmark-pdf"></i> CONFIGURAR Y DESCARGAR CV
+        </button>
+    </div>
+</div>
+
+<div class="modal fade" id="modalConfig" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered"> <div class="modal-content bg-dark text-white border-info" style="border-radius: 20px;">
+            <div class="modal-header border-info">
+                <h5 class="modal-title fw-bold">Personalizar PDF</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="sel-datos" checked>
+                    <label class="form-check-label">Datos Personales</label>
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="sel-reco" checked>
+                    <label class="form-check-label text-info fw-bold">Formación Académica</label>
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="sel-exp" checked>
+                    <label class="form-check-label">Experiencia Laboral</label>
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="sel-hab" checked>
+                    <label class="form-check-label">Habilidades</label>
+                </div>
+            </div>
+            <div class="modal-footer border-info">
+                <button onclick="generarPDFConfigurado()" class="btn btn-cian w-100">DESCARGAR AHORA</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="area-pdf-oculta">
+    <div style="border-bottom: 3px solid #00cae3; padding-bottom: 15px; margin-bottom: 25px; display: flex; align-items: center;">
+        <img src="https://i.postimg.cc/L41m7wwd/perfil.jpg" style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #00cae3; margin-right: 20px; object-fit: cover;">
+        <div>
+            <h1 style="margin:0; font-family: Arial; font-size: 26pt;">{{ datos.nombre|upper }}</h1>
+            <p style="margin:0; color: #008899; font-weight: bold;">{{ datos.puesto_preferido|default:"INGENIERÍA DE SOFTWARE" }}</p>
+            <div id="pdf-datos-sec" style="font-size: 10pt; color: #555; margin-top: 5px;">
+                CI: {{ datos.cedula }} | Tel: {{ datos.telefono }} | {{ datos.origen }}
+            </div>
+        </div>
+    </div>
+
+    <div id="pdf-reco-sec" style="margin-bottom: 25px;">
+        <h3 style="color: #008899; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-transform: uppercase; font-size: 14pt;">Formación Académica</h3>
+        {% for reco in reconocimientos %}
+            <div style="margin-bottom: 10px;">
+                <div style="font-weight: bold; font-size: 11pt;">{{ reco.nombre }}</div>
+                <div style="font-size: 10pt; color: #444;">{{ reco.institucion }} | {% if reco.en_curso %}En curso{% else %}{{ reco.fecha_fin|date:"M Y" }}{% endif %}</div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="pdf-exp-sec" style="margin-bottom: 25px;">
+        <h3 style="color: #008899; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-transform: uppercase; font-size: 14pt;">Experiencia Profesional</h3>
+        {% for exp in experiencias %}
+            <div style="margin-bottom: 15px;">
+                <div style="font-weight: bold;">{{ exp.puesto }} - {{ exp.empresa }}</div>
+                <p style="font-size: 9pt; margin-top: 4px;">{{ exp.funciones }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="pdf-hab-sec">
+        <h3 style="color: #008899; border-bottom: 1px solid #ddd; padding-bottom: 5px; text-transform: uppercase; font-size: 14pt;">Habilidades</h3>
+        <p style="font-size: 11pt;">
+            {% for hab in habilidades %}{{ hab.nombre }}{% if not forloop.last %} • {% endif %}{% endfor %}
+        </p>
+    </div>
+</div>
+
+<script>
+function generarPDFConfigurado() {
+    document.getElementById('pdf-datos-sec').style.display = document.getElementById('sel-datos').checked ? 'block' : 'none';
+    document.getElementById('pdf-reco-sec').style.display = document.getElementById('sel-reco').checked ? 'block' : 'none';
+    document.getElementById('pdf-exp-sec').style.display = document.getElementById('sel-exp').checked ? 'block' : 'none';
+    document.getElementById('pdf-hab-sec').style.display = document.getElementById('sel-hab').checked ? 'block' : 'none';
+
+    const contenido = document.getElementById('area-pdf-oculta').innerHTML;
+    const win = window.open('', '', 'height=900,width=800');
+    win.document.write('<html><head><title>CV_Fernando_Macias</title>');
+    win.document.write('<style>body{font-family:Arial; padding:40px; color:#333;} h3{margin-top:20px;}</style></head><body>');
+    win.document.write(contenido);
+    win.document.write('</body></html>');
+    win.document.close();
+    
+    setTimeout(() => { win.print(); win.close(); }, 600);
+    bootstrap.Modal.getInstance(document.getElementById('modalConfig')).hide();
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    /* Estilos base adaptados a tu sistema de variables */
+    .card-animada {
+        transition: var(--transition-smooth);
+        border-radius: 15px;
+        background-color: var(--bg-sidebar); /* Fondo dinámico */
+        color: var(--texto-principal);
+        border: 1px solid rgba(56, 189, 248, 0.1);
+    }
+    
+    .card-animada:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 24px rgba(0, 202, 227, 0.2) !important;
+        border-color: var(--cian);
+    }
+
+    .img-zoom {
+        transition: transform 0.5s ease;
+        height: 220px;
+        object-fit: cover;
+        width: 100%;
+    }
+
+    .card-animada:hover .img-zoom {
+        transform: scale(1.08);
+    }
+
+    /* Estilización del precio para que resalte en el "Garage" */
+    .price-tag {
+        color: var(--cian);
+        font-family: 'Fira Code', monospace;
+        font-weight: 800;
+        text-shadow: 0 0 10px rgba(0, 202, 227, 0.2);
+    }
+
+    .tech-badge {
+        background-color: rgba(56, 189, 248, 0.1) !important;
+        color: var(--cian) !important;
+        border: 1px solid rgba(56, 189, 248, 0.3);
+        font-size: 0.75rem;
+    }
+
+    .text-description {
+        color: var(--texto-gris);
+        font-size: 0.9rem;
+        line-height: 1.5;
+    }
+</style>
+
+<div class="container-fluid animate__animated animate__fadeIn py-4">
+    <div class="d-flex align-items-center mb-5">
+        <h2 class="mono fw-bold m-0" style="color: var(--cian);">
+            <i class="bi bi-gpu-card me-2"></i> GARAGE_TECH_EXPLORER
+        </h2>
+        <div class="ms-4 flex-grow-1 border-bottom border-secondary opacity-25"></div>
+    </div>
+    
+    <div class="row g-4">
+        {% for p in proyectos %}
+        <div class="col-md-6 col-xl-4">
+            <div class="card h-100 border-0 shadow-sm card-animada">
+                <div class="overflow-hidden position-relative" style="border-radius: 15px 15px 0 0;">
+                    {% if p.imagen %}
+                        <img src="{{ p.imagen.url }}" class="card-img-top img-zoom" alt="{{ p.nombre }}">
+                    {% else %}
+                        <div class="d-flex align-items-center justify-content-center bg-dark" style="height: 220px;">
+                            <i class="bi bi-cpu text-secondary display-1 opacity-25"></i>
+                        </div>
+                    {% endif %}
+                    <div class="position-absolute top-0 end-0 m-3">
+                        <span class="badge tech-badge px-3 py-2 rounded-pill shadow-sm">
+                            {{ p.tecnologias }}
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-2" style="color: var(--texto-principal);">{{ p.nombre }}</h5>
+                    <div class="price-tag mb-3 fs-3">${{ p.precio }}</div>
+                    <p class="text-description mb-0">{{ p.descripcion }}</p>
+                </div>
+                
+                <div class="card-footer bg-transparent border-0 px-4 pb-4">
+                    <a href="https://wa.me/593980643265?text=Hola Fernando, me interesa el proyecto: {{ p.nombre }}" 
+                       target="_blank"
+                       class="btn btn-principal w-100 rounded-pill fw-bold">
+                        <i class="bi bi-whatsapp me-2"></i> Consultar Disponibilidad
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <i class="bi bi-search text-muted display-1"></i>
+            <p class="text-muted mt-3 mono">No hay componentes o proyectos en el inventario actual.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

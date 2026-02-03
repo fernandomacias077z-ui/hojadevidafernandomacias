@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    /* Estilos para las tarjetas de experiencia */
+    .exp-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: var(--bg-sidebar); /* Adaptado para modo oscuro */
+        color: var(--texto-principal);
+    }
+    .exp-card:hover {
+        transform: translateX(8px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2) !important;
+    }
+    
+    /* Colores dinámicos basados en tus variables globales */
+    .border-cyber-blue { border-left: 5px solid var(--cian) !important; }
+    .border-cyber-gray { border-left: 5px solid #64748b !important; }
+
+    /* Animación de pulso para trabajos actuales */
+    .badge-pulse {
+        animation: pulse-blue 2s infinite;
+        background-color: var(--cian) !important;
+        color: #000; /* Texto oscuro para mejor contraste con cian */
+    }
+    @keyframes pulse-blue {
+        0% { box-shadow: 0 0 0 0 rgba(0, 202, 227, 0.7); }
+        70% { box-shadow: 0 0 0 10px rgba(0, 202, 227, 0); }
+        100% { box-shadow: 0 0 0 0 rgba(0, 202, 227, 0); }
+    }
+
+    .main-title { color: var(--texto-principal); font-weight: 800; letter-spacing: -0.5px; }
+    .mono { font-family: 'Fira Code', monospace; font-size: 0.85rem; }
+    .text-secondary-custom { color: var(--texto-gris) !important; }
+</style>
+
+<div class="animate__animated animate__fadeIn container py-4">
+    <div class="text-center mb-5">
+        <h2 class="main-title">
+            <i class="bi bi-briefcase-fill" style="color: var(--cian);"></i> Experiencia Laboral
+        </h2>
+        <p class="text-muted">Trayectoria académica y práctica gestionada dinámicamente.</p>
+        <div style="width: 50px; height: 4px; background: var(--cian); margin: 0 auto; border-radius: 2px;"></div>
+    </div>
+
+    {% for exp in experiencias %}
+    <div class="card border-0 shadow-sm rounded-4 mb-4 exp-card 
+        {% if "Actual" in exp.periodo or "Presente" in exp.periodo %}border-cyber-blue{% else %}border-cyber-gray{% endif %}">
+        
+        <div class="card-body p-4">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div>
+                    <h5 class="fw-bold mb-1" style="color: {% if "Actual" in exp.periodo %}var(--cian){% else %}var(--texto-principal){% endif %};">
+                        {{ exp.puesto }}
+                    </h5>
+                    <p class="mb-1 fw-semibold" style="color: var(--texto-principal);">{{ exp.empresa }}</p>
+                    <p class="text-muted small mb-0 mono">{{ exp.periodo }}</p>
+                </div>
+                
+                {% if "Actual" in exp.periodo or "Presente" in exp.periodo %}
+                    <span class="badge badge-pulse px-3 py-2 mono">En curso</span>
+                {% else %}
+                    <span class="badge bg-secondary px-3 py-2 mono text-white">Finalizado</span>
+                {% endif %}
+            </div>
+            <hr class="opacity-10" style="border-color: var(--texto-gris);">
+            <p class="mb-0 text-secondary-custom">
+                <strong style="color: var(--cian);">Funciones:</strong> {{ exp.funciones }}
+            </p>
+        </div>
+    </div>
+    {% empty %}
+    <div class="text-center py-5">
+        <p class="text-muted mono">No hay experiencias registradas en el sistema.</p>
+    </div>
+    {% endfor %}
+
+    <div class="text-center mt-5 pb-5">
+        <a href="{% url 'home' %}" class="btn btn-principal px-5 py-2 shadow-sm" style="border-radius: 50px; font-weight: 600;">
+            <i class="bi bi-arrow-left me-2"></i> Volver al inicio
+        </a>
+    </div>
+</div>
+
+{% endblock %}

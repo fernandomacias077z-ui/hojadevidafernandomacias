@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    /* 1. TARJETA ADAPTATIVA (Sigue el tema de tu sidebar) */
+    .card-cyber {
+        background: var(--bg-sidebar) !important; /* Usa el color de tu fondo actual */
+        border: 2px solid var(--borde) !important;
+        border-radius: 20px;
+        padding: 30px;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    /* Efecto Glow solo en el borde al pasar el mouse */
+    .card-cyber:hover {
+        border-color: var(--cian) !important;
+        box-shadow: 0 0 20px rgba(0, 202, 227, 0.2);
+        transform: translateY(-5px);
+    }
+
+    /* 2. TEXTOS DINÁMICOS */
+    .institucion-tag {
+        font-family: 'Inter', sans-serif;
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--texto-principal); /* Cambia según modo oscuro/claro */
+        margin-bottom: 2px;
+        display: block;
+        text-transform: uppercase;
+    }
+
+    .curso-nombre {
+        font-size: 0.95rem;
+        color: var(--cian); /* El cian resalta sobre ambos fondos */
+        font-weight: 600;
+        margin-bottom: 25px;
+        display: block;
+        opacity: 0.9;
+    }
+
+    /* 3. BOTÓN PULIDO (Igual a tu imagen de referencia) */
+    .btn-cyber-download {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        padding: 10px 20px;
+        background: transparent;
+        border: 2px dashed var(--cian);
+        border-radius: 12px;
+        color: var(--cian);
+        text-decoration: none;
+        font-weight: 800;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        transition: all 0.3s ease;
+    }
+
+    .btn-cyber-download:hover {
+        background: var(--cian);
+        color: #000 !important; /* Siempre negro sobre cian para legibilidad */
+        border-style: solid;
+    }
+
+    /* Ajuste de iconos */
+    .titulo-seccion {
+        color: var(--texto-principal);
+        font-weight: 800;
+        letter-spacing: 1px;
+    }
+</style>
+
+<div class="container py-5 animate__animated animate__fadeIn">
+    <h2 class="titulo-seccion mb-5">
+        <i class="bi bi-shield-check text-cian me-2"></i> CERTIFICACIONES
+    </h2>
+
+    <div class="row g-4">
+        {% for curso in cursos %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card-cyber">
+                <span class="institucion-tag">{{ curso.institucion }}</span>
+                <span class="curso-nombre">{{ curso.nombre }}</span>
+
+                {% if curso.certificado_pdf %}
+                <a href="{{ curso.certificado_pdf.url }}" target="_blank" class="btn-cyber-download">
+                    <i class="bi bi-file-earmark-arrow-down-fill"></i> Descargar Certificado
+                </a>
+                {% else %}
+                <div class="btn-cyber-download" style="opacity: 0.4; border-color: gray; color: gray;">
+                    <i class="bi bi-exclamation-triangle"></i> No disponible
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 py-5 text-center">
+            <p class="text-muted italic">No se han cargado certificados tecnológicos aún.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+    .signup-container {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .signup-card {
+        background: var(--bg-sidebar) !important;
+        border: 1px solid var(--borde) !important;
+        border-radius: 20px;
+        padding: 40px;
+        width: 100%;
+        max-width: 400px;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        transition: all 0.3s ease;
+    }
+
+    .signup-card:hover {
+        border-color: var(--cian) !important;
+        box-shadow: 0 20px 40px rgba(0, 202, 227, 0.1);
+    }
+
+    .form-control-cyber {
+        background-color: rgba(0,0,0,0.03) !important;
+        border: 1px solid var(--borde) !important;
+        color: var(--texto-principal) !important;
+        padding: 12px 15px;
+        border-radius: 10px;
+    }
+
+    body.dark-mode .form-control-cyber {
+        background-color: rgba(255,255,255,0.05) !important;
+    }
+
+    .form-control-cyber:focus {
+        border-color: var(--cian) !important;
+        box-shadow: 0 0 0 0.25rem rgba(0, 202, 227, 0.15);
+        background-color: transparent !important;
+    }
+
+    .btn-signup {
+        background-color: var(--cian) !important;
+        color: #000 !important;
+        font-weight: 800;
+        letter-spacing: 1px;
+        padding: 12px;
+        border-radius: 10px;
+        border: none;
+        transition: all 0.3s ease;
+    }
+
+    .btn-signup:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 202, 227, 0.4);
+    }
+
+    .header-code {
+        font-family: 'Fira Code', monospace;
+        font-size: 0.75rem;
+        color: var(--cian);
+        text-align: center;
+        margin-bottom: 10px;
+        display: block;
+    }
+</style>
+
+<div class="signup-container animate__animated animate__fadeIn">
+    <div class="signup-card">
+        <span class="header-code">NEW_ENTITY_INITIALIZATION</span>
+        <h2 class="text-center fw-bold mb-4" style="color: var(--texto-principal);">CREATE_ID</h2>
+        
+        {% if error %}
+        <div class="alert alert-warning py-2 small mono text-center" style="border-radius: 10px;">
+            <i class="bi bi-exclamation-circle-fill me-2"></i> Error en el despliegue
+        </div>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="small mono mb-1 opacity-75">CHOOSE_USERNAME</label>
+                <input type="text" name="username" class="form-control form-control-cyber" placeholder="Ej: dev_fernando" required>
+            </div>
+            <div class="mb-4">
+                <label class="small mono mb-1 opacity-75">SET_PASSWORD</label>
+                <input type="password" name="password" class="form-control form-control-cyber" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn btn-signup w-100">
+                INITIALIZE_SIGNUP <i class="bi bi-person-plus-fill ms-2"></i>
+            </button>
+        </form>
+
+        <div class="text-center mt-4 pt-2 border-top border-secondary opacity-50">
+            <p class="small mb-1">¿Ya tienes una identidad?</p>
+            <a href="{% url 'login' %}" class="text-decoration-none small fw-bold" style="color: var(--cian);">
+                LOG_IN_EXISTING_ID
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
