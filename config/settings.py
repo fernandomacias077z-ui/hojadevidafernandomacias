@@ -7,26 +7,24 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # --- 2. SEGURIDAD ---
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-prod-key-123')
-DEBUG = 'RENDER' not in os.environ 
+DEBUG = 'RENDER' not in os.environ
 ALLOWED_HOSTS = ['*']
 
 # --- 3. APPS INSTALADAS ---
 INSTALLED_APPS = [
-    'cloudinary_storage',       # Debe ir primero para interceptar fotos
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles', # Necesario para WhiteNoise
-    'cv',
-    'cloudinary',               # Debe ir al final
+    'django.contrib.staticfiles', # Necesario para procesar el Admin
+    'cv', 
 ]
 
 # --- 4. MIDDLEWARE ---
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # ESTO ARREGLA EL ADMIN GRIS
+    'whitenoise.middleware.WhiteNoiseMiddleware', # ARREGLA EL ADMIN GRIS
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -61,21 +59,17 @@ DATABASES = {
     )
 }
 
-# --- 6. ARCHIVOS ESTÁTICOS (ADMIN / CSS) ---
+# --- 6. CONFIGURACIÓN DE ARCHIVOS ESTÁTICOS (PARA RENDER) ---
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# OBLIGAMOS A DJANGO A BUSCAR EN TU CARPETA CV/STATIC/CV/IMG
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'cv', 'static'),
+]
+
+# Configuración de WhiteNoise para servir el Admin con diseño en Render
 if not DEBUG:
     STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-
-# --- 7. ARCHIVOS MEDIA (FOTOS / CLOUDINARY) ---
-MEDIA_URL = '/media/'
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
-# REEMPLAZA ESTO CON TUS CLAVES DE CLOUDINARY.COM
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'TU_CLOUD_NAME',
-    'API_KEY': 'TU_API_KEY',
-    'API_SECRET': 'TU_API_SECRET',
-}
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
