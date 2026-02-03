@@ -29,7 +29,7 @@ INSTALLED_APPS = [
 # --- 4. MIDDLEWARE (WHITENOISE AQUÍ ES VITAL) ---
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',, # <--- ESTO PINTA EL ADMIN DE AZUL
+    'whitenoise.middleware.WhiteNoiseMiddleware', # <--- ESTO PINTA EL ADMIN DE AZUL
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
