@@ -4,10 +4,7 @@ from django.core.exceptions import ValidationError
 class Perfil(models.Model):
     nombre = models.CharField(max_length=100)
     apellido = models.CharField(max_length=100)
-    # QUITAMOS unique=True para evitar el error de base de datos, 
-    # pero validaremos por código abajo.
     dni = models.CharField(max_length=10, verbose_name="Cédula/DNI", null=True, blank=True)
-    
     fecha_nacimiento = models.DateField(null=True, blank=True)
     telefono = models.CharField(max_length=15)
     email = models.EmailField()
@@ -24,26 +21,20 @@ class Perfil(models.Model):
     def __str__(self):
         return f"{self.nombre} {self.apellido}"
 
-    # --- VALIDACIÓN PERSONALIZADA PARA NO REPETIR DNI ---
     def clean(self):
         super().clean()
         if self.dni:
-            # Buscamos si existe otro perfil con el mismo DNI, excluyendo este mismo (self.pk)
-            # Esto evita que te de error al editar tu propio perfil
             existe = Perfil.objects.filter(dni=self.dni).exclude(pk=self.pk).exists()
             if existe:
                 raise ValidationError(f"⛔ Error: El DNI {self.dni} ya está registrado en otro perfil.")
 
 class Experiencia(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='experiencias', verbose_name="Perfil Asociado", null=True, blank=True)
-    
     cargo = models.CharField(max_length=100)
     empresa = models.CharField(max_length=100)
     descripcion = models.TextField()
     fecha_inicio = models.DateField(blank=True, null=True)
     fecha_fin = models.DateField(blank=True, null=True)
-
-    # --- NUEVOS CAMPOS ---
     logo = models.ImageField(upload_to='experiencia/logos/', null=True, blank=True, verbose_name="Logo Empresa / Imagen")
     archivo = models.FileField(upload_to='experiencia/archivos/', null=True, blank=True, verbose_name="Constancia/Archivo (PDF)")
 
@@ -59,15 +50,13 @@ class Experiencia(models.Model):
         if self.fecha_inicio and self.fecha_fin:
             if self.fecha_inicio > self.fecha_fin:
                 raise ValidationError("⛔ Error: La fecha de inicio no puede ser posterior a la fecha de fin.")
+
 class Educacion(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='educacion', verbose_name="Perfil Asociado", null=True, blank=True)
-    
     titulo = models.CharField(max_length=100)
     institucion = models.CharField(max_length=100)
     descripcion = models.TextField(blank=True, null=True, verbose_name="Descripción corta")
     fecha = models.DateField(null=True, blank=True, verbose_name="Fecha de Finalización")
-
-    # --- NUEVOS CAMPOS (Igual que en Experiencia) ---
     logo = models.ImageField(upload_to='educacion/logos/', null=True, blank=True, verbose_name="Logo Institución")
     archivo = models.FileField(upload_to='educacion/archivos/', null=True, blank=True, verbose_name="Archivo Adjunto (PDF)")
 
@@ -80,18 +69,13 @@ class Educacion(models.Model):
 
 class Proyecto(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='proyectos', verbose_name="Perfil Asociado", null=True, blank=True)
-    
     titulo = models.CharField(max_length=100)
     subtitulo = models.CharField(max_length=150, blank=True, null=True)
     descripcion = models.TextField()
     fecha = models.DateField(null=True, blank=True, verbose_name="Fecha de Realización")
     tecnologias = models.CharField(max_length=200, blank=True, null=True)
     link = models.URLField(blank=True, null=True)
-    
-    # Este 'imagen' ya existía (quizás lo usas de portada), pero agregamos el LOGO pequeño y el ARCHIVO
     imagen = models.ImageField(upload_to='proyectos/', blank=True, null=True)
-    
-    # --- NUEVOS CAMPOS ---
     logo = models.ImageField(upload_to='proyectos/logos/', null=True, blank=True, verbose_name="Logo Proyecto/Cliente")
     archivo = models.FileField(upload_to='proyectos/archivos/', null=True, blank=True, verbose_name="Archivo Adjunto (PDF)")
 
@@ -102,9 +86,15 @@ class Proyecto(models.Model):
     def __str__(self):
         return self.titulo
 
+    # --- ESTA ES LA FUNCIÓN QUE FALTABA ---
+    def obtener_lista_tecnologias(self):
+        if self.tecnologias:
+            # Separa por comas, limpia espacios y devuelve una lista
+            return [t.strip() for t in self.tecnologias.split(',')]
+        return []
+
 class Certificado(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='certificados', verbose_name="Perfil Asociado", null=True, blank=True)
-    
     titulo = models.CharField(max_length=100)
     institucion = models.CharField(max_length=100)
     fecha = models.DateField(blank=True, null=True)
@@ -119,7 +109,6 @@ class Certificado(models.Model):
 
 class Producto(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='productos_venta', verbose_name="Vendedor (Perfil)", null=True, blank=True)
-    
     ESTADOS = [
         ('Nuevo', 'Nuevo / Sellado'),
         ('Como Nuevo', 'Como Nuevo (10/10)'),
@@ -127,7 +116,6 @@ class Producto(models.Model):
         ('Detalles', 'Usado - Con detalles estéticos'),
         ('Reparar', 'Para piezas / A reparar'),
     ]
-
     titulo = models.CharField(max_length=200)
     precio = models.DecimalField(max_digits=10, decimal_places=2)
     estado = models.CharField(max_length=50, choices=ESTADOS, default='Buen Estado', verbose_name="Condición")
@@ -149,11 +137,9 @@ class Producto(models.Model):
 
 class Curso(models.Model):
     perfil = models.ForeignKey(Perfil, on_delete=models.CASCADE, related_name='cursos', verbose_name="Perfil Asociado", null=True, blank=True)
-    
     titulo = models.CharField(max_length=200, verbose_name="Título del Curso")
     descripcion = models.TextField(verbose_name="Descripción")
     fecha = models.DateField(verbose_name="Fecha de realización")
-    
     pdf_archivo = models.FileField(upload_to='cursos/pdfs/', verbose_name="PDF del Curso")
     vista_previa = models.ImageField(upload_to='cursos/previews/', verbose_name="Imagen de Vista Previa", null=True, blank=True)
     archivo_extra = models.FileField(upload_to='cursos/extras/', blank=True, null=True, verbose_name="Archivo Extra")

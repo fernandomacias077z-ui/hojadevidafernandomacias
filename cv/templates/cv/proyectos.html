@@ -1,99 +1,221 @@
+
 {% extends 'cv/base.html' %}
-
 {% block content %}
-<div class="container">
-    <h2 class="section-title text-center mb-5">
-        <i class="bi bi-pc-display-horizontal text-dark me-2"></i> Productos Laborales
-    </h2>
-    
-    <div class="row g-4 mt-2">
-        {% for proy in proyectos %}
-        
-        <div class="{% if forloop.last and proyectos|length|divisibleby:2 == False %}col-12{% else %}col-md-6{% endif %}">
-            
-            <div class="card h-100 border-0 shadow-sm hover-card bg-white rounded-4 overflow-hidden">
-                <div class="card-header" style="height: 6px; padding: 0; background: linear-gradient(90deg, #10b981, #059669);"></div>
-                
-                <div class="card-body p-4 d-flex flex-column">
-                    
-                    <div class="d-flex justify-content-between align-items-start mb-3">
-                        <div class="d-flex align-items-center">
-                            
-                            {% if proy.logo %}
-                                <img src="{{ proy.logo.url }}" class="rounded-circle me-3 shadow-sm object-fit-cover" style="width: 50px; height: 50px;">
-                            {% else %}
-                                <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                   <i class="bi bi-laptop text-success fs-4"></i>
-                                </div>
-                            {% endif %}
-                            <div>
-                                <h4 class="card-title fw-bold mb-0 text-success lh-1" style="font-size: 1.3rem;">{{ proy.titulo }}</h4>
-                                {% if proy.subtitulo %}
-                                <small class="text-secondary fw-semibold">{{ proy.subtitulo }}</small>
-                                {% endif %}
-                            </div>
-                        </div>
 
-                        {% if proy.fecha %}
-                        <span class="badge rounded-pill bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-3 py-2 ms-2">
-                            {{ proy.fecha|date:"M Y" }}
-                        </span>
-                        {% endif %}
-                    </div>
+<style>
+    /* --- TARJETA DE REPOSITORIO --- */
+    .repo-card {
+        background-color: rgba(5, 5, 5, 0.95);
+        border: 1px solid;
+        animation: neon-border-cycle 12s infinite alternate;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
 
-                    <p class="card-text text-muted flex-grow-1" style="line-height: 1.6;">
-                        {{ proy.descripcion|linebreaksbr }}
-                    </p>
+    .repo-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 0 25px rgba(0,0,0,0.8);
+        background-color: black;
+        z-index: 10;
+    }
 
-                    <div class="mb-4 mt-2 p-3 bg-light rounded-3 border border-light-subtle">
-                        <h6 class="fw-bold text-success mb-1" style="font-size: 0.75rem; letter-spacing: 1px; text-transform: uppercase;">
-                            <i class="bi bi-code-square me-1"></i> Tecnologías
-                        </h6>
-                        <span class="text-dark fw-bold small" style="font-family: monospace;">
-                            {{ proy.tecnologias }}
-                        </span>
-                    </div>
+    /* --- ZONA DE IMAGEN (MONITOR) --- */
+    .repo-monitor {
+        height: 200px;
+        background: #000;
+        border-bottom: 1px solid #333;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
 
-                    <div class="d-flex gap-2 mt-auto justify-content-end">
-                        {% if proy.archivo %}
-                        <a href="{{ proy.archivo.url }}" target="_blank" class="btn btn-outline-success btn-sm rounded-pill px-4 fw-bold shadow-sm transition-btn">
-                            <i class="bi bi-file-earmark-text me-1"></i> Ver Detalles
-                        </a>
-                        {% endif %}
-                        {% if proy.link %}
-                        <a href="{{ proy.link }}" target="_blank" class="btn btn-dark btn-sm rounded-pill px-4 fw-bold shadow-sm transition-btn">
-                            Ver Online <i class="bi bi-arrow-up-right-circle ms-1"></i>
-                        </a>
-                        {% endif %}
-                    </div>
+    /* La Imagen/Logo */
+    .repo-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Cubre todo el cuadro */
+        filter: grayscale(100%) contrast(1.2) brightness(0.8);
+        transition: 0.5s ease;
+    }
 
-                </div>
-            </div>
-        </div>
-        {% empty %}
-        <div class="col-12 py-5 text-center">
-            <div class="bg-light rounded-4 p-5 border border-dashed">
-                <i class="bi bi-laptop fs-1 d-block mb-3 text-success opacity-50"></i>
-                <h4 class="text-muted fw-bold">Aún no he publicado proyectos</h4>
-            </div>
-        </div>
-        {% endfor %}
+    /* Al pasar el mouse, recupera el color */
+    .repo-card:hover .repo-img {
+        filter: grayscale(0%) contrast(1.1) brightness(1); 
+        transform: scale(1.05);
+    }
+
+    /* Efecto de líneas de monitor antiguo (Scanlines) */
+    .scan-overlay {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+        background-size: 100% 2px, 3px 100%;
+        pointer-events: none;
+        z-index: 2;
+    }
+
+    /* ID del Proyecto en la esquina */
+    .repo-id {
+        position: absolute; top: 10px; right: 10px;
+        background: rgba(0,0,0,0.8);
+        color: white;
+        padding: 2px 8px;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.7rem;
+        border: 1px solid #555;
+        z-index: 3;
+    }
+
+    /* --- CUERPO DE LA TARJETA --- */
+    .repo-body {
+        padding: 1.5rem;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .repo-title {
+        color: white !important;
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 1.2rem;
+        margin-bottom: 5px;
+        animation: neon-text-cycle 12s infinite alternate;
+    }
+
+    .repo-subtitle {
+        color: #00ff41; /* Verde Hacker */
+        font-size: 0.85rem;
+        font-family: 'JetBrains Mono', monospace;
+        margin-bottom: 15px;
+        display: block;
+    }
+
+    .repo-desc {
+        color: #ccc;
+        font-size: 0.9rem;
+        line-height: 1.6;
+        margin-bottom: 20px;
+        flex-grow: 1;
+    }
+
+    /* --- TECNOLOGÍAS (TAGS) --- */
+    .tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+
+    .tech-badge {
+        background: rgba(255,255,255,0.1);
+        color: #ddd;
+        border: 1px solid #444;
+        padding: 4px 8px;
+        font-size: 0.75rem;
+        font-family: 'JetBrains Mono', monospace;
+        text-transform: uppercase;
+    }
+
+    /* --- BOTÓN LINK --- */
+    .btn-deploy {
+        width: 100%;
+        background: transparent;
+        border: 1px solid;
+        animation: neon-border-cycle 12s infinite alternate;
+        color: white;
+        text-transform: uppercase;
+        font-weight: bold;
+        padding: 10px;
+        transition: 0.3s;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+    }
+
+    .btn-deploy:hover {
+        background: white;
+        color: black;
+        box-shadow: 0 0 20px white;
+    }
+</style>
+
+<div class="d-flex align-items-end mb-5 border-bottom border-secondary pb-3" style="border-color: #444 !important;">
+    <div>
+        <h2 class="fw-bold mb-0 text-dynamic" style="animation: neon-text-cycle 12s infinite alternate; font-size: 2.5rem;">
+            ./ REPOSITORIOS
+        </h2>
+        <p class="text-secondary small mb-0 font-monospace">
+            Código fuente desplegado & Laboratorios.
+        </p>
+    </div>
+    <div class="ms-auto font-monospace text-light small d-none d-md-block">
+        TOTAL_OBJETOS: {{ proyectos.count }}
     </div>
 </div>
 
-<style>
-    .hover-card {
-        transition: all 0.3s ease;
-    }
-    .hover-card:hover {
-        transform: translateY(-7px);
-        box-shadow: 0 15px 30px rgba(16, 185, 129, 0.15) !important;
-    }
-    .transition-btn {
-        transition: transform 0.2s;
-    }
-    .transition-btn:hover {
-        transform: scale(1.05);
-    }
-</style>
+<div class="row g-4">
+    {% for proy in proyectos %}
+    <div class="col-md-6 col-lg-4">
+        <div class="repo-card">
+            
+            <div class="repo-monitor">
+                <div class="scan-overlay"></div>
+                <div class="repo-id">ID: {{ proy.id|stringformat:"02d" }}</div>
+                
+                {% if proy.logo %}
+                    <img src="{{ proy.logo.url }}" alt="{{ proy.titulo }}" class="repo-img">
+                {% elif proy.imagen %}
+                    <img src="{{ proy.imagen.url }}" alt="{{ proy.titulo }}" class="repo-img">
+                {% else %}
+                    <div class="d-flex flex-column align-items-center justify-content-center h-100 w-100 bg-black">
+                        <i class="bi bi-terminal text-secondary" style="font-size: 4rem;"></i>
+                        <span class="text-secondary small mt-2 font-monospace">NO_DATA</span>
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="repo-body">
+                <h3 class="repo-title">{{ proy.titulo }}</h3>
+                
+                {% if proy.subtitulo %}
+                <span class="repo-subtitle">> {{ proy.subtitulo }}</span>
+                {% endif %}
+                
+                <p class="repo-desc">
+                    {{ proy.descripcion|truncatechars:120 }}
+                </p>
+                
+                {% if proy.tecnologias %}
+                <div class="tech-stack">
+                    <span class="tech-badge">{{ proy.tecnologias }}</span>
+                </div>
+                {% endif %}
+
+                <div class="mt-auto">
+                    {% if proy.link %}
+                    <a href="{{ proy.link }}" target="_blank" class="btn-deploy">
+                        <i class="bi bi-box-arrow-up-right me-2"></i>DESPLEGAR
+                    </a>
+                    {% endif %}
+                    </div>
+            </div>
+
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert bg-transparent text-center p-5 border" style="border-color: #444; border-style: dashed;">
+            <h4 class="text-white font-monospace">[ NULL ]</h4>
+            <p class="text-secondary">No se han encontrado proyectos en el directorio.</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
 {% endblock %}

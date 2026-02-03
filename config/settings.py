@@ -11,12 +11,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 import os
 import dj_database_url
-
 from pathlib import Path
 
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path (__file__).resolve ().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -28,7 +26,7 @@ SECRET_KEY = 'django-insecure-e%i_f4)2g)f*(bti6!wm1fpv%tz@o&nd5f-oah^emt=8mzg6_4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -62,10 +60,12 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # 👇 ESTA ES LA CORRECCIÓN IMPORTANTE:
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -81,10 +81,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600
+    )
 }
 
 
@@ -129,17 +129,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 # Configuración para permitir ver PDFs en iframes
 X_FRAME_OPTIONS = 'SAMEORIGIN'
-
-# Configuración para Render
-ALLOWED_HOSTS = ['*']
-
-# Base de Datos (Detecta si es Render o Local automáticamente)
-DATABASES = {
-    'default': dj_database_url.config(
-        default='sqlite:///db.sqlite3',
-        conn_max_age=600
-    )
-}
 
 # Archivos Estáticos (CSS, Imágenes)
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

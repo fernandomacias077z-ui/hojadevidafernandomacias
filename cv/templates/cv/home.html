@@ -1,338 +1,296 @@
 {% extends 'cv/base.html' %}
+{% load static %}
+
 {% block content %}
 
-    <div class="card border-0 shadow rounded-4 mb-5 overflow-hidden bg-white">
-        <div class="row g-0">
-            <div class="col-lg-4 d-flex flex-column align-items-center justify-content-center p-4 position-relative" 
-                 style="background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);">
-                <div class="position-relative mb-3">
-                    {% if perfil.foto %}
-                        <img src="{{ perfil.foto.url }}" class="rounded-circle shadow-lg border border-5 border-white" style="width: 220px; height: 220px; object-fit: cover;">
-                    {% else %}
-                        <div class="rounded-circle bg-white border border-5 border-white d-flex align-items-center justify-content-center shadow-lg" style="width: 220px; height: 220px;"><i class="bi bi-person-fill text-muted fs-1"></i></div>
-                    {% endif %}
-                    <div class="position-absolute bottom-0 end-0 mb-3 me-3">
-                        <span class="badge bg-success border border-2 border-white rounded-circle p-2"><span class="visually-hidden">Activo</span></span>
-                    </div>
-                </div>
-                <h2 class="fw-bold text-dark mb-1 h3">{{ perfil.nombre }} {{ perfil.apellido }}</h2>
-                <div class="badge bg-white text-success shadow-sm px-3 py-2 rounded-pill fw-bold border border-success border-opacity-25">{{ perfil.profesion }}</div>
-            </div>
-            <div class="col-lg-8 p-4 p-lg-5">
-                <div class="d-flex flex-column h-100 justify-content-center">
-                    <h5 class="text-uppercase text-muted fw-bold small letter-spacing-1 mb-2">Sobre mí</h5>
-                    <p class="text-secondary mb-4" style="line-height: 1.8;">{{ perfil.resumen }}</p>
-                    <div class="d-flex flex-wrap gap-3 mb-4">
-                        {% if perfil.ubicacion %}
-                        <div class="d-flex align-items-center bg-light px-3 py-2 rounded-3 border"><i class="bi bi-geo-alt-fill text-danger me-2"></i><span class="text-dark fw-bold small">{{ perfil.ubicacion }}</span></div>
-                        {% endif %}
-                        <button class="btn btn-outline-dark border-dashed px-3 py-2 rounded-3 small fw-bold" data-bs-toggle="modal" data-bs-target="#infoModal"><i class="bi bi-eye-fill me-2"></i>Ver Credencial</button>
-                    </div>
-                    <div class="d-flex gap-3 mt-auto">
-                        <button class="btn btn-dark rounded-pill px-4 py-2 fw-bold shadow-sm hover-scale" data-bs-toggle="modal" data-bs-target="#configModal"><i class="bi bi-download me-2"></i> Descargar CV</button>
-                        <a href="https://wa.me/{{ perfil.telefono }}" target="_blank" class="btn btn-success rounded-pill px-4 py-2 fw-bold shadow-sm hover-scale"><i class="bi bi-whatsapp me-2"></i> Contactar</a>
-                    </div>
-                </div>
-            </div>
+<style>
+    /* --- 1. ESTILOS DE LA MIRA TÁCTICA (MOUSE TRACKER) --- */
+    .target-zone {
+        position: relative;
+        overflow: hidden;
+        cursor: none; /* Oculta el cursor normal dentro de esta zona */
+        border: 2px solid #00ff41;
+        display: inline-block;
+        /* Animación del borde */
+        animation: neon-border-cycle 4s infinite alternate; 
+    }
+
+    .cyber-sight {
+        position: absolute;
+        top: 50%; left: 50%; /* Se ajustará con JS */
+        transform: translate(-50%, -50%);
+        pointer-events: none; /* Permite hacer clic a través de la mira */
+        opacity: 0;
+        transition: opacity 0.2s ease;
+        z-index: 50;
+        width: 100px; height: 100px;
+        display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Mostrar mira al pasar el mouse */
+    .target-zone:hover .cyber-sight { opacity: 1; }
+
+    /* Círculo giratorio de la mira */
+    .sight-circle {
+        width: 60px; height: 60px;
+        border: 1px dashed #00ff41;
+        border-radius: 50%;
+        position: absolute;
+        animation: spin-sight 10s linear infinite, neon-border-cycle 4s infinite alternate;
+    }
+
+    /* Punto central */
+    .sight-dot {
+        width: 4px; height: 4px;
+        background-color: #ff003c;
+        border-radius: 50%;
+        box-shadow: 0 0 10px #ff003c;
+    }
+
+    /* Líneas de la cruz */
+    .sight-line-h, .sight-line-v {
+        position: absolute;
+        background-color: #00ff41;
+        opacity: 0.6;
+        box-shadow: 0 0 5px #00ff41;
+    }
+    .sight-line-h { width: 100%; height: 1px; top: 50%; }
+    .sight-line-v { height: 100%; width: 1px; left: 50%; }
+
+    /* Coordenadas numéricas dinámicas */
+    .sight-coords {
+        position: absolute; bottom: -30px; right: -40px;
+        font-family: 'JetBrains Mono', monospace; font-size: 10px;
+        background: rgba(0,0,0,0.8); color: #00ff41;
+        padding: 2px 4px; border: 1px solid #00ff41;
+        white-space: nowrap;
+    }
+
+    @keyframes spin-sight { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+
+    /* --- 2. ANIMACIONES DINÁMICAS (COLORES CAMBIANTES) --- */
+    
+    /* Borde que cambia de color (Verde > Azul > Rojo) */
+    @keyframes neon-border-cycle {
+        0% { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
+        33% { border-color: #00d2ff; box-shadow: 0 0 10px rgba(0, 210, 255, 0.2); }
+        66% { border-color: #ff003c; box-shadow: 0 0 10px rgba(255, 0, 60, 0.2); }
+        100% { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.2); }
+    }
+
+    /* Texto que cambia de color */
+    @keyframes neon-text-cycle {
+        0% { color: #00ff41; text-shadow: 0 0 5px rgba(0, 255, 65, 0.5); }
+        33% { color: #00d2ff; text-shadow: 0 0 5px rgba(0, 210, 255, 0.5); }
+        66% { color: #ff003c; text-shadow: 0 0 5px rgba(255, 0, 60, 0.5); }
+        100% { color: #00ff41; text-shadow: 0 0 5px rgba(0, 255, 65, 0.5); }
+    }
+
+    /* Fondo dinámico para etiquetas */
+    @keyframes neon-bg-cycle {
+        0% { background-color: #00ff41; color: black; }
+        33% { background-color: #00d2ff; color: black; }
+        66% { background-color: #ff003c; color: white; }
+        100% { background-color: #00ff41; color: black; }
+    }
+
+    /* Clases de utilidad para aplicar animaciones */
+    .border-dynamic { animation: neon-border-cycle 6s infinite linear; }
+    .text-dynamic { animation: neon-text-cycle 6s infinite linear; }
+    .bg-dynamic { animation: neon-bg-cycle 6s infinite linear; }
+
+    /* Efecto Hover en tarjetas */
+    .hacker-card {
+        background-color: rgba(5, 5, 5, 0.9);
+        border: 1px solid #333;
+        padding: 1.5rem; height: 100%;
+        transition: all 0.3s ease;
+        position: relative; overflow: hidden;
+    }
+    .hacker-card:hover {
+        transform: translateY(-5px);
+        animation: neon-border-cycle 2s infinite linear; /* Se activa al pasar mouse */
+    }
+    .hacker-card h4 { font-weight: bold; margin-bottom: 1rem; color: #fff; }
+
+    /* Cursor parpadeante */
+    .cursor-blink::after { content: '_'; animation: blink 1s infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+</style>
+
+<div class="container-fluid p-0" style="min-height: 80vh;">
+    
+    <div class="row mb-5 border-bottom border-secondary pb-2 mx-2">
+        <div class="col-12 d-flex justify-content-between align-items-center text-dynamic font-monospace small">
+            <span>> ESTADO_SISTEMA: <span class="text-white">ONLINE</span></span>
+            <span>> OBJETIVO: {{ perfil.nombre|upper }}</span>
+            <span class="bg-dynamic px-2 fw-bold">NIVEL_ACCESO: ROOT</span>
         </div>
     </div>
 
-    <div class="row g-4 mb-5">
-        <div class="col-xl-8 col-lg-7">
-            <div class="d-flex justify-content-between align-items-end mb-4 border-bottom pb-2">
-                <h3 class="fw-bold text-dark m-0"><i class="bi bi-rocket-takeoff-fill text-success me-2"></i>Proyectos</h3>
-                <a href="{% url 'proyectos' %}" class="text-decoration-none small fw-bold text-success">Ver todos <i class="bi bi-arrow-right"></i></a>
-            </div>
-            <div class="row g-4">
-                {% for pro in ultimos_proyectos %}
-                <div class="col-md-6"> 
-                    <div class="card h-100 border-0 shadow-sm rounded-4 hover-up bg-white">
-                        <div class="card-body p-4 d-flex flex-column">
-                            <div class="d-flex justify-content-between align-items-start mb-3">
-                                <div class="rounded-circle bg-light p-3 d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
-                                    <i class="bi bi-laptop text-dark fs-4"></i>
-                                </div>
-                                {% if pro.fecha %}
-                                <span class="text-secondary small fw-bold mt-2">
-                                    {{ pro.fecha|date:"M Y" }}
-                                </span>
-                                {% endif %}
-                            </div>
-                            <h5 class="fw-bold text-dark mb-1">{{ pro.titulo }}</h5>
-                            <p class="text-muted small mt-2 mb-4 flex-grow-1">{{ pro.descripcion|truncatechars:85 }}</p>
-                            <div class="mt-auto pt-3 border-top border-light">
-                                <span class="text-dark fw-bold small" style="font-family: monospace;">{{ pro.tecnologias|truncatechars:28 }}</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="col-xl-4 col-lg-5">
-            <h3 class="fw-bold text-dark mb-4 pb-2 border-bottom"><i class="bi bi-mortarboard-fill text-success me-2"></i>Formación</h3>
-            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
-                <div class="timeline">
-                    {% for edu in ultima_educacion %}
-                    <div class="timeline-item position-relative pb-4 ps-4 border-start border-2 border-success border-opacity-25 {% if forloop.last %}border-0{% endif %}">
-                        <div class="position-absolute top-0 start-0 translate-middle bg-white border border-2 border-success rounded-circle p-1 mt-1" style="width: 16px; height: 16px;"></div>
-                        <div class="ps-2">
-                            <h6 class="fw-bold text-dark mb-0">{{ edu.titulo }}</h6>
-                            <p class="text-success small fw-bold mb-1">{{ edu.institucion }}</p>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                <div class="mt-3 text-center">
-                    <a href="{% url 'educacion' %}" class="btn btn-outline-success btn-sm rounded-pill w-100">Ver historial completo</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row g-4 mb-5">
-        <div class="col-lg-7">
-            <div class="d-flex justify-content-between align-items-end mb-4 border-bottom pb-2">
-                <h3 class="fw-bold text-dark m-0"><i class="bi bi-briefcase-fill text-primary me-2"></i>Experiencia</h3>
-                <a href="{% url 'experiencia' %}" class="text-decoration-none small fw-bold text-primary">Ver toda <i class="bi bi-arrow-right"></i></a>
-            </div>
-            
-            <div class="row g-3">
-                {% for exp in ultima_experiencia %}
-                <div class="col-12">
-                    <div class="card border-0 shadow-sm rounded-4 p-3 hover-up">
-                        <div class="d-flex align-items-center">
-                            <div class="bg-primary bg-opacity-10 text-primary p-3 rounded-4 me-3">
-                                <i class="bi bi-building fs-4"></i>
-                            </div>
-                            <div class="flex-grow-1">
-                                <h6 class="fw-bold mb-0">{{ exp.cargo }}</h6>
-                                <small class="text-muted">{{ exp.empresa }}</small>
-                            </div>
-                            <div class="text-end">
-                                <span class="badge bg-light text-dark border">
-                                    {% if exp.fecha_fin %}Finalizado{% else %}Actual{% endif %}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {% empty %}
-                <p class="text-muted small">No hay experiencia destacada.</p>
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="col-lg-5">
-            <div class="d-flex justify-content-between align-items-end mb-4 border-bottom pb-2">
-                <h3 class="fw-bold text-dark m-0"><i class="bi bi-award-fill text-warning me-2"></i>Certificados</h3>
-                <a href="{% url 'certificados' %}" class="text-decoration-none small fw-bold text-warning">Galería <i class="bi bi-arrow-right"></i></a>
-            </div>
-            <div class="row g-2">
-                {% for cert in ultimos_certificados %}
-                <div class="col-6">
-                    <div class="card border-0 shadow-sm rounded-3 overflow-hidden position-relative h-100">
-                        <a href="{% if cert.archivo %}{{ cert.archivo.url }}{% else %}#{% endif %}" 
-                           target="{% if cert.archivo %}_blank{% else %}_self{% endif %}" 
-                           class="text-decoration-none">
-                            
-                            {% if cert.archivo %}
-                            <img src="{{ cert.archivo.url }}" 
-                                 class="w-100" 
-                                 style="height: 100px; object-fit: cover;"
-                                 onerror="this.onerror=null; this.parentElement.innerHTML='<div class=\'bg-light w-100 d-flex align-items-center justify-content-center flex-column\' style=\'height: 100px;\'><i class=\'bi bi-file-earmark-pdf-fill text-danger fs-1\'></i><small class=\'text-muted fw-bold mt-1\'>Ver Archivo</small></div>';">
-                            {% else %}
-                            <div class="bg-light w-100 d-flex align-items-center justify-content-center" style="height: 100px;"><i class="bi bi-image text-muted"></i></div>
-                            {% endif %}
-                            
-                            <div class="card-img-overlay d-flex align-items-end p-2 bg-dark bg-opacity-50">
-                                <small class="text-white fw-bold text-truncate w-100 shadow-sm" style="font-size: 0.75rem;">{{ cert.titulo }}</small>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-                {% empty %}
-                <p class="text-muted small">No hay certificados recientes.</p>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
-    <div class="mb-5">
-        {% include 'cv/cursos.html' with cursos=ultimos_cursos %}
-    </div>
-
-    <div class="mb-5">
-        <div class="d-flex justify-content-between align-items-end mb-4 border-bottom pb-2">
-            <h3 class="fw-bold text-dark m-0"><i class="bi bi-shop text-danger me-2"></i>Garage (Ventas)</h3>
-            <a href="{% url 'garage' %}" class="text-decoration-none small fw-bold text-danger">Ir a la tienda <i class="bi bi-arrow-right"></i></a>
-        </div>
+    <div class="row align-items-center mb-5 px-4">
         
-        <div class="row g-4">
-            {% for prod in ultimos_productos %}
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm rounded-4 hover-up h-100">
-                    <div class="position-relative">
-                        {% if prod.imagen %}
-                        <img src="{{ prod.imagen.url }}" class="card-img-top rounded-top-4" style="height: 180px; object-fit: cover;">
-                        {% else %}
-                        <div class="bg-light card-img-top rounded-top-4 d-flex align-items-center justify-content-center" style="height: 180px;"><i class="bi bi-box-seam fs-1 text-muted"></i></div>
-                        {% endif %}
-                        <span class="position-absolute top-0 end-0 m-2 badge bg-white text-dark shadow-sm fw-bold">${{ prod.precio }}</span>
-                    </div>
-                    <div class="card-body">
-                        <h6 class="fw-bold mb-1 text-truncate">{{ prod.titulo }}</h6>
-                        <small class="text-success fw-bold">{{ prod.estado }}</small>
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="col-12"><p class="text-muted">No hay artículos en venta por ahora.</p></div>
-            {% endfor %}
-        </div>
-    </div>
+        <div class="col-lg-7 order-2 order-lg-1">
+            <p class="mb-2 text-secondary font-monospace">> ./ejecutando_presentacion.sh</p>
+            
+            <h1 class="display-1 fw-bold mb-0 text-white typing-cursor" style="letter-spacing: -2px;">
+                {{ perfil.nombre|upper }}
+            </h1>
+            <h2 class="h3 mb-4 text-dynamic font-monospace">
+                > {{ perfil.profesion }}
+            </h2>
 
-    <div class="modal fade" id="infoModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0 shadow-lg">
-                <div class="modal-header border-0 bg-success bg-gradient text-white">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-person-vcard me-2"></i>Credencial Profesional</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-4">
-                    <div class="text-center mb-4">
-                        {% if perfil.foto %}
-                        <img src="{{ perfil.foto.url }}" class="rounded-circle shadow border border-3 border-success p-1" width="100" height="100">
-                        {% endif %}
-                        <h4 class="fw-bold mt-2 mb-0">{{ perfil.nombre }} {{ perfil.apellido }}</h4>
-                        <span class="text-muted small">{{ perfil.profesion }}</span>
-                    </div>
-                    <ul class="list-group list-group-flush rounded-3">
-                        <li class="list-group-item d-flex justify-content-between align-items-center py-3"><span class="text-muted"><i class="bi bi-envelope me-2"></i>Email</span><span class="fw-bold text-dark text-break text-end" style="max-width: 60%;">{{ perfil.email }}</span></li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center py-3"><span class="text-muted"><i class="bi bi-telephone me-2"></i>Teléfono</span><span class="fw-bold text-dark">{{ perfil.telefono }}</span></li>
-                        {% if perfil.dni %}<li class="list-group-item d-flex justify-content-between align-items-center py-3"><span class="text-muted"><i class="bi bi-card-heading me-2"></i>DNI/Cédula</span><span class="fw-bold text-dark">{{ perfil.dni }}</span></li>{% endif %}
-                        {% if perfil.sector %}<li class="list-group-item d-flex justify-content-between align-items-center py-3"><span class="text-muted"><i class="bi bi-map me-2"></i>Sector</span><span class="fw-bold text-dark">{{ perfil.sector }}</span></li>{% endif %}
-                        <li class="list-group-item d-flex justify-content-between align-items-center py-3"><span class="text-muted"><i class="bi bi-geo-alt me-2"></i>Ubicación</span><span class="fw-bold text-dark">{{ perfil.ubicacion }}</span></li>
-                    </ul>
-                </div>
-                <div class="modal-footer border-0 bg-light rounded-bottom-4">
-                    <button type="button" class="btn btn-dark rounded-pill w-100" data-bs-dismiss="modal">Entendido</button>
-                </div>
+            <div class="p-4 mb-5 position-relative border-dynamic" style="background: rgba(0, 10, 0, 0.8);">
+                <div class="position-absolute top-0 start-0 px-2 bg-dynamic font-monospace small">LOGS_PERFIL</div>
+                <p class="mb-0 mt-3 text-light font-monospace" style="line-height: 1.6;">
+                    <span class="text-success fw-bold">root@server:~$</span> cat descripcion.txt<br>
+                    {{ perfil.resumen }}
+                    <span class="cursor-blink text-success"></span>
+                </p>
+            </div>
+
+            <div class="d-flex gap-4">
+                <button class="btn btn-outline-success font-monospace px-4 py-2" data-bs-toggle="modal" data-bs-target="#pdfModal">
+                    <i class="bi bi-file-earmark-code me-2"></i>EXPORTAR_CV
+                </button>
+                <a href="https://wa.me/{{ perfil.telefono }}" target="_blank" class="btn btn-outline-light font-monospace px-4 py-2">
+                    <i class="bi bi-chat-dots me-2"></i>INICIAR_CHAT
+                </a>
             </div>
         </div>
-    </div>
 
-    <div class="modal fade" id="configModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4">
-                <div class="modal-header border-0 bg-dark text-white rounded-top-4">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-gear-fill me-2"></i>Configurar CV</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
+        <div class="col-lg-5 order-1 order-lg-2 text-center mb-5 mb-lg-0">
+            
+            <div class="target-zone p-1" id="photoTarget">
                 
-                <form id="pdfForm" method="POST" action="{% url 'descargar_cv_pdf' %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" id="actionField" value="download">
+                {% if perfil.foto %}
+                    <img src="{{ perfil.foto.url }}" class="img-fluid" style="max-width: 350px; filter: grayscale(100%) contrast(1.2);">
+                {% else %}
+                    <div style="width: 350px; height: 350px; background: #000; display: flex; align-items: center; justify-content: center;">
+                        <i class="bi bi-person-fill" style="font-size: 8rem; color: #333;"></i>
+                    </div>
+                {% endif %}
+                
+                <div class="cyber-sight" id="customCursor">
+                    <div class="sight-line-h"></div>
+                    <div class="sight-line-v"></div>
+                    <div class="sight-circle"></div>
+                    <div class="sight-dot"></div>
+                    <div class="sight-coords">
+                        POS: <span id="coordX">000</span> : <span id="coordY">000</span>
+                    </div>
+                </div>
 
-                    <div class="modal-body p-4 bg-light">
-                        <p class="text-muted small mb-3">Marca las secciones que quieres mostrar:</p>
-                        
-                        <div class="d-grid gap-2">
-                            <label class="list-group-item d-flex gap-3 bg-white p-3 rounded-3 shadow-sm border">
-                                <input class="form-check-input flex-shrink-0" type="checkbox" name="incluir_perfil" checked style="font-size: 1.3em;">
-                                <span class="pt-1 form-checked-content"><strong>Datos de Perfil</strong></span>
-                            </label>
-                            <label class="list-group-item d-flex gap-3 bg-white p-3 rounded-3 shadow-sm border">
-                                <input class="form-check-input flex-shrink-0" type="checkbox" name="incluir_experiencia" checked style="font-size: 1.3em;">
-                                <span class="pt-1 form-checked-content"><strong>Experiencia Laboral</strong></span>
-                            </label>
-                            <label class="list-group-item d-flex gap-3 bg-white p-3 rounded-3 shadow-sm border">
-                                <input class="form-check-input flex-shrink-0" type="checkbox" name="incluir_proyectos" checked style="font-size: 1.3em;">
-                                <span class="pt-1 form-checked-content"><strong>Proyectos</strong></span>
-                            </label>
-                            <label class="list-group-item d-flex gap-3 bg-white p-3 rounded-3 shadow-sm border">
-                                <input class="form-check-input flex-shrink-0" type="checkbox" name="incluir_educacion" checked style="font-size: 1.3em;">
-                                <span class="pt-1 form-checked-content"><strong>Educación y Formación</strong></span>
-                            </label>
-                            <label class="list-group-item d-flex gap-3 bg-white p-3 rounded-3 shadow-sm border">
-                                <input class="form-check-input flex-shrink-0" type="checkbox" name="incluir_certificados" checked style="font-size: 1.3em;">
-                                <span class="pt-1 form-checked-content"><strong>Certificados</strong></span>
-                            </label>
-                            <label class="list-group-item d-flex gap-3 bg-white p-3 rounded-3 shadow-sm border">
-                                <input class="form-check-input flex-shrink-0" type="checkbox" name="incluir_cursos" checked style="font-size: 1.3em;">
-                                <span class="pt-1 form-checked-content"><strong>Cursos y Guías</strong></span>
-                            </label>
-                        </div>
-                    </div>
-                    
-                    <div class="modal-footer border-0 bg-white rounded-bottom-4">
-                        <button type="button" class="btn btn-outline-dark rounded-pill fw-bold px-4" onclick="abrirVistaPrevia()">
-                            <i class="bi bi-eye me-2"></i>Vista Previa
-                        </button>
-                        <button type="button" class="btn btn-success rounded-pill fw-bold px-4" onclick="descargarDirecto()">
-                            <i class="bi bi-download me-2"></i>Descargar PDF
-                        </button>
-                    </div>
-                </form>
+                <div class="position-absolute bottom-0 end-0 px-2 small bg-dynamic font-monospace">
+                    ID_VERIFICADO
+                </div>
+                <div class="position-absolute top-0 start-0 px-2 small text-dynamic font-monospace bg-black">
+                    REC ●
+                </div>
             </div>
+
         </div>
     </div>
 
-    <div class="modal fade" id="pdfViewerModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" style="height: 90vh;">
-            <div class="modal-content border-0 shadow-lg rounded-4 h-100">
-                <div class="modal-header bg-dark text-white border-0">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-file-earmark-pdf me-2"></i>Vista Previa del CV</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+    <div class="row g-4 mt-5 mx-2 pb-5">
+        <div class="col-md-4">
+            <a href="{% url 'experiencia' %}" class="text-decoration-none">
+                <div class="hacker-card">
+                    <h4 class="text-dynamic">> /HISTORIAL</h4>
+                    <p class="small text-secondary mb-0 font-monospace">Rastreo de actividad laboral y experiencia en combate.</p>
                 </div>
-                <div class="modal-body p-0 bg-secondary">
-                    <iframe name="pdf_preview_frame" class="w-100 h-100 border-0" style="min-height: 500px;"></iframe>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'proyectos' %}" class="text-decoration-none">
+                <div class="hacker-card">
+                    <h4 class="text-dynamic">> /REPOSITORIOS</h4>
+                    <p class="small text-secondary mb-0 font-monospace">Código fuente desplegado y armas digitales.</p>
                 </div>
-            </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{% url 'garage' %}" class="text-decoration-none">
+                <div class="hacker-card">
+                    <h4 class="text-dynamic">> /MERCADO_NEGRO</h4>
+                    <p class="small text-secondary mb-0 font-monospace">Hardware y componentes disponibles para adquisición.</p>
+                </div>
+            </a>
         </div>
     </div>
 
-    <script>
-        // Función para Vista Previa en el Modal Flotante
-        function abrirVistaPrevia() {
-            const form = document.getElementById('pdfForm');
-            const actionField = document.getElementById('actionField');
-            
-            actionField.value = 'preview';
-            form.target = 'pdf_preview_frame';
-            
-            const baseUrl = "{% url 'descargar_cv_pdf' %}";
-            form.action = baseUrl + "?v=" + new Date().getTime();
-            
-            const viewerModal = new bootstrap.Modal(document.getElementById('pdfViewerModal'));
-            viewerModal.show();
-            
-            form.submit();
-        }
+</div>
 
-        // Función para Descarga Directa
-        function descargarDirecto() {
-            const form = document.getElementById('pdfForm');
-            const actionField = document.getElementById('actionField');
-            
-            actionField.value = 'download';
-            form.target = '_blank';
-            
-            const baseUrl = "{% url 'descargar_cv_pdf' %}";
-            form.action = baseUrl + "?v=" + new Date().getTime();
-            
-            form.submit();
-        }
-    </script>
+<script>
+    const container = document.getElementById('photoTarget');
+    const cursor = document.getElementById('customCursor');
+    const coordX = document.getElementById('coordX');
+    const coordY = document.getElementById('coordY');
 
-    <style>
-        .hover-scale { transition: transform 0.2s ease; }
-        .hover-scale:hover { transform: scale(1.05); }
-        .hover-up { transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); }
-        .hover-up:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important; }
-        .border-dashed { border-style: dashed !important; }
-        .letter-spacing-1 { letter-spacing: 1px; }
-    </style>
+    container.addEventListener('mousemove', (e) => {
+        // Obtenemos la posición relativa a la caja de la foto
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        // Movemos la mira
+        cursor.style.left = x + 'px';
+        cursor.style.top = y + 'px';
+
+        // Actualizamos los números de coordenadas para efecto técnico
+        coordX.innerText = Math.round(x).toString().padStart(3, '0');
+        coordY.innerText = Math.round(y).toString().padStart(3, '0');
+    });
+</script>
+
+<div class="modal fade" id="pdfModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border border-secondary" style="background-color: #0a0a0a; color: #fff;">
+            <div class="modal-header border-bottom border-secondary">
+                <h5 class="modal-title font-monospace text-success">> ASISTENTE_EXPORTACIÓN.exe</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <form id="pdfForm" method="POST" action="{% url 'descargar_cv_pdf' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" id="actionField" value="download">
+                <div class="modal-body p-4">
+                    <p class="text-secondary font-monospace mb-3 small">SELECCIONAR MÓDULOS:</p>
+                    <div class="d-grid gap-3">
+                        <div class="form-check border p-2 border-secondary rounded hover-bg-dark"><input class="form-check-input bg-dark border-secondary" type="checkbox" name="incluir_perfil" checked><label class="form-check-label font-monospace">[x] PERFIL</label></div>
+                        <div class="form-check border p-2 border-secondary rounded hover-bg-dark"><input class="form-check-input bg-dark border-secondary" type="checkbox" name="incluir_experiencia" checked><label class="form-check-label font-monospace">[x] EXPERIENCIA</label></div>
+                        <div class="form-check border p-2 border-secondary rounded hover-bg-dark"><input class="form-check-input bg-dark border-secondary" type="checkbox" name="incluir_proyectos" checked><label class="form-check-label font-monospace">[x] PROYECTOS</label></div>
+                        <div class="form-check border p-2 border-secondary rounded hover-bg-dark"><input class="form-check-input bg-dark border-secondary" type="checkbox" name="incluir_educacion" checked><label class="form-check-label font-monospace">[x] EDUCACIÓN</label></div>
+                        <div class="form-check border p-2 border-secondary rounded hover-bg-dark"><input class="form-check-input bg-dark border-secondary" type="checkbox" name="incluir_certificados" checked><label class="form-check-label font-monospace">[x] CERTIFICADOS</label></div>
+                    </div>
+                </div>
+                <div class="modal-footer border-top border-secondary d-flex justify-content-between">
+                    <button type="button" class="btn btn-outline-light font-monospace" onclick="abrirVistaPrevia()"><i class="bi bi-eye"></i> VISTA_PREVIA</button>
+                    <button type="button" class="btn btn-danger font-monospace fw-bold" onclick="descargarDirecto()"><i class="bi bi-download"></i> EJECUTAR</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="pdfViewerModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered" style="height: 90vh;">
+        <div class="modal-content h-100 border border-secondary" style="background-color: #0a0a0a;">
+            <div class="modal-header border-bottom border-secondary py-2">
+                <span class="small fw-bold text-success font-monospace">> VISTA_PREVIA_ACTIVA</span>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-0 bg-black">
+                <iframe name="pdf_preview_frame" class="w-100 h-100 border-0" style="filter: invert(0.9) hue-rotate(180deg);"></iframe>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function descargarDirecto() { document.getElementById('actionField').value = 'download'; const form = document.getElementById('pdfForm'); form.target = '_self'; form.submit(); }
+    function abrirVistaPrevia() { document.getElementById('actionField').value = 'preview'; const form = document.getElementById('pdfForm'); form.target = 'pdf_preview_frame'; const viewerModal = new bootstrap.Modal(document.getElementById('pdfViewerModal')); viewerModal.show(); form.submit(); }
+</script>
 
 {% endblock %}

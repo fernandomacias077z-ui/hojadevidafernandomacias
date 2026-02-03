@@ -1,143 +1,66 @@
-{% load static %}
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>CV - {{ perfil.nombre }}</title>
+    <meta charset="utf-8">
     <style>
-        @page {
-            size: A4;
-            margin: 1.5cm;
-            @bottom-right {
-                content: "Pág. " counter(page) " de " counter(pages);
-                font-size: 9pt;
-                color: #666;
-            }
-        }
-        body { font-family: 'Helvetica', sans-serif; color: #333; line-height: 1.5; font-size: 11pt; }
-        h1, h2, h3 { color: #2c3e50; margin-bottom: 5px; }
-        h1 { font-size: 24pt; text-transform: uppercase; border-bottom: 2px solid #10b981; padding-bottom: 10px; }
-        h2 { font-size: 16pt; margin-top: 20px; border-bottom: 1px solid #ccc; padding-bottom: 5px; color: #10b981; text-transform: uppercase; }
-        h3 { font-size: 13pt; margin-top: 10px; margin-bottom: 0; }
-        p { margin: 2px 0 8px 0; }
-        .subtitle { font-size: 10pt; color: #666; font-weight: bold; }
-        .date { float: right; font-size: 10pt; color: #666; }
-        .contact-info { margin-bottom: 20px; font-size: 10pt; }
-        .section-content { margin-left: 10px; }
-        .badge { background: #eee; padding: 2px 6px; border-radius: 4px; font-size: 9pt; display: inline-block; margin-right: 5px; }
-        a { color: #10b981; text-decoration: none; }
+        @page { size: a4 portrait; margin: 2cm; }
+        body { font-family: Helvetica, sans-serif; font-size: 12px; color: #333; }
+        h1 { color: #000; text-transform: uppercase; font-size: 20px; border-bottom: 2px solid #000; padding-bottom: 5px; }
+        h2 { color: #666; font-size: 14px; margin-top: 5px; }
+        .section { margin-bottom: 15px; }
+        .job-title { font-weight: bold; font-size: 13px; color: #000; }
+        .company { font-style: italic; color: #444; }
+        .date { color: #666; font-size: 10px; }
+        p { text-align: justify; margin-top: 2px; }
     </style>
 </head>
 <body>
-
-    {% if opciones.incluir_perfil %}
-    <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="margin:0;">{{ perfil.nombre }} {{ perfil.apellido }}</h1>
-        <div style="font-size: 14pt; color: #666; margin-bottom: 10px;">{{ perfil.profesion }}</div>
-        
-        <div class="contact-info">
-            {{ perfil.email }} | {{ perfil.telefono }} <br>
-            {{ perfil.ubicacion }}
-            {% if perfil.dni %} | DNI: {{ perfil.dni }}{% endif %}
-        </div>
-        
-        <p style="text-align: justify; font-size: 10pt;">
-            {{ perfil.resumen }}
-        </p>
-    </div>
+    {% if perfil %}
+        <h1>{{ perfil.nombre }} {{ perfil.apellido }}</h1>
+        <h2>{{ perfil.profesion }}</h2>
+        <p>{{ perfil.email }} | {{ perfil.telefono }} | {{ perfil.ubicacion }}</p>
+        <p>{{ perfil.resumen }}</p>
     {% endif %}
 
-    {% if opciones.incluir_experiencia %}
-    <h2>Experiencia Laboral</h2>
-    <div class="section-content">
+    {% if experiencia %}
+        <br><h1>Experiencia</h1>
         {% for exp in experiencia %}
-        <div style="margin-bottom: 15px; page-break-inside: avoid;">
-            <div class="date">
-                {{ exp.fecha_inicio|date:"M Y" }} - 
-                {% if exp.fecha_fin %}{{ exp.fecha_fin|date:"M Y" }}{% else %}Presente{% endif %}
+            <div class="section">
+                <div class="job-title">{{ exp.cargo }} <span class="date">({{ exp.fecha_inicio|date:"Y" }} - {% if exp.fecha_fin %}{{ exp.fecha_fin|date:"Y" }}{% else %}Actual{% endif %})</span></div>
+                <div class="company">{{ exp.empresa }}</div>
+                <p>{{ exp.descripcion }}</p>
             </div>
-            <h3>{{ exp.cargo }}</h3>
-            <div class="subtitle">{{ exp.empresa }}</div>
-            <p>{{ exp.descripcion|linebreaksbr }}</p>
-        </div>
-        {% empty %}
-        <p style="color:#999;">Sin experiencia registrada.</p>
         {% endfor %}
-    </div>
     {% endif %}
 
-    {% if opciones.incluir_educacion %}
-    <h2>Educación</h2>
-    <div class="section-content">
+    {% if educacion %}
+        <br><h1>Educación</h1>
         {% for edu in educacion %}
-        <div style="margin-bottom: 10px; page-break-inside: avoid;">
-            <div class="date">{{ edu.fecha|date:"Y" }}</div>
-            <h3>{{ edu.titulo }}</h3>
-            <div class="subtitle">{{ edu.institucion }}</div>
-            {% if edu.descripcion %}<p>{{ edu.descripcion }}</p>{% endif %}
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    {% if opciones.incluir_proyectos %}
-    <h2>Proyectos Destacados</h2>
-    <div class="section-content">
-        {% for pro in proyectos %}
-        <div style="margin-bottom: 15px; page-break-inside: avoid;">
-            <div class="date">{{ pro.fecha|date:"M Y" }}</div>
-            <h3>{{ pro.titulo }}</h3>
-            {% if pro.tecnologias %}
-            <div style="margin-bottom: 4px; color: #10b981; font-size: 9pt;">
-                Tecnologías: {{ pro.tecnologias }}
+            <div class="section">
+                <div class="job-title">{{ edu.titulo }}</div>
+                <div class="company">{{ edu.institucion }} <span class="date">({{ edu.fecha|date:"Y" }})</span></div>
             </div>
-            {% endif %}
-            <p>{{ pro.descripcion }}</p>
-            {% if pro.link %}
-            <div style="font-size: 9pt;"><a href="{{ pro.link }}">Ver proyecto online</a></div>
-            {% endif %}
-        </div>
         {% endfor %}
-    </div>
+    {% endif %}
+    
+    {% if proyectos %}
+        <br><h1>Proyectos</h1>
+        {% for proy in proyectos %}
+            <div class="section">
+                <div class="job-title">{{ proy.titulo }}</div>
+                <p>{{ proy.descripcion }}</p>
+            </div>
+        {% endfor %}
     {% endif %}
 
-    {% if opciones.incluir_cursos %}
-    <h2>Cursos y Guías</h2>
-    <div class="section-content">
-        {% for curso in cursos %}
-        <div style="margin-bottom: 10px; page-break-inside: avoid;">
-            <div class="date">{{ curso.fecha|date:"M Y" }}</div>
-            <h3>{{ curso.titulo }}</h3>
-            <p>{{ curso.descripcion }}</p>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
-    {% if opciones.incluir_certificados %}
-    <h2>Certificaciones</h2>
-    <div class="section-content">
-        <ul>
+    {% if certificados %}
+        <br><h1>Certificaciones</h1>
         {% for cert in certificados %}
-            <li style="margin-bottom: 5px;">
-                <strong>{{ cert.titulo }}</strong> - {{ cert.institucion }} ({{ cert.fecha|date:"Y" }})
-            </li>
+            <div class="section">
+                <div class="job-title">{{ cert.titulo }}</div>
+                <div class="company">{{ cert.institucion }} <span class="date">({{ cert.fecha|date:"Y" }})</span></div>
+            </div>
         {% endfor %}
-        </ul>
-    </div>
     {% endif %}
-
-    {% if opciones.incluir_academicos %}
-    <h2>Productos Académicos</h2>
-    <div class="section-content">
-        {% for prod in productos_academicos %}
-        <div style="margin-bottom: 10px;">
-            <h3>{{ prod.titulo }}</h3>
-            <div class="subtitle">{{ prod.institucion }} - {{ prod.fecha|date:"Y" }}</div>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
-
 </body>
 </html>

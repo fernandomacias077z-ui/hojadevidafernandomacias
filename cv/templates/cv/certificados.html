@@ -1,81 +1,291 @@
 {% extends 'cv/base.html' %}
-
 {% block content %}
-    <div class="text-center mb-4">
-        <h2 class="fw-bold text-success"><i class="bi bi-patch-check-fill"></i> Certificados</h2>
-        <p class="text-muted">Evidencia documental de mi trayectoria académica y profesional.</p>
+
+<style>
+    /* --- CONTENEDOR PRINCIPAL TIPO BÓVEDA --- */
+    .vault-container {
+        border: 1px solid;
+        animation: neon-border-cycle 12s infinite alternate;
+        background: rgba(5, 5, 5, 0.95);
+        height: 80vh; /* Altura fija para simular aplicación */
+        display: flex;
+        overflow: hidden;
+        position: relative;
+        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    }
+
+    /* --- COLUMNA IZQUIERDA (LISTA) --- */
+    .file-list-col {
+        background: rgba(10, 10, 10, 0.98);
+        border-right: 1px solid #333;
+        display: flex;
+        flex-direction: column;
+        z-index: 2;
+    }
+
+    .list-header {
+        padding: 15px;
+        border-bottom: 1px solid #333;
+        background: black;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.8rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .list-group-scroll {
+        overflow-y: auto;
+        flex-grow: 1;
+    }
+
+    /* Scrollbar personalizado fino */
+    .list-group-scroll::-webkit-scrollbar { width: 4px; }
+    .list-group-scroll::-webkit-scrollbar-thumb { background: #444; }
+
+    .list-group-item {
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid #222;
+        color: #999;
+        font-family: 'JetBrains Mono', monospace;
+        padding: 18px 15px;
+        transition: 0.2s;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .list-group-item:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: white;
+        padding-left: 20px;
+    }
+
+    /* Estado Activo con borde brillante */
+    .list-group-item.active {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: white !important;
+        border-color: transparent;
+    }
+    .list-group-item.active::before {
+        content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+        animation: neon-bg-cycle 12s infinite alternate;
+    }
+
+    /* --- COLUMNA DERECHA (VISOR) --- */
+    .preview-col {
+        background: #000;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        overflow: hidden;
+        /* Fondo de cuadrícula técnica */
+        background-image: 
+            linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 20px 20px;
+    }
+
+    /* Header del Certificado */
+    .cert-header {
+        padding: 15px 20px;
+        border-bottom: 1px solid #333;
+        background: rgba(0,0,0,0.8);
+        backdrop-filter: blur(5px);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 10;
+    }
+
+    .cert-title {
+        font-weight: bold;
+        text-transform: uppercase;
+        font-size: 1.1rem;
+        margin: 0;
+        animation: neon-text-cycle 12s infinite alternate;
+    }
+
+    /* El contenedor del PDF DEBE expandirse */
+    .pdf-wrapper {
+        flex-grow: 1; /* Ocupa todo el espacio restante */
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+
+    /* Animación de entrada "Scan" */
+    .tab-pane.active {
+        display: flex !important; /* FORZAR FLEX PARA QUE OCUPE ALTURA */
+        flex-direction: column;
+        height: 100%;
+        animation: slide-up 0.5s ease-out;
+    }
+
+    @keyframes slide-up {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Iframe del PDF */
+    .pdf-frame {
+        width: 100%;
+        height: 100%;
+        border: none;
+        /* Filtro oscuro opcional (si se ve mal, puedes quitar la línea de filter) */
+        filter: invert(0.92) hue-rotate(180deg) contrast(0.9);
+    }
+
+    /* Botón Descargar */
+    .btn-download {
+        border: 1px solid #444;
+        color: #fff;
+        background: black;
+        font-size: 0.8rem;
+        padding: 5px 15px;
+        text-decoration: none;
+        font-family: 'JetBrains Mono', monospace;
+        transition: 0.3s;
+        display: flex;
+        align-items: center;
+    }
+    .btn-download:hover {
+        border-color: white;
+        box-shadow: 0 0 10px rgba(255,255,255,0.3);
+        color: white;
+    }
+
+    /* Efecto "Scanline" decorativo sobre el PDF */
+    .scan-line {
+        position: absolute; top: 0; left: 0; width: 100%; height: 5px;
+        background: rgba(0, 255, 65, 0.5);
+        box-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
+        animation: scan 3s linear infinite;
+        opacity: 0.3;
+        pointer-events: none;
+        z-index: 5;
+    }
+    @keyframes scan { 0% { top: 0%; } 100% { top: 100%; } }
+
+</style>
+
+<div class="d-flex align-items-center justify-content-between mb-4 px-2">
+    <div>
+        <h2 class="fw-bold mb-0 text-dynamic" style="animation: neon-text-cycle 12s infinite alternate;">
+            &gt; BÓVEDA_CERTIFICADOS
+        </h2>
+        <p class="text-secondary small font-monospace mb-0">
+            Credenciales verificadas y licencias activas.
+        </p>
     </div>
+    <div class="d-none d-md-block text-secondary font-monospace small border px-2 py-1" style="border-color: #333 !important;">
+        SECURE_CONNECTION: ESTABLISHED
+    </div>
+</div>
 
-    {% if certificados %}
-    <div class="row">
-        <div class="col-12 mb-4">
-            <ul class="nav nav-pills nav-fill gap-2 p-2 bg-light rounded-4 shadow-sm" id="pills-tab" role="tablist" style="overflow-x: auto; flex-wrap: nowrap; white-space: nowrap;">
-                
-                {% for cert in certificados %}
-                <li class="nav-item" role="presentation">
-                    <button class="nav-link rounded-pill fw-bold border {% if forloop.first %}active{% endif %}" 
-                            id="tab-{{ cert.id }}" 
-                            data-bs-toggle="pill" 
-                            data-bs-target="#content-{{ cert.id }}" 
-                            type="button" 
-                            role="tab" 
-                            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
-                        <i class="bi bi-award me-2"></i>{{ cert.titulo }}
-                    </button>
-                </li>
-                {% endfor %}
-
-            </ul>
-            <div class="text-center mt-2">
-                <small class="text-muted fst-italic"><i class="bi bi-arrow-left-right"></i> Desliza o selecciona un certificado para verlo</small>
-            </div>
+{% if certificados %}
+<div class="row g-0 vault-container">
+    
+    <div class="col-md-4 file-list-col">
+        <div class="list-header">
+            <i class="bi bi-folder2-open me-2"></i> ARCHIVE_INDEX
         </div>
-
-        <div class="col-12">
-            <div class="tab-content" id="pills-tabContent">
-                
-                {% for cert in certificados %}
-                <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" id="content-{{ cert.id }}" role="tabpanel" tabindex="0">
-                    
-                    <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
-                        <div class="card-header bg-dark text-white p-3 d-flex justify-content-between align-items-center">
-                            <div>
-                                <h5 class="mb-0 fw-bold">{{ cert.titulo }}</h5>
-                                <small class="text-white-50">{{ cert.institucion }} | {{ cert.fecha|date:"M Y" }}</small>
-                            </div>
-                            {% if cert.archivo %}
-                            <a href="{{ cert.archivo.url }}" download class="btn btn-success btn-sm rounded-pill fw-bold">
-                                <i class="bi bi-download me-1"></i> Descargar
-                            </a>
-                            {% endif %}
-                        </div>
-                        
-                        <div class="card-body p-0 bg-secondary position-relative">
-                            {% if cert.archivo %}
-                                <div style="height: 600px; width: 100%;">
-                                    <embed src="{{ cert.archivo.url }}" type="application/pdf" width="100%" height="100%" />
-                                </div>
-                            {% else %}
-                                <div class="text-center py-5 text-white">
-                                    <i class="bi bi-file-earmark-x fs-1"></i>
-                                    <p>No hay archivo adjunto para mostrar.</p>
-                                </div>
-                            {% endif %}
-                        </div>
-                    </div>
-
+        
+        <div class="list-group list-group-flush list-group-scroll" id="list-tab" role="tablist">
+            {% for cert in certificados %}
+            <a class="list-group-item list-group-item-action {% if forloop.first %}active{% endif %}" 
+               id="list-{{ cert.id }}-list" 
+               data-bs-toggle="list" 
+               href="#list-{{ cert.id }}" 
+               role="tab">
+                <div class="d-flex w-100 justify-content-between align-items-center">
+                    <span class="text-truncate pe-2">
+                        <i class="bi bi-file-earmark-lock2 me-2"></i> {{ cert.titulo }}
+                    </span>
+                    {% if forloop.first %}
+                    <i class="bi bi-eye-fill small text-dynamic"></i>
+                    {% endif %}
                 </div>
-                {% endfor %}
-
-            </div>
+                <small class="text-secondary d-block mt-1" style="font-size: 0.7rem;">
+                    {{ cert.institucion }} | {{ cert.fecha|date:"Y.m" }}
+                </small>
+            </a>
+            {% endfor %}
         </div>
     </div>
 
-    {% else %}
-    <div class="text-center py-5 opacity-50">
-        <i class="bi bi-folder-x fs-1"></i>
-        <p>Aún no hay documentos disponibles.</p>
+    <div class="col-md-8 preview-col">
+        <div class="tab-content w-100 h-100" id="nav-tabContent">
+            
+            {% for cert in certificados %}
+            <div class="tab-pane fade h-100 w-100 {% if forloop.first %}show active{% endif %}" 
+                 id="list-{{ cert.id }}" 
+                 role="tabpanel">
+                
+                <div class="cert-header">
+                    <div>
+                        <h4 class="cert-title">{{ cert.titulo }}</h4>
+                        <span class="badge bg-transparent border border-secondary text-secondary font-monospace fw-normal" style="font-size: 0.65rem;">
+                            ID: {{ cert.id|stringformat:"04d" }}
+                        </span>
+                    </div>
+                    {% if cert.archivo %}
+                    <a href="{{ cert.archivo.url }}" target="_blank" download class="btn-download">
+                        <i class="bi bi-download me-2"></i> EXTRAER
+                    </a>
+                    {% endif %}
+                </div>
+
+                <div class="pdf-wrapper">
+                    <div class="scan-line"></div>
+
+                    {% if cert.archivo %}
+                        <iframe src="{{ cert.archivo.url }}#view=FitH&toolbar=0&navpanes=0&scrollbar=0" 
+                                class="pdf-frame" 
+                                title="Visor de certificado">
+                        </iframe>
+                    {% else %}
+                        <div class="text-center">
+                            <i class="bi bi-file-earmark-x text-secondary" style="font-size: 5rem;"></i>
+                            <p class="text-secondary font-monospace mt-3">DATOS_CORRUPTOS: No hay archivo.</p>
+                        </div>
+                    {% endif %}
+                </div>
+
+            </div>
+            {% endfor %}
+
+        </div>
     </div>
-    {% endif %}
+
+</div>
+{% else %}
+<div class="alert bg-transparent border border-danger text-center p-5 mt-4">
+    <i class="bi bi-shield-slash display-1 text-danger opacity-50"></i>
+    <h3 class="text-white mt-3 font-monospace">BÓVEDA VACÍA</h3>
+    <p class="text-secondary">No se han encontrado certificados en el sistema.</p>
+</div>
+{% endif %}
+
+<script>
+    // Mover el icono de "ojo" al elemento activo
+    const listLinks = document.querySelectorAll('.list-group-item');
+    listLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            // Quitar iconos de todos
+            document.querySelectorAll('.bi-eye-fill').forEach(el => el.remove());
+            
+            // Agregar al actual
+            const icon = document.createElement('i');
+            icon.className = 'bi bi-eye-fill small text-white ms-auto';
+            // Insertar visualmente (pequeño detalle de UX)
+        });
+    });
+</script>
 
 {% endblock %}

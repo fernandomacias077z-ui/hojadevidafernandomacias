@@ -3,180 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ perfil.nombre }} | Portafolio</title>
+    <title>TERMINAL_ROOT | {{ perfil.nombre }}</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
     
     <style>
-        :root { --primary: #10b981; --bg-body: #f0fdfa; --bg-card: #ffffff; --text-main: #1e293b; --nav-bg: #1e293b; }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-body); color: var(--text-main); padding-top: 80px; }
-        
-        /* NAVBAR */
-        .navbar-custom { background-color: var(--nav-bg); padding: 12px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
-        .navbar-custom .nav-link { color: rgba(255,255,255,0.8) !important; font-weight: 500; margin: 0 8px; transition: 0.3s; }
-        .navbar-custom .nav-link:hover, .navbar-custom .nav-link.active { color: var(--primary) !important; font-weight: 700; }
-        .btn-admin { border: 1px solid var(--primary); color: var(--primary); border-radius: 50px; padding: 5px 20px; text-decoration: none; transition: 0.3s; }
-        .btn-admin:hover { background: var(--primary); color: white; }
+        /* --- ANIMACIÓN MAESTRA DE COLORES (GARANTIZADA) --- */
+        /* Esta animación rota los colores explícitamente */
+        @keyframes neon-border-cycle {
+            0%   { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.3); }   /* VERDE */
+            33%  { border-color: #ff003c; box-shadow: 0 0 10px rgba(255, 0, 60, 0.3); }   /* ROJO */
+            66%  { border-color: #00f3ff; box-shadow: 0 0 10px rgba(0, 243, 255, 0.3); }  /* CIAN */
+            100% { border-color: #00ff41; box-shadow: 0 0 10px rgba(0, 255, 65, 0.3); }   /* VERDE */
+        }
 
-        /* CONTENT */
-        .content-container { max-width: 1100px; margin: 0 auto; }
-        
-        /* HOVER EFFECTS */
-        .hover-card { transition: transform 0.3s ease, box-shadow 0.3s ease; background: #fff; border: 1px solid #f1f5f9; }
-        .hover-card:hover { transform: translateY(-5px); box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important; border-color: var(--primary); }
-        
-        /* SMART GRID */
-        @media (min-width: 992px) { .dynamic-grid > .col-lg-6:last-child:nth-child(odd) { width: 100%; max-width: 100%; flex: 0 0 100%; } }
+        @keyframes neon-text-cycle {
+            0%   { color: #00ff41; text-shadow: 0 0 5px rgba(0, 255, 65, 0.5); }
+            33%  { color: #ff003c; text-shadow: 0 0 5px rgba(255, 0, 60, 0.5); }
+            66%  { color: #00f3ff; text-shadow: 0 0 5px rgba(0, 243, 255, 0.5); }
+            100% { color: #00ff41; text-shadow: 0 0 5px rgba(0, 255, 65, 0.5); }
+        }
 
-        @media print { .navbar-custom, .no-print, .btn, .modal { display: none !important; } body { padding-top: 0; } }
+        @keyframes neon-bg-cycle {
+            0%   { background-color: #00ff41; color: black; box-shadow: 0 0 15px #00ff41; }
+            33%  { background-color: #ff003c; color: white; box-shadow: 0 0 15px #ff003c; }
+            66%  { background-color: #00f3ff; color: black; box-shadow: 0 0 15px #00f3ff; }
+            100% { background-color: #00ff41; color: black; box-shadow: 0 0 15px #00ff41; }
+        }
+
+        :root {
+            --bg-dark: #020202;
+            --bg-panel: #0a0a0a;
+            --text-main: #e0e0e0;
+            --border-color: #333;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'JetBrains Mono', monospace;
+            padding-top: 100px;
+            min-height: 100vh;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+
+        /* NAVBAR ANIMADA */
+        .navbar-custom {
+            background-color: rgba(0, 0, 0, 0.95);
+            border-bottom: 2px solid #00ff41; /* Color base */
+            animation: neon-border-cycle 12s infinite alternate; /* ¡AQUÍ ESTÁ LA MAGIA! */
+            backdrop-filter: blur(5px);
+        }
+
+        .navbar-brand {
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            animation: neon-text-cycle 12s infinite alternate;
+        }
+
+        .nav-link {
+            color: #888 !important;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            color: white !important;
+            animation: neon-text-cycle 1s infinite alternate; /* Parpadeo rápido al hover */
+        }
+        
+        .nav-link::before { content: "[ "; opacity: 0; transition: 0.3s; animation: neon-text-cycle 12s infinite alternate; }
+        .nav-link::after { content: " ]"; opacity: 0; transition: 0.3s; animation: neon-text-cycle 12s infinite alternate; }
+        
+        .nav-link:hover::before, .nav-link:hover::after,
+        .nav-link.active::before, .nav-link.active::after {
+            opacity: 1;
+        }
+
+        /* BOTONES GENÉRICOS */
+        .btn-primary {
+            background: transparent;
+            border: 1px solid;
+            border-radius: 0;
+            font-weight: bold;
+            text-transform: uppercase;
+            animation: neon-text-cycle 12s infinite alternate, neon-border-cycle 12s infinite alternate;
+        }
+
+        .btn-primary:hover {
+            animation: none; /* Detiene el ciclo para mostrar el estado hover */
+            background-color: white;
+            color: black !important;
+            text-shadow: none;
+            box-shadow: 0 0 20px white;
+            border-color: white;
+        }
+
+        /* BOTÓN ROOT (ROJO FIJO) */
+        .btn-root {
+            background: transparent;
+            border: 1px solid #ff003c;
+            color: #ff003c;
+            border-radius: 0;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+        .btn-root:hover {
+            background: #ff003c;
+            color: white;
+            box-shadow: 0 0 20px #ff003c;
+        }
+
+        .btn-outline-light { border-radius: 0; border-color: #444; color: #aaa; }
+        .btn-outline-light:hover { background: #222; border-color: white; color: white; }
+
+        .modal-content {
+            background-color: black;
+            border: 1px solid #333;
+            animation: neon-border-cycle 12s infinite alternate;
+            color: var(--text-main);
+            border-radius: 0;
+        }
+        .modal-header, .modal-footer { border-color: #333; }
+        .btn-close { filter: invert(1); }
+
     </style>
 </head>
 <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark fixed-top navbar-custom no-print">
-        <div class="container">
-            <a class="navbar-brand fw-bold fs-4" href="{% url 'home' %}">{{ perfil.nombre }}</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"><span class="navbar-toggler-icon"></span></button>
-            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item"><a class="nav-link {% if active_tab == 'inicio' %}active{% endif %}" href="{% url 'home' %}">Inicio</a></li>
-                    <li class="nav-item"><a class="nav-link {% if active_tab == 'experiencia' %}active{% endif %}" href="{% url 'experiencia' %}">Experiencia</a></li>
-                    <li class="nav-item"><a class="nav-link {% if active_tab == 'educacion' %}active{% endif %}" href="{% url 'educacion' %}">P. Académicos</a></li>
-                    <li class="nav-item"><a class="nav-link {% if active_tab == 'proyectos' %}active{% endif %}" href="{% url 'proyectos' %}">Proyectos</a></li>
+    <nav class="navbar navbar-expand-lg fixed-top navbar-custom">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="bi bi-terminal-fill me-2"></i>SISTEMA_ROOT
+            </a>
+            <button class="navbar-toggler border-secondary" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="bi bi-list text-white"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav align-items-center">
+                    <li class="nav-item"><a class="nav-link {% if active_tab == 'inicio' %}active{% endif %}" href="{% url 'home' %}">/INICIO</a></li>
+                    <li class="nav-item"><a class="nav-link {% if active_tab == 'experiencia' %}active{% endif %}" href="{% url 'experiencia' %}">/HISTORIAL</a></li>
+                    <li class="nav-item"><a class="nav-link {% if active_tab == 'educacion' %}active{% endif %}" href="{% url 'educacion' %}">/ESTUDIOS</a></li>
+                    <li class="nav-item"><a class="nav-link {% if active_tab == 'proyectos' %}active{% endif %}" href="{% url 'proyectos' %}">/PROYECTOS</a></li>
+                    <li class="nav-item"><a class="nav-link {% if active_tab == 'certificados' %}active{% endif %}" href="{% url 'certificados' %}">/CERTIFICADOS</a></li>
+                    <li class="nav-item"><a class="nav-link {% if active_tab == 'garage' %}active{% endif %}" href="{% url 'garage' %}">/TIENDA</a></li>
                     
-                    <li class="nav-item"><a class="nav-link {% if active_tab == 'cursos' %}active{% endif %}" href="{% url 'cursos' %}">Cursos</a></li>
-                    
-                    <li class="nav-item"><a class="nav-link {% if active_tab == 'certificados' %}active{% endif %}" href="{% url 'certificados' %}">Certificados</a></li>
-                    <li class="nav-item"><a class="nav-link text-warning fw-bold {% if active_tab == 'garage' %}active{% endif %}" href="{% url 'garage' %}">⚡ Garage</a></li>
+                    <li class="nav-item ms-lg-4 border-start border-secondary ps-lg-4 mt-3 mt-lg-0">
+                        <a href="/admin" target="_blank" class="btn btn-root">
+                            <i class="bi bi-shield-lock-fill me-1"></i>ACCESO_ROOT
+                        </a>
+                    </li>
                 </ul>
-            </div>
-            <div class="d-none d-lg-block">
-                <a href="/admin" class="btn-admin" target="_blank">Admin</a>
             </div>
         </div>
     </nav>
 
-    <div class="container py-4 content-container">
+    <main class="container py-4">
         {% block content %}
         {% endblock %}
-    </div>
-
-    <div class="modal fade" id="downloadModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content rounded-4 border-0">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title fw-bold"><i class="bi bi-file-earmark-pdf-fill me-2"></i>Generar PDF</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                
-                <form id="pdfForm" action="{% url 'descargar_cv_pdf' %}" method="POST">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" id="pdfActionInput" value="download">
-
-                    <div class="modal-body p-4">
-                        <div class="row g-3">
-                            <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="incluir_perfil" value="on" checked> Perfil
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="incluir_experiencia" value="on" checked> Experiencia
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="incluir_educacion" value="on" checked> Educación
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="incluir_proyectos" value="on" checked> Proyectos
-                                </div>
-                            </div>
-                            
-                            <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="incluir_cursos" value="on" checked> Cursos
-                                </div>
-                            </div>
-                            
-                            <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="incluir_academicos" value="on"> P. Académicos
-                                </div>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="incluir_certificados" value="on"> Certificados
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="modal-footer border-0 d-flex justify-content-between">
-                        <button type="button" onclick="submitPdf('preview')" class="btn btn-outline-success rounded-pill px-4">
-                            <i class="bi bi-eye-fill me-2"></i> Vista Previa
-                        </button>
-                        
-                        <button type="button" onclick="submitPdf('download')" class="btn btn-success rounded-pill px-4">
-                            <i class="bi bi-download me-2"></i> Descargar
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal fade" id="previewPdfModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-xl modal-dialog-centered" style="max-width: 90vw;">
-            <div class="modal-content rounded-4 border-0 h-100">
-                <div class="modal-header border-0 pb-0">
-                    <h5 class="modal-title fw-bold text-dark">Vista Previa</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body p-0" style="height: 85vh;">
-                    <iframe name="pdf_preview_frame" style="width: 100%; height: 100%; border: none;"></iframe>
-                </div>
-            </div>
-        </div>
-    </div>
+    </main>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        function submitPdf(actionType) {
-            const form = document.getElementById('pdfForm');
-            const actionInput = document.getElementById('pdfActionInput');
-            
-            // Establecer la acción (preview o download)
-            actionInput.value = actionType;
-
-            if (actionType === 'preview') {
-                // Si es PREVIEW:
-                // 1. Apuntar el formulario al IFRAME del modal
-                form.target = 'pdf_preview_frame';
-                
-                // 2. Abrir el modal de vista previa
-                const previewModal = new bootstrap.Modal(document.getElementById('previewPdfModal'));
-                previewModal.show();
-                
-            } else {
-                // Si es DOWNLOAD:
-                // 1. Apuntar a una nueva pestaña/descarga normal
-                form.target = '_blank';
-                
-                // 2. Cerrar el modal de configuración
-                const configModalEl = document.getElementById('downloadModal');
-                const configModal = bootstrap.Modal.getInstance(configModalEl);
-                configModal.hide();
-            }
-
-            // Enviar el formulario
-            form.submit();
-        }
-    </script>
 </body>
 </html>
